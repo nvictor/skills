@@ -1,0 +1,135 @@
+{
+  "diagram": {
+    "title": "HolmesGPT Architecture",
+    "subtitle": "Evidence-backed incident investigation from hypothesis to root cause",
+    "sections": [
+      {
+        "id": "triggers",
+        "title": "Incident Triggers",
+        "subtitle": "Signals entering the workflow",
+        "layout": {
+          "type": "flow",
+          "direction": "vertical"
+        },
+        "lanes": [
+          {
+            "id": "trigger_lane",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["alerting", "dev_questions"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "alerting", "label": "Alerting & On-Call", "type": "user" },
+          { "id": "dev_questions", "label": "Slack / Web UI / API", "type": "user" }
+        ],
+        "annotations": [
+          { "text": "PagerDuty, Opsgenie, New Relic alerts and developer queries.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "core",
+        "title": "HolmesGPT",
+        "subtitle": "Hypothesis-driven investigation loop",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "models_lane",
+            "title": "Model Layer",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["openai", "anthropic"]
+              }
+            ]
+          },
+          {
+            "id": "loop_lane",
+            "title": "Investigation Loop",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["hypothesis", "targeted_query", "evidence_check", "refine", "rca"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "openai", "label": "OpenAI GPT-4", "type": "model" },
+          { "id": "anthropic", "label": "Anthropic Claude", "type": "model" },
+          { "id": "hypothesis", "label": "Hypothesis", "type": "process" },
+          { "id": "targeted_query", "label": "Targeted Query", "type": "process" },
+          { "id": "evidence_check", "label": "Evidence Check", "type": "process", "highlight": true },
+          { "id": "refine", "label": "Refine & Branch", "type": "process" },
+          { "id": "rca", "label": "RCA & Remediation", "type": "process", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "Each step validates against observed signals before advancing.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "evidence",
+        "title": "Evidence Sources",
+        "subtitle": "Observability, infrastructure, and knowledge",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "observability_infra_lane",
+            "title": "Observability & Infra",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["prometheus_loki", "tempo_elastic", "kubernetes", "aws_argo"]
+              }
+            ]
+          },
+          {
+            "id": "knowledge_lane",
+            "title": "Knowledge",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["runbooks", "confluence"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "prometheus_loki", "label": "Prometheus / Loki", "type": "database" },
+          { "id": "tempo_elastic", "label": "Tempo / Elasticsearch", "type": "database" },
+          { "id": "kubernetes", "label": "Kubernetes", "type": "model" },
+          { "id": "aws_argo", "label": "AWS / Argo", "type": "model" },
+          { "id": "runbooks", "label": "Runbooks", "type": "default" },
+          { "id": "confluence", "label": "Confluence / Docs", "type": "default" }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "alerting", "to": "hypothesis", "route": "direct" },
+      { "from": "dev_questions", "to": "hypothesis", "route": "direct" },
+      { "from": "hypothesis", "to": "targeted_query", "route": "vertical" },
+      { "from": "targeted_query", "to": "evidence_check", "route": "vertical" },
+      { "from": "evidence_check", "to": "refine", "route": "vertical" },
+      { "from": "refine", "to": "rca", "route": "vertical" },
+      { "from": "openai", "to": "evidence_check", "route": "direct" },
+      { "from": "anthropic", "to": "evidence_check", "route": "direct" },
+      { "from": "prometheus_loki", "to": "targeted_query", "route": "direct" },
+      { "from": "kubernetes", "to": "targeted_query", "route": "direct" },
+      { "from": "runbooks", "to": "hypothesis", "route": "direct" }
+    ]
+  }
+}
