@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="520" viewBox="0 0 750 520" role="img" aria-label="Ingress vs Gateway API Resources">
+<defs>
+<filter id="panelShadow" x="-10%" y="-10%" width="120%" height="140%">
+<feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="rgba(0,0,0,0.05)"/>
+</filter>
+<marker id="arrow" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#8E877C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect width="750" height="520" fill="#F7F4EE"/>
+<text x="375.0" y="56" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700" fill="#1F1F1C">Ingress vs Gateway API Resources</text>
+<text x="375.0" y="80" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="500" fill="#6D685F">Comparing the monolithic ingress model with the modular Gateway API resource stack</text>
+<rect x="42.0" y="126.0" width="320.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
+<text x="202.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Ingress</text>
+<text x="202.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Single resource fronting controller-</text>
+<text x="202.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">specific behavior</text>
+<text x="202.0" y="446.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Routing rules, TLS, and controller</text>
+<text x="202.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">behavior are coupled to one front-</text>
+<text x="202.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">door object.</text>
+<rect x="382.0" y="126.0" width="326.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
+<text x="545.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Gateway API</text>
+<text x="545.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Split roles for infrastructure,</text>
+<text x="545.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">entrypoints, and routes</text>
+<text x="545.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Gateway API separates platform</text>
+<text x="545.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">ownership from app routing intent.</text>
+<path d="M 144.0 272.0 L 144.0 290.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 144.0 336.0 L 144.0 354.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 465.0 272.0 L 465.0 290.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 524.0 313.0 L 537.0 313.0 Q 542.0 313.0 542.0 318.0 L 542.0 318.0 Q 542.0 323.0 547.0 323.0 L 566.0 323.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 625.0 346.0 L 625.0 364.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="73.0" y="226.0" width="142.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
+<text x="144.0" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Ingress resource</text>
+<rect x="406.0" y="226.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="465.0" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">GatewayClass</text>
+<rect x="66.0" y="290.0" width="156.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="144.0" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Ingress controller</text>
+<rect x="406.0" y="290.0" width="118.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
+<text x="465.0" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Gateway</text>
+<rect x="566.0" y="300.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="625.0" y="327.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">HTTPRoute</text>
+<rect x="76.5" y="354.0" width="135.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="144.0" y="381.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Backend service</text>
+<rect x="566.0" y="364.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="625.0" y="383.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">BackendRef /</text>
+<text x="625.0" y="398.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Service</text>
+</svg>

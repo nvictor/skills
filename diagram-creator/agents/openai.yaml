@@ -1,0 +1,5 @@
+interface:
+  display_name: "Diagram Creator"
+  short_description: "Create polished deterministic SVG diagrams"
+  brand_color: "#F27A2B"
+  default_prompt: "Use $diagram-creator to turn this system description into a polished SVG diagram with explicit layout intent."

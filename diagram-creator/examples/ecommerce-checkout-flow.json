@@ -1,0 +1,145 @@
+{
+  "diagram": {
+    "title": "Ecommerce Checkout Flow",
+    "subtitle": "From cart review through payment approval to order confirmation",
+    "sections": [
+      {
+        "id": "storefront",
+        "title": "Storefront",
+        "subtitle": "The shopper moves from cart review into checkout",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "actor",
+            "title": "Actor",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["shopper"]
+              }
+            ]
+          },
+          {
+            "id": "storefront_flow",
+            "title": "Checkout steps",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["review_cart", "enter_details", "submit_order"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "shopper", "label": "Shopper", "type": "user" },
+          { "id": "review_cart", "label": "Review cart", "type": "process" },
+          { "id": "enter_details", "label": "Enter shipping + payment", "type": "process" },
+          { "id": "submit_order", "label": "Submit order", "type": "process", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "The checkout UI captures delivery details and payment intent before submission.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "checkout_services",
+        "title": "Checkout Services",
+        "subtitle": "Backend services validate, authorize, and create the order",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "validation",
+            "title": "Validation",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["price_check", "inventory_hold"]
+              }
+            ]
+          },
+          {
+            "id": "payment",
+            "title": "Payment + order",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["payment_auth", "create_order"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "price_check", "label": "Validate prices", "type": "process" },
+          { "id": "inventory_hold", "label": "Reserve inventory", "type": "database" },
+          { "id": "payment_auth", "label": "Authorize payment", "type": "process", "highlight": true },
+          { "id": "create_order", "label": "Create order record", "type": "database" }
+        ],
+        "annotations": [
+          { "text": "Checkout succeeds only after inventory and payment both clear.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "post_purchase",
+        "title": "Post-Purchase",
+        "subtitle": "The customer receives confirmation while fulfillment begins",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "customer_updates",
+            "title": "Customer updates",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["order_confirmed", "receipt_email"]
+              }
+            ]
+          },
+          {
+            "id": "operations",
+            "title": "Operations",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["fulfillment_queue"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "order_confirmed", "label": "Order confirmed", "type": "process", "highlight": true },
+          { "id": "receipt_email", "label": "Send receipt email", "type": "process" },
+          { "id": "fulfillment_queue", "label": "Queue fulfillment", "type": "database" }
+        ],
+        "annotations": [
+          { "text": "Confirmation and fulfillment can proceed in parallel once the order exists.", "position": "footer" }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "shopper", "to": "review_cart", "route": "elbow" },
+      { "from": "review_cart", "to": "enter_details", "route": "vertical" },
+      { "from": "enter_details", "to": "submit_order", "route": "vertical" },
+      { "from": "submit_order", "to": "price_check", "route": "direct" },
+      { "from": "price_check", "to": "inventory_hold", "route": "vertical" },
+      { "from": "inventory_hold", "to": "payment_auth", "route": "direct" },
+      { "from": "payment_auth", "to": "create_order", "route": "vertical" },
+      { "from": "create_order", "to": "order_confirmed", "route": "direct" },
+      { "from": "order_confirmed", "to": "receipt_email", "route": "vertical" },
+      { "from": "order_confirmed", "to": "fulfillment_queue", "route": "direct" }
+    ]
+  }
+}

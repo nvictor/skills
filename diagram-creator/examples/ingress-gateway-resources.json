@@ -1,0 +1,89 @@
+{
+  "diagram": {
+    "title": "Ingress vs Gateway API Resources",
+    "subtitle": "Comparing the monolithic ingress model with the modular Gateway API resource stack",
+    "sections": [
+      {
+        "id": "ingress",
+        "title": "Ingress",
+        "subtitle": "Single resource fronting controller-specific behavior",
+        "layout": {
+          "type": "flow",
+          "direction": "vertical"
+        },
+        "lanes": [
+          {
+            "id": "ingress_flow",
+            "title": "Ingress flow",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["ingress_resource", "ingress_controller", "backend_service"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "ingress_resource", "label": "Ingress resource", "type": "default", "highlight": true },
+          { "id": "ingress_controller", "label": "Ingress controller", "type": "process" },
+          { "id": "backend_service", "label": "Backend service", "type": "database" }
+        ],
+        "annotations": [
+          { "text": "Routing rules, TLS, and controller behavior are coupled to one front-door object.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "gateway_api",
+        "title": "Gateway API",
+        "subtitle": "Split roles for infrastructure, entrypoints, and routes",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "infrastructure",
+            "title": "Infrastructure",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["gateway_class", "gateway"]
+              }
+            ]
+          },
+          {
+            "id": "routing",
+            "title": "Routing",
+            "direction": "vertical",
+            "x_offset": 24,
+            "y_offset": 74,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["http_route", "backend_ref"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "gateway_class", "label": "GatewayClass", "type": "default" },
+          { "id": "gateway", "label": "Gateway", "type": "default", "highlight": true },
+          { "id": "http_route", "label": "HTTPRoute", "type": "process" },
+          { "id": "backend_ref", "label": "BackendRef / Service", "type": "database" }
+        ],
+        "annotations": [
+          { "text": "Gateway API separates platform ownership from app routing intent.", "position": "footer" }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "ingress_resource", "to": "ingress_controller", "route": "vertical" },
+      { "from": "ingress_controller", "to": "backend_service", "route": "vertical" },
+      { "from": "gateway_class", "to": "gateway", "route": "vertical" },
+      { "from": "gateway", "to": "http_route", "route": "direct" },
+      { "from": "http_route", "to": "backend_ref", "route": "vertical" }
+    ]
+  }
+}
