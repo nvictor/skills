@@ -1,0 +1,126 @@
+{
+  "diagram": {
+    "title": "MCP, Tools, Skills & Agents",
+    "subtitle": "How the four layers relate — and why each one exists",
+    "sections": [
+      {
+        "id": "agent",
+        "title": "Agent",
+        "subtitle": "Orchestrates goals and decisions",
+        "layout": {
+          "type": "flow",
+          "direction": "vertical"
+        },
+        "lanes": [
+          {
+            "id": "agent_lane",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["goal_input", "agent_decision"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "goal_input", "label": "Goal", "type": "default" },
+          { "id": "agent_decision", "label": "Agent", "type": "user", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "The general contractor — decides what to do and when.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "skills",
+        "title": "Skills",
+        "subtitle": "Reusable ways of using tools",
+        "layout": {
+          "type": "flow",
+          "direction": "vertical"
+        },
+        "lanes": [
+          {
+            "id": "skills_lane",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["choose_skill"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "choose_skill", "label": "Skill", "type": "process", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "The trade — knows how to accomplish a specific class of task.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "tools",
+        "title": "Tools",
+        "subtitle": "Capabilities exposed via standard interface",
+        "layout": {
+          "type": "flow",
+          "direction": "vertical"
+        },
+        "lanes": [
+          {
+            "id": "tools_lane",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "parallel",
+                "nodes": ["tool_a", "tool_b"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "tool_a", "label": "Tool A", "type": "default" },
+          { "id": "tool_b", "label": "Tool B", "type": "default" }
+        ],
+        "annotations": [
+          { "text": "Not the hammer — but \"drive nail\". A named, callable capability.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "mcp",
+        "title": "MCP",
+        "subtitle": "Communication, tool interface, context delivery",
+        "layout": {
+          "type": "flow",
+          "direction": "vertical"
+        },
+        "lanes": [
+          {
+            "id": "mcp_lane",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["mcp_protocol"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "mcp_protocol", "label": "MCP", "type": "database", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "The job site infrastructure — not just a protocol, but the whole access layer.", "position": "footer" }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "goal_input", "to": "agent_decision", "route": "vertical" },
+      { "from": "agent_decision", "to": "choose_skill", "route": "direct" },
+      { "from": "choose_skill", "to": "tool_a", "route": "direct" },
+      { "from": "choose_skill", "to": "tool_b", "route": "direct" },
+      { "from": "tool_a", "to": "mcp_protocol", "route": "direct" },
+      { "from": "tool_b", "to": "mcp_protocol", "route": "direct" }
+    ]
+  }
+}

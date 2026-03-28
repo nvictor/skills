@@ -41,8 +41,9 @@ Do not use it when the user explicitly wants:
    - lane offsets when a cross-lane edge needs more width or cleaner alignment
    - node order inside each lane
    - connection routing hints only where needed
-3. Validate the spec with `scripts/render_diagram.py --validate-only`.
-4. Render the SVG with `scripts/render_diagram.py --output ...`.
+3. Write the JSON spec to a file.
+4. Validate the spec with `python3 scripts/render_diagram.py <spec.json> --validate-only`.
+5. Render the SVG with `python3 scripts/render_diagram.py <spec.json> --output <diagram.svg>`.
 
 ## Output contract
 
@@ -52,6 +53,13 @@ Do not use it when the user explicitly wants:
 - JSON is the canonical authoring format.
 
 ## Renderer
+
+Operational notes:
+
+- `scripts/render_diagram.py` requires one positional argument: the input JSON spec path.
+- Run commands from this skill directory, or use absolute paths for both the script and the spec.
+- The renderer uses only the Python standard library. Do not stop to install `cairosvg`, `lxml`, or other SVG packages for this skill.
+- `--validate-only` prints `OK` on success and exits without producing SVG output.
 
 Validate:
 

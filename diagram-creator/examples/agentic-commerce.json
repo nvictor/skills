@@ -1,0 +1,160 @@
+{
+  "diagram": {
+    "title": "Agentic Commerce Experience",
+    "subtitle": "AI agents acting as autonomous proxies for multi-step shopping and fulfillment",
+    "sections": [
+      {
+        "id": "delegation",
+        "title": "User Intent & Delegation",
+        "subtitle": "High-level goal setting by the user",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "actor",
+            "title": "User",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["shopper", "intent_prompt"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "shopper", "label": "Shopper", "type": "user" },
+          { "id": "intent_prompt", "label": "Define Intent", "type": "process" }
+        ],
+        "annotations": [
+          { "text": "The user provides broad constraints (e.g., 'Find me trail shoes under $150 by Friday').", "position": "footer" }
+        ]
+      },
+      {
+        "id": "agent_core",
+        "title": "Autonomous Agent Core",
+        "subtitle": "Reasoning, planning, and evaluation loop",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "reasoning",
+            "title": "Reasoning",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["llm_planner", "evaluation_engine"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "llm_planner", "label": "LLM Planner", "type": "model", "highlight": true },
+          { "id": "evaluation_engine", "label": "Evaluation Engine", "type": "process" }
+        ],
+        "annotations": [
+          { "text": "Agent breaks down the goal into executable search and comparison tasks.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "marketplace",
+        "title": "Marketplace Interaction",
+        "subtitle": "Sourcing and negotiating with external vendors",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "external",
+            "title": "External APIs",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "parallel",
+                "nodes": ["vendor_a", "vendor_b"]
+              }
+            ]
+          },
+          {
+            "id": "negotiation",
+            "title": "Comparison",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["price_check"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "vendor_a", "label": "Retailer API A", "type": "process" },
+          { "id": "vendor_b", "label": "Retailer API B", "type": "process" },
+          { "id": "price_check", "label": "Cross-Vendor Analysis", "type": "process" }
+        ],
+        "annotations": [
+          { "text": "Agent queries multiple sources in parallel to find the best match.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "execution",
+        "title": "Execution & Monitoring",
+        "subtitle": "Transaction completion and fulfillment tracking",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "transaction",
+            "title": "Transaction",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["secure_payment", "order_placement"]
+              }
+            ]
+          },
+          {
+            "id": "fulfillment",
+            "title": "Fulfillment",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["delivery_tracking"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "secure_payment", "label": "Secure Payment", "type": "process", "highlight": true },
+          { "id": "order_placement", "label": "Place Order", "type": "database" },
+          { "id": "delivery_tracking", "label": "Track Delivery", "type": "process" }
+        ],
+        "annotations": [
+          { "text": "Agent handles the final purchase and keeps the user updated on shipping.", "position": "footer" }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "shopper", "to": "intent_prompt", "route": "vertical" },
+      { "from": "intent_prompt", "to": "llm_planner", "route": "direct" },
+      { "from": "llm_planner", "to": "evaluation_engine", "route": "vertical" },
+      { "from": "evaluation_engine", "to": "vendor_a", "route": "direct" },
+      { "from": "evaluation_engine", "to": "vendor_b", "route": "direct" },
+      { "from": "vendor_a", "to": "price_check", "route": "direct" },
+      { "from": "vendor_b", "to": "price_check", "route": "direct" },
+      { "from": "price_check", "to": "secure_payment", "route": "direct" },
+      { "from": "secure_payment", "to": "order_placement", "route": "vertical" },
+      { "from": "order_placement", "to": "delivery_tracking", "route": "direct" }
+    ]
+  }
+}
