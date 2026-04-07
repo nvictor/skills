@@ -15,6 +15,7 @@
           {
             "id": "trigger_lane",
             "direction": "vertical",
+            "y_offset": 7,
             "groups": [
               {
                 "type": "sequential",
@@ -41,17 +42,6 @@
         },
         "lanes": [
           {
-            "id": "models_lane",
-            "title": "Model Layer",
-            "direction": "vertical",
-            "groups": [
-              {
-                "type": "sequential",
-                "nodes": ["openai", "anthropic"]
-              }
-            ]
-          },
-          {
             "id": "loop_lane",
             "title": "Investigation Loop",
             "direction": "vertical",
@@ -61,11 +51,23 @@
                 "nodes": ["hypothesis", "targeted_query", "evidence_check", "refine", "rca"]
               }
             ]
+          },
+          {
+            "id": "models_lane",
+            "title": "Model Layer",
+            "direction": "horizontal",
+            "x_offset": 0,
+            "y_offset": 128,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["model_providers"]
+              }
+            ]
           }
         ],
         "nodes": [
-          { "id": "openai", "label": "OpenAI GPT-4", "type": "model" },
-          { "id": "anthropic", "label": "Anthropic Claude", "type": "model" },
+          { "id": "model_providers", "label": "OpenAI GPT-4 / Anthropic Claude", "type": "model" },
           { "id": "hypothesis", "label": "Hypothesis", "type": "process" },
           { "id": "targeted_query", "label": "Targeted Query", "type": "process" },
           { "id": "evidence_check", "label": "Evidence Check", "type": "process", "highlight": true },
@@ -86,35 +88,22 @@
         },
         "lanes": [
           {
-            "id": "observability_infra_lane",
-            "title": "Observability & Infra",
+            "id": "evidence_lane",
+            "title": "Evidence Sources",
             "direction": "vertical",
+            "x_offset": 62,
             "groups": [
               {
                 "type": "sequential",
-                "nodes": ["prometheus_loki", "tempo_elastic", "kubernetes", "aws_argo"]
-              }
-            ]
-          },
-          {
-            "id": "knowledge_lane",
-            "title": "Knowledge",
-            "direction": "vertical",
-            "groups": [
-              {
-                "type": "sequential",
-                "nodes": ["runbooks", "confluence"]
+                "nodes": ["knowledge_base", "observability", "platforms"]
               }
             ]
           }
         ],
         "nodes": [
-          { "id": "prometheus_loki", "label": "Prometheus / Loki", "type": "database" },
-          { "id": "tempo_elastic", "label": "Tempo / Elasticsearch", "type": "database" },
-          { "id": "kubernetes", "label": "Kubernetes", "type": "model" },
-          { "id": "aws_argo", "label": "AWS / Argo", "type": "model" },
-          { "id": "runbooks", "label": "Runbooks", "type": "default" },
-          { "id": "confluence", "label": "Confluence / Docs", "type": "default" }
+          { "id": "observability", "label": "Prometheus / Loki / Tempo / Elasticsearch", "type": "database" },
+          { "id": "platforms", "label": "Kubernetes / AWS / Argo", "type": "model" },
+          { "id": "knowledge_base", "label": "Runbooks / Confluence / Docs", "type": "default" }
         ]
       }
     ],
@@ -125,11 +114,10 @@
       { "from": "targeted_query", "to": "evidence_check", "route": "vertical" },
       { "from": "evidence_check", "to": "refine", "route": "vertical" },
       { "from": "refine", "to": "rca", "route": "vertical" },
-      { "from": "openai", "to": "evidence_check", "route": "direct" },
-      { "from": "anthropic", "to": "evidence_check", "route": "direct" },
-      { "from": "prometheus_loki", "to": "targeted_query", "route": "direct" },
-      { "from": "kubernetes", "to": "targeted_query", "route": "direct" },
-      { "from": "runbooks", "to": "hypothesis", "route": "direct" }
+      { "from": "model_providers", "to": "evidence_check", "route": "direct" },
+      { "from": "observability", "to": "targeted_query", "route": "direct" },
+      { "from": "platforms", "to": "targeted_query", "route": "direct" },
+      { "from": "knowledge_base", "to": "hypothesis", "route": "direct" }
     ]
   }
 }
