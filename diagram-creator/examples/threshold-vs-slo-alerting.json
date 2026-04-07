@@ -1,0 +1,131 @@
+{
+  "diagram": {
+    "title": "Threshold-Based vs SLO-Based Alerting",
+    "subtitle": "Fixed metric thresholds react to signal spikes, while SLO alerting reacts to user-impacting error-budget burn",
+    "sections": [
+      {
+        "id": "threshold_alerting",
+        "title": "Threshold-Based Alerting",
+        "subtitle": "Alert when a raw metric crosses a static limit",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "signal_lane",
+            "title": "Metric signal",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": [
+                  "cpu_latency_error_rate",
+                  "fixed_threshold",
+                  "threshold_comparison",
+                  "page_oncall"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "outcome_lane",
+            "title": "Operational effect",
+            "direction": "vertical",
+            "x_offset": 18,
+            "y_offset": 72,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": [
+                  "noisy_or_blind"
+                ]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "cpu_latency_error_rate", "label": "CPU, latency, or error-rate metric", "type": "process" },
+          { "id": "fixed_threshold", "label": "Static threshold", "type": "default" },
+          { "id": "threshold_comparison", "label": "Metric > threshold?", "type": "process", "highlight": true },
+          { "id": "page_oncall", "label": "Page on-call", "type": "status" },
+          { "id": "noisy_or_blind", "label": "Can be noisy or miss real user pain", "type": "default" }
+        ],
+        "annotations": [
+          {
+            "text": "Thresholds are simple to set up, but they treat every threshold crossing as equally important regardless of customer impact.",
+            "position": "footer"
+          }
+        ]
+      },
+      {
+        "id": "slo_alerting",
+        "title": "SLO-Based Alerting",
+        "subtitle": "Alert when reliability objectives are burning too fast",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "user_experience_lane",
+            "title": "User-facing reliability",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": [
+                  "good_bad_events",
+                  "sli",
+                  "error_budget",
+                  "burn_rate",
+                  "budget_alert"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "outcome_lane",
+            "title": "Operational effect",
+            "direction": "vertical",
+            "x_offset": 18,
+            "y_offset": 108,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": [
+                  "high_signal"
+                ]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "good_bad_events", "label": "Good vs bad user requests", "type": "process" },
+          { "id": "sli", "label": "Service level indicator", "type": "default" },
+          { "id": "error_budget", "label": "Remaining error budget", "type": "default" },
+          { "id": "burn_rate", "label": "Burn-rate evaluation", "type": "process", "highlight": true },
+          { "id": "budget_alert", "label": "Page on-call", "type": "status" },
+          { "id": "high_signal", "label": "Pages when reliability is genuinely at risk", "type": "default" }
+        ],
+        "annotations": [
+          {
+            "text": "SLO alerts are tied to the allowed reliability target, so they focus attention on issues that threaten the user experience and the error budget.",
+            "position": "footer"
+          }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "cpu_latency_error_rate", "to": "fixed_threshold", "route": "vertical" },
+      { "from": "fixed_threshold", "to": "threshold_comparison", "route": "vertical" },
+      { "from": "threshold_comparison", "to": "page_oncall", "route": "vertical" },
+      { "from": "threshold_comparison", "to": "noisy_or_blind", "route": "direct" },
+      { "from": "good_bad_events", "to": "sli", "route": "vertical" },
+      { "from": "sli", "to": "error_budget", "route": "vertical" },
+      { "from": "error_budget", "to": "burn_rate", "route": "vertical" },
+      { "from": "burn_rate", "to": "budget_alert", "route": "vertical" },
+      { "from": "burn_rate", "to": "high_signal", "route": "direct" }
+    ]
+  }
+}
