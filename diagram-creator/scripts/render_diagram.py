@@ -45,6 +45,8 @@ NODE_HEIGHT = 46
 NODE_MIN_WIDTH = 118
 NODE_MAX_WIDTH = 190
 USER_NODE_SIZE = 68
+USER_LABEL_BASELINE_OFFSET = 18
+USER_LABEL_FONT_SIZE = 12
 STATUS_WIDTH = 92
 STATUS_HEIGHT = 42
 SECTION_RADIUS = 18
@@ -136,6 +138,29 @@ class SectionLayout:
     footer_annotations: list[str]
 
 
+def estimate_text_width(text: str, font_size: float) -> float:
+    return max(0.0, len(text) * font_size * 0.56)
+
+
+def centered_text_rect(
+    center_x: float,
+    baseline_y: float,
+    text: str,
+    font_size: float,
+    padding_x: float = 8.0,
+    padding_y: float = 4.0,
+) -> Rect:
+    text_width = estimate_text_width(text, font_size)
+    ascent = font_size * 0.82
+    descent = font_size * 0.24
+    return Rect(
+        center_x - text_width / 2 - padding_x,
+        baseline_y - ascent - padding_y,
+        center_x + text_width / 2 + padding_x,
+        baseline_y + descent + padding_y,
+    )
+
+
 def load_spec(path: Path) -> dict[str, Any]:
     raw = path.read_text()
     if path.suffix.lower() != ".json":
@@ -189,6 +214,24 @@ def measure_node(node: dict[str, Any]) -> tuple[int, int]:
     max_chars = max(len(line) for line in lines)
     width = max(NODE_MIN_WIDTH, min(NODE_MAX_WIDTH, 30 + max_chars * 7))
     return width, NODE_HEIGHT
+
+
+def measure_node_footprint(node: dict[str, Any]) -> tuple[float, float]:
+    width, height = measure_node(node)
+    if node["type"] != "user":
+        return float(width), float(height)
+
+    label_rect = centered_text_rect(
+        0.0,
+        USER_NODE_SIZE + USER_LABEL_BASELINE_OFFSET,
+        node["label"],
+        USER_LABEL_FONT_SIZE,
+        padding_x=8.0,
+        padding_y=5.0,
+    )
+    footprint_width = max(float(width), label_rect.right - label_rect.left)
+    footprint_height = max(float(height), label_rect.bottom)
+    return footprint_width, footprint_height
 
 
 def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
@@ -363,7 +406,7 @@ def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
 def lane_dimensions(lane: dict[str, Any], node_map: dict[str, dict[str, Any]]) -> tuple[float, float]:
     group_boxes: list[tuple[float, float]] = []
     for group in lane["groups"]:
-        node_sizes = [measure_node(node_map[node_id]) for node_id in group["nodes"]]
+        node_sizes = [measure_node_footprint(node_map[node_id]) for node_id in group["nodes"]]
         if group["type"] == "sequential":
             if lane["direction"] == "vertical":
                 width = max(width for width, _ in node_sizes)
@@ -434,22 +477,25 @@ def layout_group(
     lane_id: str,
     positioned: dict[str, NodeLayout],
 ) -> tuple[float, float]:
-    node_sizes = [(node_id, *measure_node(node_specs[node_id])) for node_id in group["nodes"]]
+    node_sizes = [
+        (node_id, *measure_node(node_specs[node_id]), *measure_node_footprint(node_specs[node_id]))
+        for node_id in group["nodes"]
+    ]
     if group["type"] == "sequential":
         advance = 0.0
         max_width = 0.0
         max_height = 0.0
-        track_width = max(width for _, width, _ in node_sizes)
-        track_height = max(height for _, _, height in node_sizes)
-        for node_id, width, height in node_sizes:
+        track_width = max(footprint_width for _, _, _, footprint_width, _ in node_sizes)
+        track_height = max(footprint_height for _, _, _, _, footprint_height in node_sizes)
+        for node_id, width, height, footprint_width, footprint_height in node_sizes:
             if lane["direction"] == "vertical":
-                node_x = x + (track_width - width) / 2
+                node_x = x + (track_width - footprint_width) / 2 + (footprint_width - width) / 2
                 node_y = y + advance
-                advance += height + NODE_GAP
+                advance += footprint_height + NODE_GAP
             else:
                 node_x = x + advance
-                node_y = y + (track_height - height) / 2
-                advance += width + NODE_GAP
+                node_y = y + (track_height - footprint_height) / 2
+                advance += footprint_width + NODE_GAP
             positioned[node_id] = NodeLayout(
                 node_id=node_id,
                 label=node_specs[node_id]["label"],
@@ -462,8 +508,8 @@ def layout_group(
                 section_id=section_id,
                 lane_id=lane_id,
             )
-            max_width = max(max_width, width)
-            max_height = max(max_height, height)
+            max_width = max(max_width, footprint_width)
+            max_height = max(max_height, footprint_height)
         if lane["direction"] == "vertical":
             return max_width, advance - NODE_GAP
         return advance - NODE_GAP, max_height
@@ -472,10 +518,10 @@ def layout_group(
     max_width = 0.0
     max_height = 0.0
     if lane["direction"] == "vertical":
-        row_height = max(height for _, _, height in node_sizes)
-        for node_id, width, height in node_sizes:
+        row_height = max(footprint_height for _, _, _, _, footprint_height in node_sizes)
+        for node_id, width, height, footprint_width, footprint_height in node_sizes:
             node_x = x + advance
-            node_y = y + (row_height - height) / 2
+            node_y = y + (row_height - footprint_height) / 2
             positioned[node_id] = NodeLayout(
                 node_id=node_id,
                 label=node_specs[node_id]["label"],
@@ -488,14 +534,14 @@ def layout_group(
                 section_id=section_id,
                 lane_id=lane_id,
             )
-            advance += width + NODE_GAP
+            advance += footprint_width + NODE_GAP
             max_width = max(max_width, advance - NODE_GAP)
-            max_height = max(max_height, height)
+            max_height = max(max_height, row_height)
         return max_width, row_height
 
-    column_width = max(width for _, width, _ in node_sizes)
-    for node_id, width, height in node_sizes:
-        node_x = x + (column_width - width) / 2
+    column_width = max(footprint_width for _, _, _, footprint_width, _ in node_sizes)
+    for node_id, width, height, footprint_width, footprint_height in node_sizes:
+        node_x = x + (column_width - footprint_width) / 2 + (footprint_width - width) / 2
         node_y = y + advance
         positioned[node_id] = NodeLayout(
             node_id=node_id,
@@ -509,8 +555,8 @@ def layout_group(
             section_id=section_id,
             lane_id=lane_id,
         )
-        advance += height + NODE_GAP
-        max_width = max(max_width, width)
+        advance += footprint_height + NODE_GAP
+        max_width = max(max_width, column_width)
         max_height = max(max_height, advance - NODE_GAP)
     return column_width, max_height
 
@@ -590,6 +636,10 @@ def layout_diagram(diagram: dict[str, Any]) -> tuple[list[SectionLayout], dict[s
 
 
 def candidate_port_sides(source: NodeLayout, target: NodeLayout, route: str) -> list[tuple[str, str]]:
+    if route == "vertical" and (source.node_type == "user" or target.node_type == "user"):
+        if target.center_y >= source.center_y:
+            return [("right", "left"), ("left", "right"), ("bottom", "top")]
+        return [("right", "left"), ("left", "right"), ("top", "bottom")]
     if route == "vertical":
         if target.center_y >= source.center_y:
             return [("bottom", "top"), ("right", "left"), ("left", "right")]
@@ -659,19 +709,108 @@ def segment_is_clear(
 
 
 def unique_sorted_coords(values: list[float]) -> list[float]:
-    rounded = sorted({round(value, 1) for value in values})
-    return [float(value) for value in rounded]
+    unique_values: list[float] = []
+    for value in sorted(float(value) for value in values):
+        if not unique_values or abs(value - unique_values[-1]) > 0.05:
+            unique_values.append(value)
+    return unique_values
+
+
+def title_text_obstacles(title: str, subtitle: str | None, width: int) -> list[tuple[str, Rect]]:
+    obstacles = [("diagram_title", centered_text_rect(width / 2, 56, title, 32, padding_x=12.0, padding_y=8.0))]
+    if subtitle:
+        obstacles.append(
+            ("diagram_subtitle", centered_text_rect(width / 2, 80, subtitle, 14, padding_x=10.0, padding_y=6.0))
+        )
+    return obstacles
+
+
+def section_text_obstacles(section: SectionLayout) -> list[tuple[str, Rect]]:
+    obstacles: list[tuple[str, Rect]] = []
+    center_x = section.x + section.width / 2
+    title_y = section.y + 34
+    obstacles.append(
+        (
+            f"section_title:{section.section_id}",
+            centered_text_rect(center_x, title_y, section.title, 14, padding_x=10.0, padding_y=6.0),
+        )
+    )
+    if section.subtitle:
+        subtitle_lines = wrap_text_to_width(section.subtitle, section.width - SECTION_PAD_X * 2, max_lines=3)
+        for idx, line in enumerate(subtitle_lines):
+            baseline_y = title_y + 20 + idx * 14
+            obstacles.append(
+                (
+                    f"section_subtitle:{section.section_id}:{idx}",
+                    centered_text_rect(center_x, baseline_y, line, 12, padding_x=8.0, padding_y=5.0),
+                )
+            )
+
+    consumed_lines = 0
+    for note in reversed(section.footer_annotations):
+        note_lines = wrap_text_to_width(note, section.width - SECTION_PAD_X * 2, max_lines=3)
+        base_y = section.y + section.height - 12 - consumed_lines * 14 - (len(note_lines) - 1) * 14
+        for line_index, line in enumerate(note_lines):
+            baseline_y = base_y + line_index * 14
+            obstacles.append(
+                (
+                    f"section_footer:{section.section_id}:{consumed_lines + line_index}",
+                    centered_text_rect(center_x, baseline_y, line, 11, padding_x=8.0, padding_y=4.0),
+                )
+            )
+        consumed_lines += len(note_lines)
+    return obstacles
+
+
+def node_text_obstacles(nodes: dict[str, NodeLayout]) -> list[tuple[str, Rect]]:
+    obstacles: list[tuple[str, Rect]] = []
+    for node in nodes.values():
+        if node.node_type == "user":
+            obstacles.append(
+                (
+                    f"node_label:{node.node_id}",
+                    centered_text_rect(
+                        node.center_x,
+                        node.bottom + USER_LABEL_BASELINE_OFFSET,
+                        node.label,
+                        USER_LABEL_FONT_SIZE,
+                        padding_x=8.0,
+                        padding_y=5.0,
+                    ),
+                )
+            )
+    return obstacles
+
+
+def build_edge_obstacles(
+    title: str,
+    subtitle: str | None,
+    sections: list[SectionLayout],
+    nodes: dict[str, NodeLayout],
+    width: int,
+) -> list[tuple[str, Rect]]:
+    obstacles = [(node_id, node.rect.inflate(EDGE_CLEARANCE)) for node_id, node in nodes.items()]
+    obstacles.extend((obstacle_id, rect.inflate(EDGE_CLEARANCE / 2)) for obstacle_id, rect in title_text_obstacles(title, subtitle, width))
+    for section in sections:
+        obstacles.extend(
+            (obstacle_id, rect.inflate(EDGE_CLEARANCE / 2))
+            for obstacle_id, rect in section_text_obstacles(section)
+        )
+    obstacles.extend(
+        (obstacle_id, rect.inflate(EDGE_CLEARANCE / 2)) for obstacle_id, rect in node_text_obstacles(nodes)
+    )
+    return obstacles
 
 
 def route_connection_points(
     connection: dict[str, str],
     nodes: dict[str, NodeLayout],
+    obstacles: list[tuple[str, Rect]],
     width: int,
     height: int,
 ) -> list[tuple[float, float]]:
     source = nodes[connection["from"]]
     target = nodes[connection["to"]]
-    obstacles = [(node_id, node.rect.inflate(EDGE_CLEARANCE)) for node_id, node in nodes.items()]
     allowed = {source.node_id, target.node_id}
 
     for source_side, target_side in candidate_port_sides(source, target, connection["route"]):
@@ -769,7 +908,7 @@ def route_connection_points(
         return [source_port, source_stub, *routed[1:-1], target_stub, target_port]
 
     raise DiagramError(
-        f"Could not route connection '{source.node_id}->{target.node_id}' without crossing nodes."
+        f"Could not route connection '{source.node_id}->{target.node_id}' without crossing nodes or text."
     )
 
 
@@ -870,7 +1009,7 @@ def render_user_node(node: NodeLayout) -> str:
             f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{TOKENS["panel"]}" stroke="{TOKENS["border"]}" stroke-width="1.4"/>',
             f'<circle cx="{cx:.1f}" cy="{cy - 8:.1f}" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>',
             f'<path d="M {cx - 12:.1f} {cy + 13:.1f} C {cx - 10:.1f} {cy + 2:.1f}, {cx + 10:.1f} {cy + 2:.1f}, {cx + 12:.1f} {cy + 13:.1f}" fill="none" stroke="#35C89B" stroke-width="2"/>',
-            f'<text x="{cx:.1f}" y="{node.bottom + 18:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="12" font-weight="500" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
+            f'<text x="{cx:.1f}" y="{node.bottom + USER_LABEL_BASELINE_OFFSET:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="{USER_LABEL_FONT_SIZE}" font-weight="500" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
         ]
     )
 
@@ -916,8 +1055,14 @@ def render_node(node: NodeLayout) -> str:
     return "\n".join(parts)
 
 
-def render_connection(connection: dict[str, str], nodes: dict[str, NodeLayout], width: int, height: int) -> str:
-    points = route_connection_points(connection, nodes, width, height)
+def render_connection(
+    connection: dict[str, str],
+    nodes: dict[str, NodeLayout],
+    obstacles: list[tuple[str, Rect]],
+    width: int,
+    height: int,
+) -> str:
+    points = route_connection_points(connection, nodes, obstacles, width, height)
     path = rounded_orthogonal_path(points, radius=10)
     return f'<path d="{path}" fill="none" stroke="{TOKENS["edge"]}" stroke-width="1.7" marker-end="url(#arrow)"/>'
 
@@ -925,6 +1070,7 @@ def render_connection(connection: dict[str, str], nodes: dict[str, NodeLayout], 
 def render_svg(spec: dict[str, Any]) -> str:
     diagram = spec["diagram"]
     sections, nodes, width, height = layout_diagram(diagram)
+    obstacles = build_edge_obstacles(diagram["title"], diagram.get("subtitle"), sections, nodes, width)
 
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(diagram["title"])}">',
@@ -944,7 +1090,7 @@ def render_svg(spec: dict[str, Any]) -> str:
         for section in sections:
             parts.append(render_section(section))
     for connection in diagram["connections"]:
-        parts.append(render_connection(connection, nodes, width, height))
+        parts.append(render_connection(connection, nodes, obstacles, width, height))
     for node_id in sorted(nodes.keys(), key=lambda key: (nodes[key].y, nodes[key].x)):
         parts.append(render_node(nodes[node_id]))
 
