@@ -15,6 +15,7 @@
           {
             "id": "agent_lane",
             "direction": "vertical",
+            "x_offset": 77,
             "groups": [
               {
                 "type": "sequential",
@@ -43,6 +44,8 @@
           {
             "id": "skills_lane",
             "direction": "vertical",
+            "x_offset": 77,
+            "y_offset": 18,
             "groups": [
               {
                 "type": "sequential",
@@ -68,12 +71,26 @@
         },
         "lanes": [
           {
-            "id": "tools_lane",
+            "id": "tool_a_lane",
             "direction": "vertical",
+            "x_offset": 77,
+            "y_offset": 18,
             "groups": [
               {
-                "type": "parallel",
-                "nodes": ["tool_a", "tool_b"]
+                "type": "sequential",
+                "nodes": ["tool_a"]
+              }
+            ]
+          },
+          {
+            "id": "tool_b_lane",
+            "direction": "vertical",
+            "x_offset": 77,
+            "y_offset": 18,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["tool_b"]
               }
             ]
           }
@@ -98,6 +115,8 @@
           {
             "id": "mcp_lane",
             "direction": "vertical",
+            "x_offset": 77,
+            "y_offset": 18,
             "groups": [
               {
                 "type": "sequential",

@@ -636,6 +636,10 @@ def layout_diagram(diagram: dict[str, Any]) -> tuple[list[SectionLayout], dict[s
 
 
 def candidate_port_sides(source: NodeLayout, target: NodeLayout, route: str) -> list[tuple[str, str]]:
+    if route == "vertical" and abs(target.center_x - source.center_x) < 0.01:
+        if target.center_y >= source.center_y:
+            return [("bottom", "top"), ("right", "left"), ("left", "right")]
+        return [("top", "bottom"), ("right", "left"), ("left", "right")]
     if route == "vertical" and (source.node_type == "user" or target.node_type == "user"):
         if target.center_y >= source.center_y:
             return [("right", "left"), ("left", "right"), ("bottom", "top")]
@@ -964,6 +968,20 @@ def rounded_orthogonal_path(points: list[tuple[float, float]], radius: float = 1
     return " ".join(commands)
 
 
+def marker_adjusted_points(points: list[tuple[float, float]], offset: float = 1.0) -> list[tuple[float, float]]:
+    if len(points) < 2:
+        return points
+    adjusted = list(points)
+    prev_x, prev_y = adjusted[-2]
+    end_x, end_y = adjusted[-1]
+    if abs(prev_x - end_x) < 0.01:
+        end_y -= offset if end_y > prev_y else -offset
+    elif abs(prev_y - end_y) < 0.01:
+        end_x -= offset if end_x > prev_x else -offset
+    adjusted[-1] = (end_x, end_y)
+    return adjusted
+
+
 def render_title(title: str, subtitle: str | None, width: int) -> str:
     lines = [
         f'<text x="{width / 2:.1f}" y="56" text-anchor="middle" font-family="{FONT_STACK}" font-size="32" font-weight="700" fill="{TOKENS["text"]}">{escape(title)}</text>'
@@ -1063,6 +1081,7 @@ def render_connection(
     height: int,
 ) -> str:
     points = route_connection_points(connection, nodes, obstacles, width, height)
+    points = marker_adjusted_points(points)
     path = rounded_orthogonal_path(points, radius=10)
     return f'<path d="{path}" fill="none" stroke="{TOKENS["edge"]}" stroke-width="1.7" marker-end="url(#arrow)"/>'
 
