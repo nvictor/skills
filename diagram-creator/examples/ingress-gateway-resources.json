@@ -16,6 +16,7 @@
             "id": "ingress_flow",
             "title": "Ingress flow",
             "direction": "vertical",
+            "x_offset": 58,
             "groups": [
               {
                 "type": "sequential",
@@ -58,7 +59,7 @@
             "title": "Routing",
             "direction": "vertical",
             "x_offset": 24,
-            "y_offset": 74,
+            "y_offset": 64,
             "groups": [
               {
                 "type": "sequential",
