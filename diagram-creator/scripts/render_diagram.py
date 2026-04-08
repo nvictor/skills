@@ -52,9 +52,11 @@ STATUS_HEIGHT = 42
 SECTION_RADIUS = 18
 NODE_RADIUS = 8
 CHART_WIDTH = 244
-CHART_HEIGHT = 188
+CHART_HEIGHT = 220
 PIE_CHART_HEIGHT = 280
 CHART_RADIUS = 12
+CHART_CAPTION_TOP_GAP = 20.0
+CHART_CAPTION_BOTTOM_GAP = 14.0
 SECTION_MIN_WIDTH = 320
 SECTION_MAX_WIDTH = 420
 EDGE_CLEARANCE = 12.0
@@ -1362,7 +1364,9 @@ def render_chart_node(node: NodeLayout) -> str:
     plot_x = node.x + chart_pad_x
     plot_y = content_top + title_h + title_legend_gap + legend_h + (8.0 if legend_h else 0.0)
     plot_width = node.width - chart_pad_x * 2
-    plot_bottom_limit = node.y + node.height - chart_pad_y - (caption_h + (8.0 if caption_h else 0.0))
+    plot_bottom_limit = node.y + node.height - chart_pad_y - (
+        caption_h + (CHART_CAPTION_TOP_GAP if caption_h else 0.0) + (CHART_CAPTION_BOTTOM_GAP if caption_h else 0.0)
+    )
     plot_height = max(58.0, plot_bottom_limit - plot_y)
     plot_bottom = plot_y + plot_height
     y_min, y_max = chart_value_range(chart)
@@ -1443,8 +1447,8 @@ def render_chart_node(node: NodeLayout) -> str:
         series_count = len(chart["series"])
         point_count = len(chart["series"][0]["points"])
         slot_width = plot_width / max(1, point_count)
-        inter_series_gap = 6.0
-        bar_width = max(6.0, min(10.0, (slot_width - inter_series_gap * (series_count - 1)) / max(1, series_count)))
+        inter_series_gap = 7.0
+        bar_width = max(8.0, min(13.0, (slot_width - inter_series_gap * (series_count - 1)) / max(1, series_count)))
         for series in chart["series"]:
             color = chart_color(series["color"], series["index"])
             for point_index, value in enumerate(series["points"]):
@@ -1470,7 +1474,9 @@ def render_chart_node(node: NodeLayout) -> str:
             )
 
     if caption_lines:
-        caption_y = plot_bottom + 16.0
+        caption_y = node.y + node.height - chart_pad_y - CHART_CAPTION_BOTTOM_GAP - (
+            (len(caption_lines) - 1) * caption_line_height
+        )
         for index, line in enumerate(caption_lines):
             parts.append(
                 f'<text x="{text_center:.1f}" y="{caption_y + index * caption_line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(line)}</text>'
