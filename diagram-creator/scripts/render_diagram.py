@@ -1447,8 +1447,16 @@ def render_chart_node(node: NodeLayout) -> str:
         series_count = len(chart["series"])
         point_count = len(chart["series"][0]["points"])
         slot_width = plot_width / max(1, point_count)
-        inter_series_gap = 7.0
-        bar_width = max(8.0, min(13.0, (slot_width - inter_series_gap * (series_count - 1)) / max(1, series_count)))
+        if point_count == 1 and series_count > 1:
+            group_width = plot_width * 0.78
+            inter_series_gap = max(8.0, min(16.0, group_width * 0.06))
+            bar_width = max(
+                12.0,
+                min(20.0, (group_width - inter_series_gap * (series_count - 1)) / max(1, series_count)),
+            )
+        else:
+            inter_series_gap = 7.0
+            bar_width = max(8.0, min(13.0, (slot_width - inter_series_gap * (series_count - 1)) / max(1, series_count)))
         for series in chart["series"]:
             color = chart_color(series["color"], series["index"])
             for point_index, value in enumerate(series["points"]):

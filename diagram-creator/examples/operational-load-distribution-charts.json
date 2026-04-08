@@ -16,7 +16,7 @@
             "id": "bar_lane",
             "direction": "vertical",
             "x_offset": 19,
-            "y_offset": 18,
+            "y_offset": 32,
             "groups": [
               {
                 "type": "sequential",
@@ -89,7 +89,7 @@
             "id": "pie_lane",
             "direction": "vertical",
             "x_offset": 19,
-            "y_offset": 18,
+            "y_offset": -10,
             "groups": [
               {
                 "type": "sequential",
