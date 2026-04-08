@@ -108,10 +108,63 @@ Sequential groups place nodes along the lane direction. Parallel groups place no
 
 - `id`: required unique string within the diagram
 - `label`: required string
-- `type`: required enum: `default`, `process`, `model`, `database`, `user`, `status`
+- `type`: required enum: `default`, `process`, `model`, `database`, `user`, `status`, `chart`
 - `highlight`: optional boolean
+- `chart`: required object when `type` is `chart`
 
 Nodes do not declare their lane directly. Lane membership comes from lane groups.
+
+## Chart node
+
+```json
+{
+  "id": "threshold_chart",
+  "label": "Threshold-based alerting",
+  "type": "chart",
+  "chart": {
+    "kind": "line",
+    "series": [
+      {
+        "id": "metric",
+        "label": "Metric",
+        "points": [20, 65, 40, 78, 52, 83]
+      }
+    ],
+    "reference_lines": [
+      {
+        "id": "threshold",
+        "label": "Threshold",
+        "value": 60,
+        "style": "dashed"
+      }
+    ],
+    "caption": "Repeated crossings produce alert noise."
+  }
+}
+```
+
+- `chart.kind`: required enum: `line`, `area`, `bar`
+- `chart.series`: required non-empty ordered array
+- `chart.series[].id`: required unique string within the chart
+- `chart.series[].label`: required string
+- `chart.series[].points`: required non-empty numeric array
+- `chart.series[].color`: optional string
+- `chart.reference_lines`: optional ordered array
+- `chart.reference_lines[].id`: required unique string within the chart
+- `chart.reference_lines[].label`: optional string
+- `chart.reference_lines[].value`: required number when `points` is omitted
+- `chart.reference_lines[].points`: required numeric array when `value` is omitted
+- `chart.reference_lines[].color`: optional string
+- `chart.reference_lines[].style`: optional enum: `solid`, `dashed`; defaults to `dashed`
+- `chart.y_range`: optional object with numeric `min` and `max`
+- `chart.caption`: optional string
+
+V1 rules:
+
+- all chart series must have the same point count
+- point-based reference lines must match the series point count
+- each reference line must provide exactly one of `value` or `points`
+- pie charts are not supported in v1
 
 ## Connection
 
@@ -152,8 +205,12 @@ Edge labels are not supported.
 - connections must reference existing nodes
 - routes must be one of the supported enums
 - labels and annotation text must be non-empty after trimming
+- chart nodes must define a valid `chart` object
+- chart series must have equal lengths
+- chart `y_range.min` must be less than `chart.y_range.max`
 
 ## Reference examples
 
 - [examples/ingress-gateway-resources.json](../examples/ingress-gateway-resources.json)
 - [examples/ecommerce-checkout-flow.json](../examples/ecommerce-checkout-flow.json)
+- [examples/threshold-vs-slo-chart-alerting.json](../examples/threshold-vs-slo-chart-alerting.json)

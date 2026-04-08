@@ -1,0 +1,126 @@
+{
+  "diagram": {
+    "title": "Threshold vs Multi-Window SLO Alerting",
+    "subtitle": "Compact chart nodes show noisy threshold crossings versus sustained long-window burn",
+    "sections": [
+      {
+        "id": "threshold_alerting",
+        "title": "Threshold-Based Alerting",
+        "subtitle": "A single metric crosses the alert threshold repeatedly",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "threshold_lane",
+            "direction": "vertical",
+            "x_offset": 38,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["threshold_chart"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "threshold_chart",
+            "label": "Metric vs threshold",
+            "type": "chart",
+            "highlight": true,
+            "chart": {
+              "kind": "line",
+              "series": [
+                {
+                  "id": "metric",
+                  "label": "Metric",
+                  "points": [28, 72, 38, 79, 44, 82, 41, 76, 36, 58]
+                }
+              ],
+              "reference_lines": [
+                {
+                  "id": "threshold",
+                  "label": "Threshold",
+                  "value": 60,
+                  "style": "dashed"
+                }
+              ],
+              "caption": "Repeated spikes cause churn and paging friction."
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "text": "The metric bounces above and below the threshold several times even though the issue is not sustained.",
+            "position": "footer"
+          }
+        ]
+      },
+      {
+        "id": "slo_alerting",
+        "title": "Multi-Window SLO Alerting",
+        "subtitle": "A short window oscillates, but the long window stays elevated long enough to matter",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "slo_lane",
+            "direction": "vertical",
+            "x_offset": 38,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["slo_chart"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "slo_chart",
+            "label": "Short and long windows",
+            "type": "chart",
+            "highlight": true,
+            "chart": {
+              "kind": "line",
+              "series": [
+                {
+                  "id": "short_window",
+                  "label": "Short window",
+                  "points": [18, 42, 27, 61, 35, 74, 48, 64, 39, 22],
+                  "color": "#58A6F4"
+                },
+                {
+                  "id": "long_window",
+                  "label": "Long window",
+                  "points": [10, 14, 20, 34, 51, 66, 69, 63, 44, 19],
+                  "color": "#F27A2B"
+                }
+              ],
+              "reference_lines": [
+                {
+                  "id": "slo_trigger",
+                  "label": "SLO trigger",
+                  "value": 55,
+                  "style": "dashed"
+                }
+              ],
+              "caption": "The long window stays high enough to justify intervention."
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "text": "Short windows show volatility, but the long window captures sustained error-budget burn before paging.",
+            "position": "footer"
+          }
+        ]
+      }
+    ],
+    "connections": []
+  }
+}

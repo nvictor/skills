@@ -51,6 +51,9 @@ STATUS_WIDTH = 92
 STATUS_HEIGHT = 42
 SECTION_RADIUS = 18
 NODE_RADIUS = 8
+CHART_WIDTH = 244
+CHART_HEIGHT = 164
+CHART_RADIUS = 12
 SECTION_MIN_WIDTH = 320
 SECTION_MAX_WIDTH = 420
 EDGE_CLEARANCE = 12.0
@@ -60,8 +63,12 @@ GRID_MARGIN = 16.0
 VALID_SECTION_LAYOUTS = {"flow", "comparison", "stack", "grid"}
 VALID_DIRECTIONS = {"horizontal", "vertical"}
 VALID_GROUP_TYPES = {"sequential", "parallel"}
-VALID_NODE_TYPES = {"default", "process", "model", "database", "user", "status"}
+VALID_NODE_TYPES = {"default", "process", "model", "database", "user", "status", "chart"}
 VALID_ROUTES = {"direct", "elbow", "vertical"}
+VALID_CHART_KINDS = {"line", "area", "bar"}
+VALID_REFERENCE_LINE_STYLES = {"solid", "dashed"}
+CHART_SERIES_COLORS = ["#F27A2B", "#58A6F4", "#76C68B", "#C98BFF"]
+CHART_REFERENCE_COLORS = ["#6D685F", "#F06A63", "#58A6F4"]
 
 
 class DiagramError(ValueError):
@@ -90,6 +97,7 @@ class NodeLayout:
     label: str
     node_type: str
     highlight: bool
+    chart: dict[str, Any] | None
     x: float
     y: float
     width: float
@@ -192,6 +200,25 @@ def require_number(obj: dict[str, Any], key: str, default: float = 0.0) -> float
     return float(value)
 
 
+def normalize_optional_string(value: Any, context: str) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise DiagramError(f"{context} must be a non-empty string when provided.")
+    return value.strip()
+
+
+def require_numeric_list(value: Any, context: str) -> list[float]:
+    if not isinstance(value, list) or not value:
+        raise DiagramError(f"{context} must be a non-empty array of numbers.")
+    numbers: list[float] = []
+    for item in value:
+        if isinstance(item, bool) or not isinstance(item, (int, float)):
+            raise DiagramError(f"{context} must contain only numbers.")
+        numbers.append(float(item))
+    return numbers
+
+
 def wrap_label(text: str, width: int = 18) -> list[str]:
     wrapped = textwrap.wrap(text, width=width, break_long_words=False)
     return wrapped[:3] if wrapped else [text]
@@ -210,6 +237,8 @@ def measure_node(node: dict[str, Any]) -> tuple[int, int]:
         return USER_NODE_SIZE, USER_NODE_SIZE
     if node_type == "status":
         return STATUS_WIDTH, STATUS_HEIGHT
+    if node_type == "chart":
+        return CHART_WIDTH, CHART_HEIGHT
     lines = wrap_label(label, 17 if len(label) > 20 else 18)
     max_chars = max(len(line) for line in lines)
     width = max(NODE_MIN_WIDTH, min(NODE_MAX_WIDTH, 30 + max_chars * 7))
@@ -232,6 +261,119 @@ def measure_node_footprint(node: dict[str, Any]) -> tuple[float, float]:
     footprint_width = max(float(width), label_rect.right - label_rect.left)
     footprint_height = max(float(height), label_rect.bottom)
     return footprint_width, footprint_height
+
+
+def validate_chart(node_id: str, chart_obj: Any) -> dict[str, Any]:
+    if not isinstance(chart_obj, dict):
+        raise DiagramError(f"Chart node '{node_id}' must define a 'chart' object.")
+    kind = require_non_empty_string(chart_obj, "kind")
+    if kind not in VALID_CHART_KINDS:
+        raise DiagramError(f"Chart node '{node_id}' has invalid chart kind '{kind}'.")
+
+    series_list = require_list(chart_obj, "series")
+    normalized_series: list[dict[str, Any]] = []
+    expected_length: int | None = None
+    seen_series_ids: set[str] = set()
+    for index, series in enumerate(series_list):
+        if not isinstance(series, dict):
+            raise DiagramError(f"Chart node '{node_id}' series entries must be objects.")
+        series_id = require_non_empty_string(series, "id")
+        if series_id in seen_series_ids:
+            raise DiagramError(f"Chart node '{node_id}' has duplicate series id '{series_id}'.")
+        seen_series_ids.add(series_id)
+        points = require_numeric_list(series.get("points"), f"Chart node '{node_id}' series '{series_id}' points")
+        if expected_length is None:
+            expected_length = len(points)
+        elif len(points) != expected_length:
+            raise DiagramError(f"Chart node '{node_id}' series must all have the same number of points.")
+        normalized_series.append(
+            {
+                "id": series_id,
+                "label": require_non_empty_string(series, "label"),
+                "points": points,
+                "color": normalize_optional_string(
+                    series.get("color"), f"Chart node '{node_id}' series '{series_id}' color"
+                ),
+                "index": index,
+            }
+        )
+
+    reference_lines = chart_obj.get("reference_lines", [])
+    if not isinstance(reference_lines, list):
+        raise DiagramError(f"Chart node '{node_id}' reference_lines must be an array when provided.")
+    normalized_reference_lines: list[dict[str, Any]] = []
+    seen_reference_ids: set[str] = set()
+    for index, reference_line in enumerate(reference_lines):
+        if not isinstance(reference_line, dict):
+            raise DiagramError(f"Chart node '{node_id}' reference_lines entries must be objects.")
+        ref_id = require_non_empty_string(reference_line, "id")
+        if ref_id in seen_reference_ids:
+            raise DiagramError(f"Chart node '{node_id}' has duplicate reference line id '{ref_id}'.")
+        seen_reference_ids.add(ref_id)
+        has_value = "value" in reference_line
+        has_points = "points" in reference_line
+        if has_value == has_points:
+            raise DiagramError(
+                f"Chart node '{node_id}' reference line '{ref_id}' must provide exactly one of 'value' or 'points'."
+            )
+        points: list[float] | None = None
+        value: float | None = None
+        if has_points:
+            points = require_numeric_list(
+                reference_line.get("points"),
+                f"Chart node '{node_id}' reference line '{ref_id}' points",
+            )
+            if expected_length is not None and len(points) != expected_length:
+                raise DiagramError(
+                    f"Chart node '{node_id}' reference line '{ref_id}' points must match the series length."
+                )
+        else:
+            raw_value = reference_line.get("value")
+            if isinstance(raw_value, bool) or not isinstance(raw_value, (int, float)):
+                raise DiagramError(
+                    f"Chart node '{node_id}' reference line '{ref_id}' value must be a number."
+                )
+            value = float(raw_value)
+        style = reference_line.get("style", "dashed")
+        if style not in VALID_REFERENCE_LINE_STYLES:
+            raise DiagramError(
+                f"Chart node '{node_id}' reference line '{ref_id}' has invalid style '{style}'."
+            )
+        normalized_reference_lines.append(
+            {
+                "id": ref_id,
+                "label": normalize_optional_string(
+                    reference_line.get("label"),
+                    f"Chart node '{node_id}' reference line '{ref_id}' label",
+                ),
+                "points": points,
+                "value": value,
+                "color": normalize_optional_string(
+                    reference_line.get("color"), f"Chart node '{node_id}' reference line '{ref_id}' color"
+                ),
+                "style": style,
+                "index": index,
+            }
+        )
+
+    y_range = chart_obj.get("y_range")
+    normalized_y_range: dict[str, float] | None = None
+    if y_range is not None:
+        if not isinstance(y_range, dict):
+            raise DiagramError(f"Chart node '{node_id}' y_range must be an object when provided.")
+        y_min = require_number(y_range, "min")
+        y_max = require_number(y_range, "max")
+        if y_min >= y_max:
+            raise DiagramError(f"Chart node '{node_id}' y_range.min must be less than y_range.max.")
+        normalized_y_range = {"min": y_min, "max": y_max}
+
+    return {
+        "kind": kind,
+        "series": normalized_series,
+        "reference_lines": normalized_reference_lines,
+        "y_range": normalized_y_range,
+        "caption": normalize_optional_string(chart_obj.get("caption"), f"Chart node '{node_id}' caption"),
+    }
 
 
 def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
@@ -290,11 +432,13 @@ def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
             if node_type not in VALID_NODE_TYPES:
                 raise DiagramError(f"Node '{node_id}' has invalid type '{node_type}'.")
             seen_node_ids.add(node_id)
+            chart = validate_chart(node_id, node.get("chart")) if node_type == "chart" else None
             section_node_map[node_id] = {
                 "id": node_id,
                 "label": require_non_empty_string(node, "label"),
                 "type": node_type,
                 "highlight": bool(node.get("highlight", False)),
+                "chart": chart,
             }
             node_to_section[node_id] = section_id
 
@@ -501,6 +645,7 @@ def layout_group(
                 label=node_specs[node_id]["label"],
                 node_type=node_specs[node_id]["type"],
                 highlight=node_specs[node_id]["highlight"],
+                chart=node_specs[node_id].get("chart"),
                 x=node_x,
                 y=node_y,
                 width=width,
@@ -527,6 +672,7 @@ def layout_group(
                 label=node_specs[node_id]["label"],
                 node_type=node_specs[node_id]["type"],
                 highlight=node_specs[node_id]["highlight"],
+                chart=node_specs[node_id].get("chart"),
                 x=node_x,
                 y=node_y,
                 width=width,
@@ -548,6 +694,7 @@ def layout_group(
             label=node_specs[node_id]["label"],
             node_type=node_specs[node_id]["type"],
             highlight=node_specs[node_id]["highlight"],
+            chart=node_specs[node_id].get("chart"),
             x=node_x,
             y=node_y,
             width=width,
@@ -1044,11 +1191,167 @@ def render_status_node(node: NodeLayout) -> str:
     )
 
 
+def chart_color(explicit_color: str | None, index: int, reference: bool = False) -> str:
+    if explicit_color:
+        return explicit_color
+    palette = CHART_REFERENCE_COLORS if reference else CHART_SERIES_COLORS
+    return palette[index % len(palette)]
+
+
+def chart_value_range(chart: dict[str, Any]) -> tuple[float, float]:
+    if chart.get("y_range"):
+        return chart["y_range"]["min"], chart["y_range"]["max"]
+    values: list[float] = []
+    for series in chart["series"]:
+        values.extend(series["points"])
+    for reference_line in chart["reference_lines"]:
+        if reference_line["points"] is not None:
+            values.extend(reference_line["points"])
+        elif reference_line["value"] is not None:
+            values.append(reference_line["value"])
+    y_min = min(values)
+    y_max = max(values)
+    if math.isclose(y_min, y_max):
+        pad = 1.0 if math.isclose(y_min, 0.0) else abs(y_min) * 0.15
+        return y_min - pad, y_max + pad
+    pad = (y_max - y_min) * 0.08
+    return y_min - pad, y_max + pad
+
+
+def chart_point_coordinates(
+    values: list[float],
+    plot_x: float,
+    plot_y: float,
+    plot_width: float,
+    plot_height: float,
+    y_min: float,
+    y_max: float,
+) -> list[tuple[float, float]]:
+    if len(values) == 1:
+        return [(plot_x + plot_width / 2, plot_y + plot_height / 2)]
+    step_x = plot_width / (len(values) - 1)
+    points: list[tuple[float, float]] = []
+    span = y_max - y_min
+    for index, value in enumerate(values):
+        normalized = 0.5 if math.isclose(span, 0.0) else (value - y_min) / span
+        x = plot_x + index * step_x
+        y = plot_y + plot_height - normalized * plot_height
+        points.append((x, y))
+    return points
+
+
+def polyline_path(points: list[tuple[float, float]]) -> str:
+    if not points:
+        return ""
+    commands = [f"M {points[0][0]:.1f} {points[0][1]:.1f}"]
+    commands.extend(f"L {x:.1f} {y:.1f}" for x, y in points[1:])
+    return " ".join(commands)
+
+
+def render_chart_node(node: NodeLayout) -> str:
+    assert node.chart is not None
+    chart = node.chart
+    caption = chart.get("caption")
+    header_h = 28.0
+    legend_h = 18.0
+    caption_h = 18.0 if caption else 0.0
+    chart_pad_x = 14.0
+    chart_pad_y = 12.0
+    plot_x = node.x + chart_pad_x
+    plot_y = node.y + chart_pad_y + header_h + legend_h
+    plot_width = node.width - chart_pad_x * 2
+    plot_height = node.height - (chart_pad_y * 2 + header_h + legend_h + caption_h)
+    plot_bottom = plot_y + plot_height
+    y_min, y_max = chart_value_range(chart)
+
+    fill = "#FFF9F3" if node.highlight else TOKENS["panel"]
+    stroke = TOKENS["accent"] if node.highlight else TOKENS["border"]
+    parts = [
+        f'<rect x="{node.x:.1f}" y="{node.y:.1f}" width="{node.width:.1f}" height="{node.height:.1f}" rx="{CHART_RADIUS}" fill="{fill}" stroke="{stroke}" stroke-width="{1.8 if node.highlight else 1.2}"/>',
+        f'<text x="{node.x + chart_pad_x:.1f}" y="{node.y + chart_pad_y + 12:.1f}" font-family="{FONT_STACK}" font-size="12" font-weight="700" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
+        f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="#FBFAF7" stroke="{TOKENS["border"]}" stroke-width="1"/>',
+        f'<line x1="{plot_x:.1f}" y1="{plot_bottom:.1f}" x2="{plot_x + plot_width:.1f}" y2="{plot_bottom:.1f}" stroke="{TOKENS["border"]}" stroke-width="1"/>',
+    ]
+
+    legend_x = node.x + chart_pad_x
+    legend_y = node.y + chart_pad_y + header_h
+    for index, series in enumerate(chart["series"]):
+        color = chart_color(series["color"], series["index"])
+        parts.append(
+            f'<line x1="{legend_x:.1f}" y1="{legend_y:.1f}" x2="{legend_x + 10:.1f}" y2="{legend_y:.1f}" stroke="{color}" stroke-width="2.4" stroke-linecap="round"/>'
+        )
+        parts.append(
+            f'<text x="{legend_x + 14:.1f}" y="{legend_y + 3:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(series["label"])}</text>'
+        )
+        legend_x += estimate_text_width(series["label"], 10) + 34
+
+    for reference_line in chart["reference_lines"]:
+        ref_color = chart_color(reference_line["color"], reference_line["index"], reference=True)
+        points = (
+            chart_point_coordinates(reference_line["points"], plot_x, plot_y, plot_width, plot_height, y_min, y_max)
+            if reference_line["points"] is not None
+            else chart_point_coordinates(
+                [reference_line["value"]] * len(chart["series"][0]["points"]),
+                plot_x,
+                plot_y,
+                plot_width,
+                plot_height,
+                y_min,
+                y_max,
+            )
+        )
+        dash = ' stroke-dasharray="5 4"' if reference_line["style"] == "dashed" else ""
+        parts.append(
+            f'<path d="{polyline_path(points)}" fill="none" stroke="{ref_color}" stroke-width="1.6"{dash}/>'
+        )
+        if reference_line.get("label"):
+            label_point = points[-1]
+            parts.append(
+                f'<text x="{label_point[0] - 2:.1f}" y="{label_point[1] - 4:.1f}" text-anchor="end" font-family="{FONT_STACK}" font-size="10" font-weight="600" fill="{ref_color}">{escape(reference_line["label"])}</text>'
+            )
+
+    if chart["kind"] == "bar":
+        series_count = len(chart["series"])
+        point_count = len(chart["series"][0]["points"])
+        slot_width = plot_width / max(1, point_count)
+        inner_gap = 4.0
+        bar_width = max(6.0, (slot_width - inner_gap * 2) / max(1, series_count))
+        for series in chart["series"]:
+            color = chart_color(series["color"], series["index"])
+            for point_index, value in enumerate(series["points"]):
+                normalized = 0.5 if math.isclose(y_max - y_min, 0.0) else (value - y_min) / (y_max - y_min)
+                bar_height = max(2.0, normalized * plot_height)
+                x = plot_x + point_index * slot_width + inner_gap + series["index"] * bar_width
+                y = plot_bottom - bar_height
+                parts.append(
+                    f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_width - 2:.1f}" height="{bar_height:.1f}" rx="3" fill="{color}" opacity="0.92"/>'
+                )
+    else:
+        for series in chart["series"]:
+            color = chart_color(series["color"], series["index"])
+            points = chart_point_coordinates(series["points"], plot_x, plot_y, plot_width, plot_height, y_min, y_max)
+            if chart["kind"] == "area":
+                area_path = polyline_path(points)
+                area_path += f" L {points[-1][0]:.1f} {plot_bottom:.1f} L {points[0][0]:.1f} {plot_bottom:.1f} Z"
+                parts.append(f'<path d="{area_path}" fill="{color}" opacity="0.18" stroke="none"/>')
+            parts.append(
+                f'<path d="{polyline_path(points)}" fill="none" stroke="{color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'
+            )
+
+    if caption:
+        parts.append(
+            f'<text x="{node.x + chart_pad_x:.1f}" y="{node.y + node.height - chart_pad_y:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(caption)}</text>'
+        )
+    return "\n".join(parts)
+
+
 def render_node(node: NodeLayout) -> str:
     if node.node_type == "user":
         return render_user_node(node)
     if node.node_type == "status":
         return render_status_node(node)
+    if node.node_type == "chart":
+        return render_chart_node(node)
 
     if node.highlight and node.node_type == "process":
         fill = TOKENS["callout"]

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="764" height="520" viewBox="0 0 764 520" role="img" aria-label="Threshold vs Multi-Window SLO Alerting">
+<defs>
+<filter id="panelShadow" x="-10%" y="-10%" width="120%" height="140%">
+<feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="rgba(0,0,0,0.05)"/>
+</filter>
+<marker id="arrow" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#8E877C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect width="764" height="520" fill="#F7F4EE"/>
+<text x="382.0" y="56" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700" fill="#1F1F1C">Threshold vs Multi-Window SLO Alerting</text>
+<text x="382.0" y="80" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="500" fill="#6D685F">Compact chart nodes show noisy threshold crossings versus sustained long-window burn</text>
+<rect x="42.0" y="126.0" width="330.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
+<text x="207.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Threshold-Based Alerting</text>
+<text x="207.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">A single metric crosses the alert</text>
+<text x="207.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">threshold repeatedly</text>
+<text x="207.0" y="446.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">The metric bounces above and below the</text>
+<text x="207.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">threshold several times even though the</text>
+<text x="207.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">issue is not sustained.</text>
+<rect x="392.0" y="126.0" width="330.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
+<text x="557.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Multi-Window SLO Alerting</text>
+<text x="557.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">A short window oscillates, but the long</text>
+<text x="557.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">window stays elevated long enough to</text>
+<text x="557.0" y="208.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">matter</text>
+<text x="557.0" y="446.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Short windows show volatility, but the</text>
+<text x="557.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">long window captures sustained error-</text>
+<text x="557.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">budget burn before paging.</text>
+<rect x="104.0" y="208.0" width="244.0" height="164.0" rx="12" fill="#FFF9F3" stroke="#F27A2B" stroke-width="1.8"/>
+<text x="118.0" y="232.0" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#1F1F1C">Metric vs threshold</text>
+<rect x="118.0" y="266.0" width="216.0" height="76.0" rx="8" fill="#FBFAF7" stroke="#DAD4CA" stroke-width="1"/>
+<line x1="118.0" y1="342.0" x2="334.0" y2="342.0" stroke="#DAD4CA" stroke-width="1"/>
+<line x1="118.0" y1="248.0" x2="128.0" y2="248.0" stroke="#F27A2B" stroke-width="2.4" stroke-linecap="round"/>
+<text x="132.0" y="251.0" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="500" fill="#6D685F">Metric</text>
+<path d="M 118.0 297.9 L 142.0 297.9 L 166.0 297.9 L 190.0 297.9 L 214.0 297.9 L 238.0 297.9 L 262.0 297.9 L 286.0 297.9 L 310.0 297.9 L 334.0 297.9" fill="none" stroke="#6D685F" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="332.0" y="293.9" text-anchor="end" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="600" fill="#6D685F">Threshold</text>
+<path d="M 118.0 336.8 L 142.0 283.4 L 166.0 324.6 L 190.0 274.9 L 214.0 317.3 L 238.0 271.2 L 262.0 321.0 L 286.0 278.5 L 310.0 327.1 L 334.0 300.4" fill="none" stroke="#F27A2B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="118.0" y="360.0" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="500" fill="#6D685F">Repeated spikes cause churn and paging friction.</text>
+<rect x="454.0" y="208.0" width="244.0" height="164.0" rx="12" fill="#FFF9F3" stroke="#F27A2B" stroke-width="1.8"/>
+<text x="468.0" y="232.0" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#1F1F1C">Short and long windows</text>
+<rect x="468.0" y="266.0" width="216.0" height="76.0" rx="8" fill="#FBFAF7" stroke="#DAD4CA" stroke-width="1"/>
+<line x1="468.0" y1="342.0" x2="684.0" y2="342.0" stroke="#DAD4CA" stroke-width="1"/>
+<line x1="468.0" y1="248.0" x2="478.0" y2="248.0" stroke="#58A6F4" stroke-width="2.4" stroke-linecap="round"/>
+<text x="482.0" y="251.0" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="500" fill="#6D685F">Short window</text>
+<line x1="569.2" y1="248.0" x2="579.2" y2="248.0" stroke="#F27A2B" stroke-width="2.4" stroke-linecap="round"/>
+<text x="583.2" y="251.0" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="500" fill="#6D685F">Long window</text>
+<path d="M 468.0 290.7 L 492.0 290.7 L 516.0 290.7 L 540.0 290.7 L 564.0 290.7 L 588.0 290.7 L 612.0 290.7 L 636.0 290.7 L 660.0 290.7 L 684.0 290.7" fill="none" stroke="#6D685F" stroke-width="1.6" stroke-dasharray="5 4"/>
+<text x="682.0" y="286.7" text-anchor="end" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="600" fill="#6D685F">SLO trigger</text>
+<path d="M 468.0 328.6 L 492.0 304.0 L 516.0 319.4 L 540.0 284.5 L 564.0 311.2 L 588.0 271.2 L 612.0 297.9 L 636.0 281.5 L 660.0 307.1 L 684.0 324.5" fill="none" stroke="#58A6F4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 468.0 336.8 L 492.0 332.7 L 516.0 326.5 L 540.0 312.2 L 564.0 294.8 L 588.0 279.4 L 612.0 276.4 L 636.0 282.5 L 660.0 302.0 L 684.0 327.5" fill="none" stroke="#F27A2B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="468.0" y="360.0" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="500" fill="#6D685F">The long window stays high enough to justify intervention.</text>
+</svg>

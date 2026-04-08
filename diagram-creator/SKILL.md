@@ -17,6 +17,7 @@ Use it when the user wants:
 
 - a polished architecture, workflow, platform, or systems diagram
 - grouped flows, lanes, panels, or comparison layouts
+- compact embedded charts for comparisons or key metrics inside a diagram
 - deterministic SVG that can be regenerated from a source spec
 
 Do not use it when the user explicitly wants:
@@ -80,3 +81,4 @@ python3 scripts/render_diagram.py examples/ecommerce-checkout-flow.json --output
 - Reference examples:
   - [examples/ingress-gateway-resources.json](examples/ingress-gateway-resources.json)
   - [examples/ecommerce-checkout-flow.json](examples/ecommerce-checkout-flow.json)
+  - [examples/threshold-vs-slo-chart-alerting.json](examples/threshold-vs-slo-chart-alerting.json)
