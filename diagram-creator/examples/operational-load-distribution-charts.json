@@ -1,0 +1,155 @@
+{
+  "diagram": {
+    "title": "Operational Load Distribution",
+    "subtitle": "One dataset shown as a bar chart for comparison and a pie chart for share-of-whole",
+    "sections": [
+      {
+        "id": "bar_view",
+        "title": "Bar Chart View",
+        "subtitle": "Good for comparing category magnitudes directly",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "bar_lane",
+            "direction": "vertical",
+            "x_offset": 19,
+            "y_offset": 18,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["bar_distribution"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "bar_distribution",
+            "label": "Interrupt sources by count",
+            "type": "chart",
+            "highlight": true,
+            "chart": {
+              "kind": "bar",
+              "series": [
+                {
+                  "id": "alerts",
+                  "label": "Alert noise",
+                  "points": [42],
+                  "color": "#F27A2B"
+                },
+                {
+                  "id": "deploys",
+                  "label": "Deploy regressions",
+                  "points": [24],
+                  "color": "#58A6F4"
+                },
+                {
+                  "id": "drift",
+                  "label": "Infra drift",
+                  "points": [18],
+                  "color": "#76C68B"
+                },
+                {
+                  "id": "capacity",
+                  "label": "Capacity",
+                  "points": [10],
+                  "color": "#C98BFF"
+                },
+                {
+                  "id": "unknown",
+                  "label": "Unknown",
+                  "points": [6],
+                  "color": "#F06A63"
+                }
+              ],
+              "caption": "Bar charts make it easiest to compare the absolute size of each category."
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "text": "The largest operational load in this sample comes from alert noise, with deploy regressions a distant second.",
+            "position": "footer"
+          }
+        ]
+      },
+      {
+        "id": "pie_view",
+        "title": "Pie Chart View",
+        "subtitle": "Good for showing how much each category contributes to the whole",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "pie_lane",
+            "direction": "vertical",
+            "x_offset": 19,
+            "y_offset": 18,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["pie_distribution"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "pie_distribution",
+            "label": "Interrupt share of total",
+            "type": "chart",
+            "highlight": true,
+            "chart": {
+              "kind": "pie",
+              "series": [
+                {
+                  "id": "alerts",
+                  "label": "Alert noise",
+                  "points": [42],
+                  "color": "#F27A2B"
+                },
+                {
+                  "id": "deploys",
+                  "label": "Deploy regressions",
+                  "points": [24],
+                  "color": "#58A6F4"
+                },
+                {
+                  "id": "drift",
+                  "label": "Infra drift",
+                  "points": [18],
+                  "color": "#76C68B"
+                },
+                {
+                  "id": "capacity",
+                  "label": "Capacity",
+                  "points": [10],
+                  "color": "#C98BFF"
+                },
+                {
+                  "id": "unknown",
+                  "label": "Unknown",
+                  "points": [6],
+                  "color": "#F06A63"
+                }
+              ],
+              "caption": "Pie charts emphasize the overall share captured by each category."
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "text": "The same data reads differently here: alert noise clearly dominates the overall operational burden.",
+            "position": "footer"
+          }
+        ]
+      }
+    ],
+    "connections": []
+  }
+}

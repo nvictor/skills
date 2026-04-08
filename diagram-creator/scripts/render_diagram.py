@@ -53,6 +53,7 @@ SECTION_RADIUS = 18
 NODE_RADIUS = 8
 CHART_WIDTH = 244
 CHART_HEIGHT = 188
+PIE_CHART_HEIGHT = 280
 CHART_RADIUS = 12
 SECTION_MIN_WIDTH = 320
 SECTION_MAX_WIDTH = 420
@@ -65,7 +66,7 @@ VALID_DIRECTIONS = {"horizontal", "vertical"}
 VALID_GROUP_TYPES = {"sequential", "parallel"}
 VALID_NODE_TYPES = {"default", "process", "model", "database", "user", "status", "chart"}
 VALID_ROUTES = {"direct", "elbow", "vertical"}
-VALID_CHART_KINDS = {"line", "area", "bar"}
+VALID_CHART_KINDS = {"line", "area", "bar", "pie"}
 VALID_REFERENCE_LINE_STYLES = {"solid", "dashed"}
 CHART_SERIES_COLORS = ["#F27A2B", "#58A6F4", "#76C68B", "#C98BFF"]
 CHART_REFERENCE_COLORS = ["#6D685F", "#F06A63", "#58A6F4"]
@@ -238,6 +239,8 @@ def measure_node(node: dict[str, Any]) -> tuple[int, int]:
     if node_type == "status":
         return STATUS_WIDTH, STATUS_HEIGHT
     if node_type == "chart":
+        if isinstance(node.get("chart"), dict) and node["chart"].get("kind") == "pie":
+            return CHART_WIDTH, PIE_CHART_HEIGHT
         return CHART_WIDTH, CHART_HEIGHT
     lines = wrap_label(label, 17 if len(label) > 20 else 18)
     max_chars = max(len(line) for line in lines)
@@ -366,6 +369,19 @@ def validate_chart(node_id: str, chart_obj: Any) -> dict[str, Any]:
         if y_min >= y_max:
             raise DiagramError(f"Chart node '{node_id}' y_range.min must be less than y_range.max.")
         normalized_y_range = {"min": y_min, "max": y_max}
+
+    if kind == "pie":
+        if normalized_reference_lines:
+            raise DiagramError(f"Chart node '{node_id}' pie charts do not support reference_lines in v1.")
+        if normalized_y_range is not None:
+            raise DiagramError(f"Chart node '{node_id}' pie charts do not support y_range in v1.")
+        for series in normalized_series:
+            if len(series["points"]) != 1:
+                raise DiagramError(
+                    f"Chart node '{node_id}' pie chart series must each contain exactly one value."
+                )
+            if series["points"][0] < 0:
+                raise DiagramError(f"Chart node '{node_id}' pie chart values must be non-negative.")
 
     return {
         "kind": kind,
@@ -1268,6 +1284,29 @@ def polyline_path(points: list[tuple[float, float]]) -> str:
     return " ".join(commands)
 
 
+def pie_slice_path(cx: float, cy: float, radius: float, start_angle: float, end_angle: float) -> str:
+    x1 = cx + radius * math.cos(start_angle)
+    y1 = cy + radius * math.sin(start_angle)
+    x2 = cx + radius * math.cos(end_angle)
+    y2 = cy + radius * math.sin(end_angle)
+    large_arc = 1 if end_angle - start_angle > math.pi else 0
+    return (
+        f"M {cx:.1f} {cy:.1f} "
+        f"L {x1:.1f} {y1:.1f} "
+        f"A {radius:.1f} {radius:.1f} 0 {large_arc} 1 {x2:.1f} {y2:.1f} Z"
+    )
+
+
+def format_percentage(value: float, total: float) -> str:
+    if math.isclose(total, 0.0):
+        return "0%"
+    percent = (value / total) * 100
+    rounded = round(percent)
+    if math.isclose(percent, rounded, abs_tol=0.05):
+        return f"{rounded:.0f}%"
+    return f"{percent:.1f}%"
+
+
 def render_chart_node(node: NodeLayout) -> str:
     assert node.chart is not None
     chart = node.chart
@@ -1276,18 +1315,25 @@ def render_chart_node(node: NodeLayout) -> str:
     chart_pad_y = 12.0
     text_left = node.x + chart_pad_x
     text_width = node.width - chart_pad_x * 2
+    text_center = node.center_x
     title_lines = wrap_text_to_width(node.label, text_width, max_lines=2)
     title_line_height = 13.0
     title_h = len(title_lines) * title_line_height
+    title_legend_gap = 14.0
 
-    legend_entries = [
-        {
-            "label": series["label"],
-            "color": chart_color(series["color"], series["index"]),
-            "style": "solid",
-        }
-        for series in chart["series"]
-    ]
+    pie_total = sum(series["points"][0] for series in chart["series"]) if chart["kind"] == "pie" else 0.0
+    legend_entries = []
+    for series in chart["series"]:
+        label = series["label"]
+        if chart["kind"] == "pie":
+            label = f"{label} ({format_percentage(series['points'][0], pie_total)})"
+        legend_entries.append(
+            {
+                "label": label,
+                "color": chart_color(series["color"], series["index"]),
+                "style": "solid",
+            }
+        )
     legend_entries.extend(
         {
             "label": reference_line["label"] or reference_line["id"],
@@ -1314,7 +1360,7 @@ def render_chart_node(node: NodeLayout) -> str:
 
     content_top = node.y + chart_pad_y
     plot_x = node.x + chart_pad_x
-    plot_y = content_top + title_h + 8.0 + legend_h + (8.0 if legend_h else 0.0)
+    plot_y = content_top + title_h + title_legend_gap + legend_h + (8.0 if legend_h else 0.0)
     plot_width = node.width - chart_pad_x * 2
     plot_bottom_limit = node.y + node.height - chart_pad_y - (caption_h + (8.0 if caption_h else 0.0))
     plot_height = max(58.0, plot_bottom_limit - plot_y)
@@ -1325,16 +1371,14 @@ def render_chart_node(node: NodeLayout) -> str:
     stroke = TOKENS["accent"] if node.highlight else TOKENS["border"]
     parts = [
         f'<rect x="{node.x:.1f}" y="{node.y:.1f}" width="{node.width:.1f}" height="{node.height:.1f}" rx="{CHART_RADIUS}" fill="{fill}" stroke="{stroke}" stroke-width="{1.8 if node.highlight else 1.2}"/>',
-        f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="#FBFAF7" stroke="{TOKENS["border"]}" stroke-width="1"/>',
-        f'<line x1="{plot_x:.1f}" y1="{plot_bottom:.1f}" x2="{plot_x + plot_width:.1f}" y2="{plot_bottom:.1f}" stroke="{TOKENS["border"]}" stroke-width="1"/>',
     ]
 
     for index, line in enumerate(title_lines):
         parts.append(
-            f'<text x="{text_left:.1f}" y="{content_top + 12 + index * title_line_height:.1f}" font-family="{FONT_STACK}" font-size="12" font-weight="700" fill="{TOKENS["text"]}">{escape(line)}</text>'
+            f'<text x="{text_center:.1f}" y="{content_top + 12 + index * title_line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="12" font-weight="700" fill="{TOKENS["text"]}">{escape(line)}</text>'
         )
 
-    legend_y = content_top + title_h + 8.0
+    legend_y = content_top + title_h + title_legend_gap
     for row_index, row in enumerate(legend_rows):
         legend_x = text_left
         row_y = legend_y + row_index * legend_line_height
@@ -1348,43 +1392,72 @@ def render_chart_node(node: NodeLayout) -> str:
             )
             legend_x += 18.0 + estimate_text_width(entry["label"], 10) + 16.0
 
-    for reference_line in chart["reference_lines"]:
-        ref_color = chart_color(reference_line["color"], reference_line["index"], reference=True)
-        points = (
-            chart_point_coordinates(reference_line["points"], plot_x, plot_y, plot_width, plot_height, y_min, y_max)
-            if reference_line["points"] is not None
-            else chart_point_coordinates(
-                [reference_line["value"]] * len(chart["series"][0]["points"]),
-                plot_x,
-                plot_y,
-                plot_width,
-                plot_height,
-                y_min,
-                y_max,
-            )
-        )
-        dash = ' stroke-dasharray="5 4"' if reference_line["style"] == "dashed" else ""
+    if chart["kind"] == "pie":
         parts.append(
-            f'<path d="{polyline_path(points)}" fill="none" stroke="{ref_color}" stroke-width="1.6"{dash}/>'
+            f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="#FBFAF7" stroke="{TOKENS["border"]}" stroke-width="1"/>'
         )
+        values = [series["points"][0] for series in chart["series"]]
+        total = sum(values) or 1.0
+        radius = min(plot_width, plot_height) / 2 - 3.0
+        cx = plot_x + plot_width / 2
+        cy = plot_y + plot_height / 2
+        angle = -math.pi / 2
+        for series in chart["series"]:
+            value = series["points"][0]
+            sweep = (value / total) * math.tau
+            next_angle = angle + sweep
+            color = chart_color(series["color"], series["index"])
+            if sweep > 0:
+                parts.append(
+                    f'<path d="{pie_slice_path(cx, cy, radius, angle, next_angle)}" fill="{color}" stroke="{TOKENS["panel"]}" stroke-width="1.2" opacity="0.96"/>'
+                )
+            angle = next_angle
+    else:
+        parts.append(
+            f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="#FBFAF7" stroke="{TOKENS["border"]}" stroke-width="1"/>'
+        )
+        parts.append(
+            f'<line x1="{plot_x:.1f}" y1="{plot_bottom:.1f}" x2="{plot_x + plot_width:.1f}" y2="{plot_bottom:.1f}" stroke="{TOKENS["border"]}" stroke-width="1"/>'
+        )
+        for reference_line in chart["reference_lines"]:
+            ref_color = chart_color(reference_line["color"], reference_line["index"], reference=True)
+            points = (
+                chart_point_coordinates(reference_line["points"], plot_x, plot_y, plot_width, plot_height, y_min, y_max)
+                if reference_line["points"] is not None
+                else chart_point_coordinates(
+                    [reference_line["value"]] * len(chart["series"][0]["points"]),
+                    plot_x,
+                    plot_y,
+                    plot_width,
+                    plot_height,
+                    y_min,
+                    y_max,
+                )
+            )
+            dash = ' stroke-dasharray="5 4"' if reference_line["style"] == "dashed" else ""
+            parts.append(
+                f'<path d="{polyline_path(points)}" fill="none" stroke="{ref_color}" stroke-width="1.6"{dash}/>'
+            )
 
     if chart["kind"] == "bar":
         series_count = len(chart["series"])
         point_count = len(chart["series"][0]["points"])
         slot_width = plot_width / max(1, point_count)
-        inner_gap = 4.0
-        bar_width = max(6.0, (slot_width - inner_gap * 2) / max(1, series_count))
+        inter_series_gap = 6.0
+        bar_width = max(6.0, min(10.0, (slot_width - inter_series_gap * (series_count - 1)) / max(1, series_count)))
         for series in chart["series"]:
             color = chart_color(series["color"], series["index"])
             for point_index, value in enumerate(series["points"]):
                 normalized = 0.5 if math.isclose(y_max - y_min, 0.0) else (value - y_min) / (y_max - y_min)
                 bar_height = max(2.0, normalized * plot_height)
-                x = plot_x + point_index * slot_width + inner_gap + series["index"] * bar_width
+                group_width = series_count * bar_width + (series_count - 1) * inter_series_gap
+                group_x = plot_x + point_index * slot_width + max(0.0, (slot_width - group_width) / 2)
+                x = group_x + series["index"] * (bar_width + inter_series_gap)
                 y = plot_bottom - bar_height
                 parts.append(
-                    f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_width - 2:.1f}" height="{bar_height:.1f}" rx="3" fill="{color}" opacity="0.92"/>'
+                    f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_width:.1f}" height="{bar_height:.1f}" rx="3" fill="{color}" opacity="0.92"/>'
                 )
-    else:
+    elif chart["kind"] != "pie":
         for series in chart["series"]:
             color = chart_color(series["color"], series["index"])
             points = chart_point_coordinates(series["points"], plot_x, plot_y, plot_width, plot_height, y_min, y_max)
@@ -1400,7 +1473,7 @@ def render_chart_node(node: NodeLayout) -> str:
         caption_y = plot_bottom + 16.0
         for index, line in enumerate(caption_lines):
             parts.append(
-                f'<text x="{text_left:.1f}" y="{caption_y + index * caption_line_height:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(line)}</text>'
+                f'<text x="{text_center:.1f}" y="{caption_y + index * caption_line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(line)}</text>'
             )
     return "\n".join(parts)
 

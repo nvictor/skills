@@ -143,7 +143,7 @@ Nodes do not declare their lane directly. Lane membership comes from lane groups
 }
 ```
 
-- `chart.kind`: required enum: `line`, `area`, `bar`
+- `chart.kind`: required enum: `line`, `area`, `bar`, `pie`
 - `chart.series`: required non-empty ordered array
 - `chart.series[].id`: required unique string within the chart
 - `chart.series[].label`: required string
@@ -164,7 +164,8 @@ V1 rules:
 - all chart series must have the same point count
 - point-based reference lines must match the series point count
 - each reference line must provide exactly one of `value` or `points`
-- pie charts are not supported in v1
+- pie charts use one value per series, where each series label becomes a slice label
+- pie charts do not support `reference_lines` or `y_range` in v1
 
 ## Connection
 
