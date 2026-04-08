@@ -52,7 +52,7 @@ STATUS_HEIGHT = 42
 SECTION_RADIUS = 18
 NODE_RADIUS = 8
 CHART_WIDTH = 244
-CHART_HEIGHT = 164
+CHART_HEIGHT = 188
 CHART_RADIUS = 12
 SECTION_MIN_WIDTH = 320
 SECTION_MAX_WIDTH = 420
@@ -930,6 +930,26 @@ def node_text_obstacles(nodes: dict[str, NodeLayout]) -> list[tuple[str, Rect]]:
                     ),
                 )
             )
+        if node.node_type == "chart":
+            chart_pad_x = 14.0
+            chart_pad_y = 12.0
+            title_width = node.width - chart_pad_x * 2
+            title_lines = wrap_text_to_width(node.label, title_width, max_lines=2)
+            for index, line in enumerate(title_lines):
+                baseline_y = node.y + chart_pad_y + 12 + index * 13
+                obstacles.append(
+                    (
+                        f"chart_title:{node.node_id}:{index}",
+                        centered_text_rect(
+                            node.x + node.width / 2,
+                            baseline_y,
+                            line,
+                            12,
+                            padding_x=6.0,
+                            padding_y=4.0,
+                        ),
+                    )
+                )
     return obstacles
 
 
@@ -1252,15 +1272,52 @@ def render_chart_node(node: NodeLayout) -> str:
     assert node.chart is not None
     chart = node.chart
     caption = chart.get("caption")
-    header_h = 28.0
-    legend_h = 18.0
-    caption_h = 18.0 if caption else 0.0
     chart_pad_x = 14.0
     chart_pad_y = 12.0
+    text_left = node.x + chart_pad_x
+    text_width = node.width - chart_pad_x * 2
+    title_lines = wrap_text_to_width(node.label, text_width, max_lines=2)
+    title_line_height = 13.0
+    title_h = len(title_lines) * title_line_height
+
+    legend_entries = [
+        {
+            "label": series["label"],
+            "color": chart_color(series["color"], series["index"]),
+            "style": "solid",
+        }
+        for series in chart["series"]
+    ]
+    legend_entries.extend(
+        {
+            "label": reference_line["label"] or reference_line["id"],
+            "color": chart_color(reference_line["color"], reference_line["index"], reference=True),
+            "style": reference_line["style"],
+        }
+        for reference_line in chart["reference_lines"]
+    )
+    legend_rows: list[list[dict[str, str]]] = [[]]
+    legend_row_width = 0.0
+    for entry in legend_entries:
+        entry_width = 18.0 + estimate_text_width(entry["label"], 10)
+        if legend_rows[-1] and legend_row_width + entry_width > text_width:
+            legend_rows.append([])
+            legend_row_width = 0.0
+        legend_rows[-1].append(entry)
+        legend_row_width += entry_width + 16.0
+    legend_line_height = 14.0
+    legend_h = len(legend_rows) * legend_line_height if legend_entries else 0.0
+
+    caption_lines = wrap_text_to_width(caption, text_width, max_lines=3) if caption else []
+    caption_line_height = 12.0
+    caption_h = len(caption_lines) * caption_line_height if caption_lines else 0.0
+
+    content_top = node.y + chart_pad_y
     plot_x = node.x + chart_pad_x
-    plot_y = node.y + chart_pad_y + header_h + legend_h
+    plot_y = content_top + title_h + 8.0 + legend_h + (8.0 if legend_h else 0.0)
     plot_width = node.width - chart_pad_x * 2
-    plot_height = node.height - (chart_pad_y * 2 + header_h + legend_h + caption_h)
+    plot_bottom_limit = node.y + node.height - chart_pad_y - (caption_h + (8.0 if caption_h else 0.0))
+    plot_height = max(58.0, plot_bottom_limit - plot_y)
     plot_bottom = plot_y + plot_height
     y_min, y_max = chart_value_range(chart)
 
@@ -1268,22 +1325,28 @@ def render_chart_node(node: NodeLayout) -> str:
     stroke = TOKENS["accent"] if node.highlight else TOKENS["border"]
     parts = [
         f'<rect x="{node.x:.1f}" y="{node.y:.1f}" width="{node.width:.1f}" height="{node.height:.1f}" rx="{CHART_RADIUS}" fill="{fill}" stroke="{stroke}" stroke-width="{1.8 if node.highlight else 1.2}"/>',
-        f'<text x="{node.x + chart_pad_x:.1f}" y="{node.y + chart_pad_y + 12:.1f}" font-family="{FONT_STACK}" font-size="12" font-weight="700" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
         f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="#FBFAF7" stroke="{TOKENS["border"]}" stroke-width="1"/>',
         f'<line x1="{plot_x:.1f}" y1="{plot_bottom:.1f}" x2="{plot_x + plot_width:.1f}" y2="{plot_bottom:.1f}" stroke="{TOKENS["border"]}" stroke-width="1"/>',
     ]
 
-    legend_x = node.x + chart_pad_x
-    legend_y = node.y + chart_pad_y + header_h
-    for index, series in enumerate(chart["series"]):
-        color = chart_color(series["color"], series["index"])
+    for index, line in enumerate(title_lines):
         parts.append(
-            f'<line x1="{legend_x:.1f}" y1="{legend_y:.1f}" x2="{legend_x + 10:.1f}" y2="{legend_y:.1f}" stroke="{color}" stroke-width="2.4" stroke-linecap="round"/>'
+            f'<text x="{text_left:.1f}" y="{content_top + 12 + index * title_line_height:.1f}" font-family="{FONT_STACK}" font-size="12" font-weight="700" fill="{TOKENS["text"]}">{escape(line)}</text>'
         )
-        parts.append(
-            f'<text x="{legend_x + 14:.1f}" y="{legend_y + 3:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(series["label"])}</text>'
-        )
-        legend_x += estimate_text_width(series["label"], 10) + 34
+
+    legend_y = content_top + title_h + 8.0
+    for row_index, row in enumerate(legend_rows):
+        legend_x = text_left
+        row_y = legend_y + row_index * legend_line_height
+        for entry in row:
+            dash = ' stroke-dasharray="5 4"' if entry["style"] == "dashed" else ""
+            parts.append(
+                f'<line x1="{legend_x:.1f}" y1="{row_y:.1f}" x2="{legend_x + 10:.1f}" y2="{row_y:.1f}" stroke="{entry["color"]}" stroke-width="2.2" stroke-linecap="round"{dash}/>'
+            )
+            parts.append(
+                f'<text x="{legend_x + 14:.1f}" y="{row_y + 3:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(entry["label"])}</text>'
+            )
+            legend_x += 18.0 + estimate_text_width(entry["label"], 10) + 16.0
 
     for reference_line in chart["reference_lines"]:
         ref_color = chart_color(reference_line["color"], reference_line["index"], reference=True)
@@ -1304,11 +1367,6 @@ def render_chart_node(node: NodeLayout) -> str:
         parts.append(
             f'<path d="{polyline_path(points)}" fill="none" stroke="{ref_color}" stroke-width="1.6"{dash}/>'
         )
-        if reference_line.get("label"):
-            label_point = points[-1]
-            parts.append(
-                f'<text x="{label_point[0] - 2:.1f}" y="{label_point[1] - 4:.1f}" text-anchor="end" font-family="{FONT_STACK}" font-size="10" font-weight="600" fill="{ref_color}">{escape(reference_line["label"])}</text>'
-            )
 
     if chart["kind"] == "bar":
         series_count = len(chart["series"])
@@ -1338,10 +1396,12 @@ def render_chart_node(node: NodeLayout) -> str:
                 f'<path d="{polyline_path(points)}" fill="none" stroke="{color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'
             )
 
-    if caption:
-        parts.append(
-            f'<text x="{node.x + chart_pad_x:.1f}" y="{node.y + node.height - chart_pad_y:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(caption)}</text>'
-        )
+    if caption_lines:
+        caption_y = plot_bottom + 16.0
+        for index, line in enumerate(caption_lines):
+            parts.append(
+                f'<text x="{text_left:.1f}" y="{caption_y + index * caption_line_height:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(line)}</text>'
+            )
     return "\n".join(parts)
 
 

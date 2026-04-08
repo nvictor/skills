@@ -15,7 +15,7 @@
           {
             "id": "threshold_lane",
             "direction": "vertical",
-            "x_offset": 38,
+            "x_offset": 19,
             "groups": [
               {
                 "type": "sequential",
@@ -70,7 +70,7 @@
           {
             "id": "slo_lane",
             "direction": "vertical",
-            "x_offset": 38,
+            "x_offset": 19,
             "groups": [
               {
                 "type": "sequential",

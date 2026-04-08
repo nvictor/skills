@@ -78,7 +78,4 @@ python3 scripts/render_diagram.py examples/ecommerce-checkout-flow.json --output
 
 - DSL and schema: [references/diagram-dsl.md](references/diagram-dsl.md)
 - House style and layout rules: [references/style-system.md](references/style-system.md)
-- Reference examples:
-  - [examples/ingress-gateway-resources.json](examples/ingress-gateway-resources.json)
-  - [examples/ecommerce-checkout-flow.json](examples/ecommerce-checkout-flow.json)
-  - [examples/threshold-vs-slo-chart-alerting.json](examples/threshold-vs-slo-chart-alerting.json)
+- Reference examples: [examples/](examples)
