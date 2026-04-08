@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1204" height="520" viewBox="0 0 1204 520" role="img" aria-label="Terraform Pub/Sub Topic and Subscription Relationship">
+<defs>
+<filter id="panelShadow" x="-10%" y="-10%" width="120%" height="140%">
+<feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="rgba(0,0,0,0.05)"/>
+</filter>
+<marker id="arrow" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#8E877C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect width="1204" height="520" fill="#F7F4EE"/>
+<text x="602.0" y="56" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700" fill="#1F1F1C">Terraform Pub/Sub Topic and Subscription Relationship</text>
+<text x="602.0" y="80" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="500" fill="#6D685F">Publishers send to a topic, and one topic can fan out to multiple subscriptions managed by Terraform</text>
+<rect x="42.0" y="126.0" width="320.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
+<text x="202.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Publishers</text>
+<text x="202.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Applications publish messages to a</text>
+<text x="202.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">single topic</text>
+<text x="202.0" y="446.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">The topic resource defines the</text>
+<text x="202.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Pub/Sub topic that producers publish</text>
+<text x="202.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">into.</text>
+<rect x="382.0" y="126.0" width="420.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
+<text x="592.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Subscriptions</text>
+<text x="592.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Each subscription resource points at one topic, and</text>
+<text x="592.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">one topic may have many subscriptions</text>
+<text x="592.0" y="446.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Subscriptions configure delivery behavior such as</text>
+<text x="592.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">ack deadlines, retention, filters, dead-lettering,</text>
+<text x="592.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">and push or pull delivery.</text>
+<rect x="822.0" y="126.0" width="340.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
+<text x="992.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Consumers</text>
+<text x="992.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Applications receive from subscriptions,</text>
+<text x="992.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">not directly from the topic</text>
+<text x="992.0" y="446.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Consumers read from subscriptions so</text>
+<text x="992.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">each subscriber group can manage its own</text>
+<text x="992.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">delivery semantics independently.</text>
+<path d="M 233.3 246.0 L 109.8 246.0 Q 99.8 246.0 99.8 256.0 L 99.8 338.4 Q 99.8 346.9 108.3 346.9 L 116.8 346.9" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 280.8 346.9 L 289.8 346.9 Q 298.8 346.9 298.8 337.9 L 298.8 259.0 Q 298.8 249.0 308.8 249.0 L 405.0 249.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 280.8 346.9 L 290.8 346.9 Q 298.8 346.9 298.8 338.9 L 298.8 338.9 Q 298.8 331.0 306.7 331.0 L 613.0 331.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 596.0 249.0 L 845.0 249.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 804.0 331.0 L 1019.0 331.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<circle cx="199.3" cy="246.0" r="34.0" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.4"/>
+<circle cx="199.3" cy="238.0" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>
+<path d="M 187.3 259.0 C 189.3 248.0, 209.3 248.0, 211.3 259.0" fill="none" stroke="#35C89B" stroke-width="2"/>
+<text x="199.3" y="298.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">Publisher app / service</text>
+<rect x="406.0" y="226.0" width="190.0" height="46.0" rx="8" fill="#EAF4FF" stroke="#58A6F4" stroke-width="2"/>
+<text x="501.0" y="245.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">google_pubsub_subscription</text>
+<text x="501.0" y="260.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">(pull)</text>
+<rect x="846.0" y="226.0" width="156.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="924.0" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Subscriber workers</text>
+<rect x="614.0" y="308.0" width="190.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="709.0" y="327.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">google_pubsub_subscription</text>
+<text x="709.0" y="342.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">(push)</text>
+<rect x="1020.0" y="308.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="1079.0" y="327.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">HTTPS push</text>
+<text x="1079.0" y="342.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">endpoint</text>
+<rect x="117.8" y="323.9" width="163.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
+<text x="199.3" y="350.9" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">google_pubsub_topic</text>
+</svg>
