@@ -1,0 +1,134 @@
+{
+  "diagram": {
+    "title": "AJAX vs SSE",
+    "subtitle": "AJAX is request/response driven, while SSE keeps one HTTP stream open for server-to-client updates",
+    "sections": [
+      {
+        "id": "ajax",
+        "title": "AJAX",
+        "subtitle": "Client asks for data each time it needs an update",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "ajax_flow",
+            "title": "Transport flow",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": [
+                  "ajax_client",
+                  "ajax_request",
+                  "ajax_server",
+                  "ajax_response"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "ajax_characteristics",
+            "title": "Operational behavior",
+            "direction": "vertical",
+            "x_offset": 20,
+            "y_offset": 66,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": [
+                  "ajax_repeat",
+                  "ajax_best_for"
+                ]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "ajax_client", "label": "Browser client", "type": "user" },
+          { "id": "ajax_request", "label": "HTTP request via XHR or fetch", "type": "process", "highlight": true },
+          { "id": "ajax_server", "label": "Server handles one request", "type": "default" },
+          { "id": "ajax_response", "label": "One response returns data", "type": "status" },
+          { "id": "ajax_repeat", "label": "New update needs another request or polling cycle", "type": "default" },
+          { "id": "ajax_best_for", "label": "Good for forms, CRUD, search, and on-demand fetches", "type": "default" }
+        ],
+        "annotations": [
+          {
+            "text": "AJAX fits interactions where the client decides when to ask for data, but frequent updates add request overhead and polling latency.",
+            "position": "footer"
+          }
+        ]
+      },
+      {
+        "id": "sse",
+        "title": "SSE",
+        "subtitle": "Client opens one stream and the server pushes events over time",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "sse_flow",
+            "title": "Transport flow",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": [
+                  "sse_client",
+                  "sse_open",
+                  "sse_server",
+                  "sse_stream"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "sse_characteristics",
+            "title": "Operational behavior",
+            "direction": "vertical",
+            "x_offset": 20,
+            "y_offset": 66,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": [
+                  "sse_push",
+                  "sse_best_for"
+                ]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "sse_client", "label": "Browser client", "type": "user" },
+          { "id": "sse_open", "label": "Open EventSource HTTP connection", "type": "process", "highlight": true },
+          { "id": "sse_server", "label": "Server keeps stream open", "type": "default" },
+          { "id": "sse_stream", "label": "Server pushes text/event-stream messages", "type": "status" },
+          { "id": "sse_push", "label": "Updates arrive continuously without repeated requests", "type": "default" },
+          { "id": "sse_best_for", "label": "Good for dashboards, notifications, feeds, and live logs", "type": "default" }
+        ],
+        "annotations": [
+          {
+            "text": "SSE is ideal when updates flow mainly from server to browser, trading bidirectional flexibility for a simpler real-time stream over plain HTTP.",
+            "position": "footer"
+          }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "ajax_client", "to": "ajax_request", "route": "vertical" },
+      { "from": "ajax_request", "to": "ajax_server", "route": "vertical" },
+      { "from": "ajax_server", "to": "ajax_response", "route": "vertical" },
+      { "from": "ajax_response", "to": "ajax_repeat", "route": "direct" },
+      { "from": "ajax_repeat", "to": "ajax_best_for", "route": "vertical" },
+      { "from": "sse_client", "to": "sse_open", "route": "vertical" },
+      { "from": "sse_open", "to": "sse_server", "route": "vertical" },
+      { "from": "sse_server", "to": "sse_stream", "route": "vertical" },
+      { "from": "sse_stream", "to": "sse_push", "route": "direct" },
+      { "from": "sse_push", "to": "sse_best_for", "route": "vertical" }
+    ]
+  }
+}

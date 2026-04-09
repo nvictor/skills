@@ -47,7 +47,8 @@ NODE_MAX_WIDTH = 190
 USER_NODE_SIZE = 68
 USER_LABEL_BASELINE_OFFSET = 18
 USER_LABEL_FONT_SIZE = 12
-STATUS_WIDTH = 92
+STATUS_MIN_WIDTH = 92
+STATUS_MAX_WIDTH = 180
 STATUS_HEIGHT = 42
 SECTION_RADIUS = 18
 NODE_RADIUS = 8
@@ -239,7 +240,11 @@ def measure_node(node: dict[str, Any]) -> tuple[int, int]:
     if node_type == "user":
         return USER_NODE_SIZE, USER_NODE_SIZE
     if node_type == "status":
-        return STATUS_WIDTH, STATUS_HEIGHT
+        lines = wrap_label(label, 16 if len(label) > 18 else 18)
+        max_chars = max(len(line) for line in lines)
+        width = max(STATUS_MIN_WIDTH, min(STATUS_MAX_WIDTH, 28 + max_chars * 7))
+        height = STATUS_HEIGHT if len(lines) == 1 else STATUS_HEIGHT + (len(lines) - 1) * 14
+        return width, height
     if node_type == "chart":
         if isinstance(node.get("chart"), dict) and node["chart"].get("kind") == "pie":
             return CHART_WIDTH, PIE_CHART_HEIGHT
@@ -1221,12 +1226,17 @@ def render_status_node(node: NodeLayout) -> str:
     fill = TOKENS["ok"] if node.highlight else "#FDE3E1"
     stroke = "#5CAD73" if node.highlight else TOKENS["danger"]
     text = "#2C6C3C" if node.highlight else "#C94F48"
-    return "\n".join(
-        [
-            f'<rect x="{node.x:.1f}" y="{node.y:.1f}" width="{node.width:.1f}" height="{node.height:.1f}" rx="8" fill="{fill}" stroke="{stroke}" stroke-width="1.6"/>',
-            f'<text x="{node.center_x:.1f}" y="{node.center_y + 4:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="13" font-weight="600" fill="{text}">{escape(node.label)}</text>',
-        ]
-    )
+    lines = wrap_label(node.label, 16 if len(node.label) > 18 else 18)
+    line_height = 15
+    first_baseline = node.center_y + 4 - ((len(lines) - 1) * line_height) / 2
+    parts = [
+        f'<rect x="{node.x:.1f}" y="{node.y:.1f}" width="{node.width:.1f}" height="{node.height:.1f}" rx="8" fill="{fill}" stroke="{stroke}" stroke-width="1.6"/>'
+    ]
+    for idx, line in enumerate(lines):
+        parts.append(
+            f'<text x="{node.center_x:.1f}" y="{first_baseline + idx * line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="13" font-weight="600" fill="{text}">{escape(line)}</text>'
+        )
+    return "\n".join(parts)
 
 
 def chart_color(explicit_color: str | None, index: int, reference: bool = False) -> str:
