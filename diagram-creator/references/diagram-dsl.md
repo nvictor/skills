@@ -108,7 +108,7 @@ Sequential groups place nodes along the lane direction. Parallel groups place no
 
 - `id`: required unique string within the diagram
 - `label`: required string
-- `type`: required enum: `default`, `process`, `model`, `database`, `user`, `status`, `chart`
+- `type`: required enum: `default`, `process`, `model`, `database`, `user`, `storage`, `cloud`, `security`, `status`, `chart`
 - `highlight`: optional boolean
 - `chart`: required object when `type` is `chart`
 

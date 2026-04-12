@@ -1,0 +1,41 @@
+{
+  "diagram": {
+    "title": "Canonical Semantic Pictograms",
+    "subtitle": "Reference shapes for people, cloud systems, storage, and security",
+    "sections": [
+      {
+        "id": "pictograms",
+        "title": "Semantic Nodes",
+        "subtitle": "Use these badge-style pictograms when the node type itself carries meaning",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "pictogram_lane",
+            "direction": "horizontal",
+            "x_offset": 8,
+            "y_offset": 28,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["actor", "cloud_runtime", "data_store", "policy_guard"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "actor", "label": "User", "type": "user" },
+          { "id": "cloud_runtime", "label": "Cloud", "type": "cloud" },
+          { "id": "data_store", "label": "Storage", "type": "storage" },
+          { "id": "policy_guard", "label": "Security", "type": "security" }
+        ],
+        "annotations": [
+          { "text": "A simple visual reference for the canonical non-rectangular node shapes.", "position": "footer" }
+        ]
+      }
+    ],
+    "connections": []
+  }
+}

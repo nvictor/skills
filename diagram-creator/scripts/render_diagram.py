@@ -45,8 +45,11 @@ NODE_HEIGHT = 46
 NODE_MIN_WIDTH = 118
 NODE_MAX_WIDTH = 190
 USER_NODE_SIZE = 68
-USER_LABEL_BASELINE_OFFSET = 18
-USER_LABEL_FONT_SIZE = 12
+STORAGE_NODE_SIZE = 68
+CLOUD_NODE_SIZE = 68
+SECURITY_NODE_SIZE = 68
+BADGE_LABEL_BASELINE_OFFSET = 18
+BADGE_LABEL_FONT_SIZE = 12
 STATUS_MIN_WIDTH = 92
 STATUS_MAX_WIDTH = 180
 STATUS_HEIGHT = 42
@@ -67,12 +70,30 @@ GRID_MARGIN = 16.0
 VALID_SECTION_LAYOUTS = {"flow", "comparison", "stack", "grid"}
 VALID_DIRECTIONS = {"horizontal", "vertical"}
 VALID_GROUP_TYPES = {"sequential", "parallel"}
-VALID_NODE_TYPES = {"default", "process", "model", "database", "user", "status", "chart"}
+VALID_NODE_TYPES = {
+    "default",
+    "process",
+    "model",
+    "database",
+    "user",
+    "storage",
+    "cloud",
+    "security",
+    "status",
+    "chart",
+}
 VALID_ROUTES = {"direct", "elbow", "vertical"}
 VALID_CHART_KINDS = {"line", "area", "bar", "pie"}
 VALID_REFERENCE_LINE_STYLES = {"solid", "dashed"}
 CHART_SERIES_COLORS = ["#F27A2B", "#58A6F4", "#76C68B", "#C98BFF"]
 CHART_REFERENCE_COLORS = ["#6D685F", "#F06A63", "#58A6F4"]
+BADGE_NODE_SIZES = {
+    "user": USER_NODE_SIZE,
+    "storage": STORAGE_NODE_SIZE,
+    "cloud": CLOUD_NODE_SIZE,
+    "security": SECURITY_NODE_SIZE,
+}
+BADGE_NODE_TYPES = set(BADGE_NODE_SIZES)
 
 
 class DiagramError(ValueError):
@@ -237,8 +258,9 @@ def wrap_text_to_width(text: str, pixel_width: float, max_lines: int = 3) -> lis
 def measure_node(node: dict[str, Any]) -> tuple[int, int]:
     node_type = node["type"]
     label = node["label"]
-    if node_type == "user":
-        return USER_NODE_SIZE, USER_NODE_SIZE
+    if node_type in BADGE_NODE_TYPES:
+        size = BADGE_NODE_SIZES[node_type]
+        return size, size
     if node_type == "status":
         lines = wrap_label(label, 16 if len(label) > 18 else 18)
         max_chars = max(len(line) for line in lines)
@@ -257,14 +279,14 @@ def measure_node(node: dict[str, Any]) -> tuple[int, int]:
 
 def measure_node_footprint(node: dict[str, Any]) -> tuple[float, float]:
     width, height = measure_node(node)
-    if node["type"] != "user":
+    if node["type"] not in BADGE_NODE_TYPES:
         return float(width), float(height)
 
     label_rect = centered_text_rect(
         0.0,
-        USER_NODE_SIZE + USER_LABEL_BASELINE_OFFSET,
+        height + BADGE_LABEL_BASELINE_OFFSET,
         node["label"],
-        USER_LABEL_FONT_SIZE,
+        BADGE_LABEL_FONT_SIZE,
         padding_x=8.0,
         padding_y=5.0,
     )
@@ -801,6 +823,29 @@ def layout_diagram(diagram: dict[str, Any]) -> tuple[list[SectionLayout], dict[s
         max_height = max(max_height, section_height)
 
     total_width = int(x_cursor - SECTION_GAP + CANVAS_PAD_X)
+    title_rect = centered_text_rect(0.0, 56.0, diagram["title"], 32, padding_x=12.0, padding_y=8.0)
+    total_width = max(total_width, int(math.ceil(title_rect.right - title_rect.left + CANVAS_PAD_X * 2)))
+    if diagram.get("subtitle"):
+        subtitle_rect = centered_text_rect(
+            0.0,
+            80.0,
+            diagram["subtitle"],
+            14,
+            padding_x=10.0,
+            padding_y=6.0,
+        )
+        total_width = max(total_width, int(math.ceil(subtitle_rect.right - subtitle_rect.left + CANVAS_PAD_X * 2)))
+    if section_layouts:
+        content_left = min(section.x for section in section_layouts)
+        content_right = max(section.x + section.width for section in section_layouts)
+        content_width = content_right - content_left
+        centered_left = (total_width - content_width) / 2
+        x_shift = centered_left - content_left
+        if abs(x_shift) > 0.01:
+            for section in section_layouts:
+                section.x += x_shift
+            for node in node_layouts.values():
+                node.x += x_shift
     total_height = int(CANVAS_PAD_Y + TITLE_BLOCK_H + max_height + CANVAS_PAD_Y)
     return section_layouts, node_layouts, total_width, total_height
 
@@ -810,7 +855,7 @@ def candidate_port_sides(source: NodeLayout, target: NodeLayout, route: str) -> 
         if target.center_y >= source.center_y:
             return [("bottom", "top"), ("right", "left"), ("left", "right")]
         return [("top", "bottom"), ("right", "left"), ("left", "right")]
-    if route == "vertical" and (source.node_type == "user" or target.node_type == "user"):
+    if route == "vertical" and (source.node_type in BADGE_NODE_TYPES or target.node_type in BADGE_NODE_TYPES):
         if target.center_y >= source.center_y:
             return [("right", "left"), ("left", "right"), ("bottom", "top")]
         return [("right", "left"), ("left", "right"), ("top", "bottom")]
@@ -939,15 +984,15 @@ def section_text_obstacles(section: SectionLayout) -> list[tuple[str, Rect]]:
 def node_text_obstacles(nodes: dict[str, NodeLayout]) -> list[tuple[str, Rect]]:
     obstacles: list[tuple[str, Rect]] = []
     for node in nodes.values():
-        if node.node_type == "user":
+        if node.node_type in BADGE_NODE_TYPES:
             obstacles.append(
                 (
                     f"node_label:{node.node_id}",
                     centered_text_rect(
                         node.center_x,
-                        node.bottom + USER_LABEL_BASELINE_OFFSET,
+                        node.bottom + BADGE_LABEL_BASELINE_OFFSET,
                         node.label,
-                        USER_LABEL_FONT_SIZE,
+                        BADGE_LABEL_FONT_SIZE,
                         padding_x=8.0,
                         padding_y=5.0,
                     ),
@@ -1208,18 +1253,102 @@ def render_section(section: SectionLayout) -> str:
     return "\n".join(parts)
 
 
-def render_user_node(node: NodeLayout) -> str:
+def render_badge_shell(node: NodeLayout) -> list[str]:
     cx = node.center_x
     cy = node.center_y
     r = node.width / 2
-    return "\n".join(
-        [
-            f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{TOKENS["panel"]}" stroke="{TOKENS["border"]}" stroke-width="1.4"/>',
-            f'<circle cx="{cx:.1f}" cy="{cy - 8:.1f}" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>',
-            f'<path d="M {cx - 12:.1f} {cy + 13:.1f} C {cx - 10:.1f} {cy + 2:.1f}, {cx + 10:.1f} {cy + 2:.1f}, {cx + 12:.1f} {cy + 13:.1f}" fill="none" stroke="#35C89B" stroke-width="2"/>',
-            f'<text x="{cx:.1f}" y="{node.bottom + USER_LABEL_BASELINE_OFFSET:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="{USER_LABEL_FONT_SIZE}" font-weight="500" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
-        ]
+    return [
+        f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{TOKENS["panel"]}" stroke="{TOKENS["border"]}" stroke-width="1.4"/>',
+        f'<text x="{cx:.1f}" y="{node.bottom + BADGE_LABEL_BASELINE_OFFSET:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="{BADGE_LABEL_FONT_SIZE}" font-weight="500" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
+    ]
+
+
+def render_user_node(node: NodeLayout) -> str:
+    cx = node.center_x
+    cy = node.center_y
+    parts = render_badge_shell(node)
+    parts.insert(
+        1,
+        f'<circle cx="{cx:.1f}" cy="{cy - 8:.1f}" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>',
     )
+    parts.insert(
+        2,
+        f'<path d="M {cx - 12:.1f} {cy + 13:.1f} C {cx - 10:.1f} {cy + 2:.1f}, {cx + 10:.1f} {cy + 2:.1f}, {cx + 12:.1f} {cy + 13:.1f}" fill="none" stroke="#35C89B" stroke-width="2"/>',
+    )
+    return "\n".join(parts)
+
+
+def render_storage_node(node: NodeLayout) -> str:
+    cx = node.center_x
+    cy = node.center_y
+    left = cx - 14
+    right = cx + 14
+    top = cy - 12
+    bottom = cy + 12
+    parts = render_badge_shell(node)
+    parts.insert(
+        1,
+        f'<ellipse cx="{cx:.1f}" cy="{top:.1f}" rx="14" ry="5.5" fill="{TOKENS["panel"]}" stroke="#35C89B" stroke-width="1.8"/>',
+    )
+    parts.insert(
+        2,
+        f'<path d="M {left:.1f} {top:.1f} L {left:.1f} {bottom:.1f} M {right:.1f} {top:.1f} L {right:.1f} {bottom:.1f}" fill="none" stroke="#35C89B" stroke-width="1.8" stroke-linecap="round"/>',
+    )
+    parts.insert(
+        3,
+        f'<path d="M {left:.1f} {bottom:.1f} A 14 5.5 0 0 0 {right:.1f} {bottom:.1f}" fill="none" stroke="#35C89B" stroke-width="1.8"/>',
+    )
+    parts.insert(
+        4,
+        f'<path d="M {left:.1f} {cy - 1:.1f} A 14 5.5 0 0 0 {right:.1f} {cy - 1:.1f}" fill="none" stroke="#35C89B" stroke-width="1.4"/>',
+    )
+    return "\n".join(parts)
+
+
+def render_cloud_node(node: NodeLayout) -> str:
+    cx = node.center_x
+    cy = node.center_y
+    scale = 0.42
+    translate_x = cx - 21.0
+    translate_y = cy - 21.0
+    cloud_path = (
+        "M77.258,37.494c-1.375,0-2.764,0.164-4.276,0.511c-4.115-9.401-13.534-15.606-23.957-15.606 "
+        "c-13.11,0-24.034,9.643-25.863,22.363c-1.114-0.215-2.249-0.323-3.395-0.323c-9.824,0-17.816,7.759-17.816,17.529 "
+        "C1.95,71.74,9.942,79.5,19.767,79.5h57.491c11.726,0,21.266-9.308,21.266-20.981C98.523,46.82,88.983,37.494,77.258,37.494z "
+        "M77.258,75.5H19.767c-7.618,0-13.816-5.966-13.816-13.532c0-7.565,6.198-13.625,13.816-13.625c1.401,0,2.782,0.255,4.093,0.663 "
+        "l0.458,0.169c0.591,0.186,1.234,0.102,1.745-0.25c0.51-0.354,0.826-0.918,0.857-1.537c0.595-11.772,10.304-20.992,22.104-20.992 "
+        "c9.319,0,17.689,5.851,20.828,14.557c0.063,0.175,0.15,0.34,0.26,0.491l0.078,0.109c0.497,0.691,1.378,0.992,2.195,0.748 "
+        "c1.863-0.558,3.365-0.806,4.872-0.806c9.521,0,17.266,7.532,17.266,17.024C94.523,67.987,86.778,75.5,77.258,75.5z"
+    )
+    parts = render_badge_shell(node)
+    parts.insert(
+        1,
+        f'<path d="{cloud_path}" fill="#35C89B" transform="translate({translate_x:.1f} {translate_y:.1f}) scale({scale:.3f})"/>',
+    )
+    return "\n".join(parts)
+
+
+def render_security_node(node: NodeLayout) -> str:
+    cx = node.center_x
+    cy = node.center_y
+    parts = render_badge_shell(node)
+    parts.insert(
+        1,
+        f'<path d="M {cx - 10:.1f} {cy - 4:.1f} A 10 10 0 0 1 {cx + 10:.1f} {cy - 4:.1f}" fill="none" stroke="#35C89B" stroke-width="2" stroke-linecap="round"/>',
+    )
+    parts.insert(
+        2,
+        f'<rect x="{cx - 14:.1f}" y="{cy - 3:.1f}" width="28" height="22" rx="6" fill="{TOKENS["panel"]}" stroke="#35C89B" stroke-width="1.8"/>',
+    )
+    parts.insert(
+        3,
+        f'<circle cx="{cx:.1f}" cy="{cy + 7:.1f}" r="2.8" fill="#35C89B"/>',
+    )
+    parts.insert(
+        4,
+        f'<path d="M {cx:.1f} {cy + 9.8:.1f} L {cx:.1f} {cy + 14.5:.1f}" fill="none" stroke="#35C89B" stroke-width="1.8" stroke-linecap="round"/>',
+    )
+    return "\n".join(parts)
 
 
 def render_status_node(node: NodeLayout) -> str:
@@ -1505,6 +1634,12 @@ def render_chart_node(node: NodeLayout) -> str:
 def render_node(node: NodeLayout) -> str:
     if node.node_type == "user":
         return render_user_node(node)
+    if node.node_type == "storage":
+        return render_storage_node(node)
+    if node.node_type == "cloud":
+        return render_cloud_node(node)
+    if node.node_type == "security":
+        return render_security_node(node)
     if node.node_type == "status":
         return render_status_node(node)
     if node.node_type == "chart":

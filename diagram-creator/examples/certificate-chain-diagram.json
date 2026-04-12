@@ -1,0 +1,89 @@
+{
+  "diagram": {
+    "title": "Certificate Chain",
+    "subtitle": "A server certificate chains through a CA to a trusted root",
+    "sections": [
+      {
+        "id": "chain",
+        "title": "Certificate Path",
+        "subtitle": "Each certificate is signed by the next authority in the chain",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "certificate_lane",
+            "title": "Presented chain",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["leaf_cert", "intermediate_ca", "root_ca"]
+              }
+            ]
+          },
+          {
+            "id": "trust_lane",
+            "title": "Trust anchor",
+            "direction": "vertical",
+            "x_offset": 34,
+            "y_offset": 162,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["client_trust_store"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          {
+            "id": "leaf_cert",
+            "label": "Server certificate",
+            "type": "process",
+            "highlight": true
+          },
+          {
+            "id": "intermediate_ca",
+            "label": "Intermediate CA",
+            "type": "default"
+          },
+          {
+            "id": "root_ca",
+            "label": "Root CA",
+            "type": "default"
+          },
+          {
+            "id": "client_trust_store",
+            "label": "Client trust store",
+            "type": "database"
+          }
+        ],
+        "annotations": [
+          {
+            "text": "The client validates the server certificate by walking upward to a root CA it already trusts.",
+            "position": "footer"
+          }
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "from": "leaf_cert",
+        "to": "intermediate_ca",
+        "route": "vertical"
+      },
+      {
+        "from": "intermediate_ca",
+        "to": "root_ca",
+        "route": "vertical"
+      },
+      {
+        "from": "client_trust_store",
+        "to": "root_ca",
+        "route": "elbow"
+      }
+    ]
+  }
+}

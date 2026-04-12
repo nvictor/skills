@@ -86,6 +86,9 @@ sizing:
   node_min_width: 118
   node_max_width: 190
   user_node_size: 68
+  storage_node_size: 68
+  cloud_node_size: 68
+  security_node_size: 68
   section_radius: 18
   node_radius: 8
 ```
@@ -107,6 +110,7 @@ sizing:
 - Section titles use title case.
 - Section subtitles sit directly below section titles.
 - Node labels are centered by default.
+- `user`, `storage`, `cloud`, and `security` render as canonical badge-style semantic nodes with the label below.
 - `highlight: true` uses orange emphasis, except process nodes may use a blue callout style when they act as the focal instruction block.
 - `status` nodes render as compact pills for outcomes such as `Allow` or `Deny`.
 - Arrowheads are always visible and terminate outside target shapes.
