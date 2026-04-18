@@ -40,6 +40,8 @@ Do not use it when the user explicitly wants:
    - use depth, layering, lighting, and material cues where they improve recognition
    - add highlights only when they explain curvature, glass, enamel, or a turned plane
    - let forms merge with, sit on, tuck behind, or selectively break past the squircle when that strengthens the icon
+   - when a motif should feel fused with the icon, prefer reusing the squircle's own corner or edge geometry instead of drawing separate strokes on top
+   - preserve the dominant silhouette when refining seams or overlaps; do not distort the primary mass just to satisfy a local junction
    - keep shapes simple enough to survive at small sizes
 4. Produce the deliverable:
    - one JSON brief artifact and one SVG artifact by default
@@ -71,6 +73,8 @@ Do not use it when the user explicitly wants:
 - Use shadows, gradients, highlights, and layering with restraint and purpose.
 - Do not add a highlight by default; only use it when it clarifies form or material.
 - When possible, validate the icon from a rasterized preview rather than judging only from the full-size SVG.
+- If a supporting motif keeps reading like an applied mark, rebuild it as a filled form that inherits the icon's geometry.
+- When refining overlaps, prefer adjusting the secondary element first; only reshape the main object when the silhouette clearly improves.
 - Design the object and squircle together; do not default to a safely contained centered object.
 - Let the metaphor interact with the icon boundary when that improves energy or recognizability.
 - Allow controlled breakout beyond the squircle when the protruding element remains legible at small sizes.
