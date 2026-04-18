@@ -1,0 +1,9 @@
+{
+  "prompt": "Create a macOS app icon for Framed, a menu bar utility that resizes visible windows to common aspect ratios.",
+  "concept": "The entire squircle becomes a warm orange framing plate, carrying only two opposing corner guides: a light guide in the upper-left and a darker guide in the lower-right.",
+  "primary_metaphor": "minimal framing plate",
+  "supporting_motifs": [
+    "upper-left light corner guide",
+    "lower-right dark corner guide"
+  ]
+}
