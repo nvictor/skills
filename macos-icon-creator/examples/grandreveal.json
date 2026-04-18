@@ -1,0 +1,9 @@
+{
+  "prompt": "Create a macOS app icon for GrandReveal, a macOS application for opening and viewing Reveal.js presentations locally.",
+  "concept": "A split red-over-blue macOS squircle evokes a shot-start board, with a slightly enlarged and subtly softened white play triangle set a touch lower on the blue field for stronger dock presence.",
+  "primary_metaphor": "playback trigger for local presentations",
+  "supporting_motifs": [
+    "shot-board style split background",
+    "soft-cornered white play triangle"
+  ]
+}
