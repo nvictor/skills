@@ -11,13 +11,12 @@
       <stop offset="100%" stop-color="#8E311A" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="guideLight" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0%" stop-color="#FFFDF8"/>
-      <stop offset="100%" stop-color="#FFE2B8"/>
+      <stop offset="0%" stop-color="#FFE6B2"/>
+      <stop offset="100%" stop-color="#FFBE63"/>
     </linearGradient>
   </defs>
   <rect x="24" y="24" width="464" height="464" rx="104" fill="url(#bg)"/>
   <rect x="24" y="24" width="464" height="464" rx="104" fill="url(#surface)"/>
-
-  <path d="M110 176V142C110 124 124 110 142 110H176" fill="none" stroke="url(#guideLight)" stroke-linecap="round" stroke-linejoin="round" stroke-width="26"/>
-  <path d="M402 336V370C402 388 388 402 370 402H336" fill="none" stroke="#7B2414" stroke-linecap="round" stroke-linejoin="round" stroke-width="26" opacity="0.9"/>
+  <path d="M24 128C24 70.562 70.562 24 128 24H250V82H132C104.386 82 82 104.386 82 132V250H24V128Z" fill="url(#guideLight)"/>
+  <path d="M488 384C488 441.438 441.438 488 384 488H262V430H380C407.614 430 430 407.614 430 380V262H488V384Z" fill="#8A2C16" opacity="0.94"/>
 </svg>
