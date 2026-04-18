@@ -5,9 +5,9 @@
       <stop offset="46%" stop-color="#FF8C46"/>
       <stop offset="100%" stop-color="#D85A28"/>
     </linearGradient>
-    <radialGradient id="surface" cx="30%" cy="24%" r="82%">
-      <stop offset="0%" stop-color="#FFD794" stop-opacity="0.26"/>
-      <stop offset="55%" stop-color="#FFD794" stop-opacity="0.06"/>
+    <radialGradient id="surface" cx="34%" cy="28%" r="78%">
+      <stop offset="0%" stop-color="#FFD58F" stop-opacity="0.16"/>
+      <stop offset="52%" stop-color="#FFD58F" stop-opacity="0.035"/>
       <stop offset="100%" stop-color="#A43F20" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="guideLight" x1="0" x2="1" y1="0" y2="1">

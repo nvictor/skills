@@ -44,7 +44,12 @@ Do not use it when the user explicitly wants:
 4. Produce the deliverable:
    - one JSON brief artifact and one SVG artifact by default
    - one concise rationale covering metaphor, material/depth, palette, and silhouette
-5. Self-check before finalizing:
+5. Render and inspect small sizes:
+   - rasterize the SVG and inspect at 16, 32, 64, and 128 px before finalizing
+   - on macOS, prefer Quick Look generation for a local raster preview, for example:
+     - `qlmanage -t -s 512 -o /tmp /path/to/icon.svg`
+   - verify that the primary silhouette survives and supporting cues do not collapse into noise
+6. Self-check before finalizing:
    - readable at 16, 32, 64, and 128 px
    - no centered-logo-in-a-box fallback
    - no text, UI screenshots, or fragile micro-detail
@@ -65,6 +70,7 @@ Do not use it when the user explicitly wants:
 - Prefer simple readable geometry over intricate decoration.
 - Use shadows, gradients, highlights, and layering with restraint and purpose.
 - Do not add a highlight by default; only use it when it clarifies form or material.
+- When possible, validate the icon from a rasterized preview rather than judging only from the full-size SVG.
 - Design the object and squircle together; do not default to a safely contained centered object.
 - Let the metaphor interact with the icon boundary when that improves energy or recognizability.
 - Allow controlled breakout beyond the squircle when the protruding element remains legible at small sizes.
