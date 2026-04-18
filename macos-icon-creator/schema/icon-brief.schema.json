@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MacOS Icon Brief",
+  "description": "Optional internal structure for normalizing a macOS app icon brief before SVG generation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "app_concept",
+    "primary_metaphor",
+    "composition_family"
+  ],
+  "properties": {
+    "app_concept": {
+      "type": "string",
+      "description": "Short description of the product or feature the icon represents."
+    },
+    "primary_metaphor": {
+      "type": "string",
+      "description": "Main object or scene that anchors the icon."
+    },
+    "supporting_motifs": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "string"
+      }
+    },
+    "composition_family": {
+      "type": "string",
+      "enum": [
+        "centered-object-with-base",
+        "diagonal-object",
+        "layered-plate",
+        "floating-tool",
+        "edge-pressure-object",
+        "fused-with-base",
+        "breakout-corner",
+        "perched-on-stage",
+        "inset-object-with-overlap"
+      ]
+    },
+    "tone": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "palette_hints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "include_symbols": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "avoid_symbols": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "small_size_risk": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    }
+  }
+}

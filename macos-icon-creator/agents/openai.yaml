@@ -1,0 +1,4 @@
+interface:
+  display_name: "macOS Icon Creator"
+  short_description: "Create native-feeling macOS app icon SVGs"
+  default_prompt: "Use $macos-icon-creator to turn this app concept into a macOS-style SVG icon with one clear metaphor and a short rationale."

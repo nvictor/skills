@@ -1,0 +1,9 @@
+{
+  "prompt": "Create a macOS app icon for a bookmark manager.",
+  "concept": "A stack of saved cards built into the dock base, with a bookmark tab folding out beyond the top-right edge.",
+  "primary_metaphor": "organized stack of saved references",
+  "supporting_motifs": [
+    "bookmark ribbon",
+    "sorted cards"
+  ]
+}
