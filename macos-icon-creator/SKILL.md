@@ -5,7 +5,7 @@ description: Create macOS-style app icon SVGs from a product brief or concept pr
 
 # MacOS Icon Creator
 
-Use this skill to design a single polished macOS app icon in SVG. The goal is not brand extraction. The goal is a native-feeling icon concept with a clear metaphor, readable silhouette, and material depth.
+Use this skill to design a single polished macOS app icon with paired JSON brief and SVG artifacts. The goal is not brand extraction. The goal is a native-feeling icon concept with a clear metaphor, readable silhouette, and material depth.
 
 ## When to use this skill
 
@@ -42,7 +42,7 @@ Do not use it when the user explicitly wants:
    - let forms merge with, sit on, tuck behind, or selectively break past the squircle when that strengthens the icon
    - keep shapes simple enough to survive at small sizes
 4. Produce the deliverable:
-   - one SVG by default
+   - one JSON brief artifact and one SVG artifact by default
    - one concise rationale covering metaphor, material/depth, palette, and silhouette
 5. Self-check before finalizing:
    - readable at 16, 32, 64, and 128 px
@@ -53,7 +53,8 @@ Do not use it when the user explicitly wants:
 
 - Default output:
   - brief restatement of the icon direction
-  - one SVG
+  - one JSON brief artifact
+  - one SVG artifact
   - short rationale
 - Optional output:
   - alternates only when the user asks or when the first concept is clearly ambiguous
@@ -76,4 +77,4 @@ Do not use it when the user explicitly wants:
 - Response shape: [references/output-shape.md](references/output-shape.md)
 - Final review checklist: [references/style-checklist.md](references/style-checklist.md)
 - Optional internal plan schema: [schema/icon-brief.schema.json](schema/icon-brief.schema.json)
-- Example briefs and SVGs: [examples/](examples)
+- Example JSON briefs and SVGs: [examples/](examples)
