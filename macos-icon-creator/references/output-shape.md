@@ -7,7 +7,7 @@ Prefer this response shape unless the user asks for something else:
 2. Icon concept summary
    - One short paragraph or two compact bullets describing the dominant object and supporting cue.
 3. JSON brief
-   - Return a compact fenced `json` block capturing the prompt, concept, primary metaphor, and supporting motifs.
+   - Return a compact fenced `json` block using the schema fields: `app_concept`, `primary_metaphor`, `supporting_motifs`, and `composition_family`.
 4. SVG
    - Return a single fenced `svg` block.
 5. Rationale
@@ -16,7 +16,10 @@ Prefer this response shape unless the user asks for something else:
      - material / depth treatment
      - palette logic
      - silhouette and small-size readability
-6. Optional refinement notes
+6. Validation note
+   - Include a compact note covering small-size readability and the PARC pass.
+   - Mention any PARC issue that shaped the final design.
+7. Optional refinement notes
    - Include only when the concept has a clear tradeoff or when the user requested alternates.
 
 ## Defaults

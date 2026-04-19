@@ -1,9 +1,9 @@
 {
-  "prompt": "Create a macOS app icon for a bookmark manager.",
-  "concept": "A single dominant saved card fills the squircle height and aligns with the inset tip of a large bookmark tab merged into the top-right edge.",
+  "app_concept": "A macOS app icon for a bookmark manager, using a single dominant saved card that fills the squircle height and aligns with an inset bookmark tab merged into the top-right edge.",
   "primary_metaphor": "organized stack of saved references",
   "supporting_motifs": [
     "large edge-fused bookmark ribbon",
     "full-height saved card"
-  ]
+  ],
+  "composition_family": "fused-with-base"
 }

@@ -1,9 +1,9 @@
 {
-  "prompt": "Create a macOS app icon for a focus timer.",
-  "concept": "A timer dial nested into the dock shape, with the countdown wedge pressing into the edge rather than floating inside it.",
+  "app_concept": "A macOS app icon for a focus timer, using a timer dial nested into the dock shape with a countdown wedge pressing into the edge rather than floating inside it.",
   "primary_metaphor": "timer dial as focused lens",
   "supporting_motifs": [
     "countdown wedge",
     "pulse center"
-  ]
+  ],
+  "composition_family": "edge-pressure-object"
 }

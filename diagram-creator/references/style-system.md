@@ -105,6 +105,13 @@ sizing:
 - The renderer must never reorder sections, lanes, groups, or nodes.
 - Section panels may be hidden with `show_sections: false`, but sections still define grouping and layout.
 
+## Layout choice guide
+
+- `flow`: use for causal or temporal movement.
+- `comparison`: use for side-by-side alternatives.
+- `stack`: use for layered architecture or responsibility levels.
+- `grid`: use for catalogs, capability maps, or repeated entities.
+
 ## Visual rules
 
 - Section titles use title case.
@@ -115,6 +122,15 @@ sizing:
 - `status` nodes render as compact pills for outcomes such as `Allow` or `Deny`.
 - Arrowheads are always visible and terminate outside target shapes.
 - Edge labels are forbidden.
+
+## Diagram PARC Pass
+
+- Proximity: nodes in the same semantic group sit closer together than nodes in different groups.
+- Alignment: sections, lanes, node centers, labels, and routes follow visible grid logic.
+- Repetition: equivalent node types, charts, panels, annotations, and connection styles use the same treatment.
+- Contrast: title, section structure, highlights, and normal nodes establish hierarchy within three seconds.
+
+Common failure pattern: weak diagrams often fail through small amounts of disorder in all four areas at once, rather than one obvious mistake.
 
 ## Canonical example target
 

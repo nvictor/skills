@@ -7,6 +7,10 @@ description: Create macOS-style app icon SVGs from a product brief or concept pr
 
 Use this skill to design a single polished macOS app icon with paired JSON brief and SVG artifacts. The goal is not brand extraction. The goal is a native-feeling icon concept with a clear metaphor, readable silhouette, and material depth.
 
+## Decision rule
+
+Ask once: what single native-feeling metaphor should represent this app?
+
 ## When to use this skill
 
 Use it when the user wants:
@@ -25,6 +29,8 @@ Do not use it when the user explicitly wants:
 - a broad multi-style illustration pass
 
 ## Workflow
+
+Use this state sequence: brief -> metaphor/composition -> SVG -> preview/verification -> final.
 
 1. Normalize the brief:
    - app purpose
@@ -51,10 +57,16 @@ Do not use it when the user explicitly wants:
    - on macOS, prefer Quick Look generation for a local raster preview, for example:
      - `qlmanage -t -s 512 -o /tmp /path/to/icon.svg`
    - verify that the primary silhouette survives and supporting cues do not collapse into noise
-6. Self-check before finalizing:
+6. Run a PARC verification:
+   - Proximity: related motifs are visibly grouped or fused; unrelated elements are separated.
+   - Alignment: major forms share intentional axes, curves, centers, or edge logic.
+   - Repetition: lighting, corner language, shadow softness, and material behavior are consistent.
+   - Contrast: the primary silhouette dominates, and supporting cues are clearly secondary.
+7. Self-check before finalizing:
    - readable at 16, 32, 64, and 128 px
    - no centered-logo-in-a-box fallback
    - no text, UI screenshots, or fragile micro-detail
+   - any PARC issue that changed the design is mentioned briefly in the final rationale
 
 ## Output contract
 
@@ -80,6 +92,7 @@ Do not use it when the user explicitly wants:
 - Allow controlled breakout beyond the squircle when the protruding element remains legible at small sizes.
 - Avoid literal UI panels unless they are abstracted into a bold icon form.
 - Avoid pasted logos on plain squircles, random gradient noise, tiny details, and text labels.
+- Common failure pattern: weak icons often fail through accumulated mild disorder across grouping, almost-aligned forms, drifting material logic, and weak hierarchy.
 
 ## References
 
