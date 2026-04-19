@@ -17,8 +17,9 @@
       <stop offset="100%" stop-color="#742A4A"/>
     </linearGradient>
     <linearGradient id="innerSuit" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0%" stop-color="#31383A"/>
-      <stop offset="100%" stop-color="#1E2426"/>
+      <stop offset="0%" stop-color="#343D3F"/>
+      <stop offset="68%" stop-color="#252C2E"/>
+      <stop offset="100%" stop-color="#171D1F"/>
     </linearGradient>
     <filter id="softShadow" x="-8%" y="-8%" width="116%" height="120%" color-interpolation-filters="sRGB">
       <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#2A1115" flood-opacity="0.16"/>
@@ -28,18 +29,20 @@
   <rect x="24" y="24" width="464" height="464" rx="106" fill="url(#skin)"/>
   <g clip-path="url(#squircleClip)">
     <path d="M24 166C82 136 162 122 256 122C350 122 430 136 488 166V372C432 402 352 418 256 418C160 418 80 402 24 372V166Z" fill="url(#skin)"/>
-    <path d="M24 24H488V178L452 118L414 218L378 104L336 238L296 112L256 224L216 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="url(#hair)" filter="url(#softShadow)"/>
+    <path d="M24 24H488V178L452 118L414 218L378 104L336 238L304 112L256 224L208 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="#8B4A3F" opacity="0.08" transform="translate(0 7)"/>
+    <path d="M24 24H488V178L452 118L414 218L378 104L336 238L304 112L256 224L208 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="url(#hair)" filter="url(#softShadow)"/>
 
     <g filter="url(#softShadow)">
       <path d="M24 346C78 328 130 332 166 348L148 488H24V346Z" fill="url(#suit)"/>
       <path d="M166 348L256 396L346 348L364 488H148L166 348Z" fill="url(#innerSuit)"/>
+      <path d="M158 438H354L364 488H148L158 438Z" fill="#0D1112" opacity="0.12"/>
       <path d="M488 346C434 328 382 332 346 348L364 488H488V346Z" fill="url(#suit)"/>
     </g>
 
     <path d="M134 242C166 254 199 249 226 230C202 264 164 271 134 252V242Z" fill="#C73538"/>
     <path d="M378 242C346 254 313 249 286 230C310 264 348 271 378 252V242Z" fill="#C73538"/>
 
-    <path d="M196 340H316" fill="none" stroke="#592A28" stroke-width="8" stroke-linecap="round"/>
+    <path d="M204 334H308" fill="none" stroke="#592A28" stroke-width="8" stroke-linecap="round"/>
   </g>
 
   <rect x="24" y="24" width="464" height="464" rx="106" fill="none" stroke="#221717" stroke-opacity="0.18" stroke-width="2"/>
