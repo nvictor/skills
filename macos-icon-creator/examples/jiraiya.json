@@ -1,0 +1,32 @@
+{
+  "app_concept": "A macOS app icon for Jiraiya, an anime-themed application named after a sage-like ninja character. The icon is reduced to three fused cartoon fields: white hair filling the top of the squircle, a wide face filling the middle, and a red ninja suit filling the bottom.",
+  "primary_metaphor": "cartoon anime sage portrait",
+  "supporting_motifs": [
+    "edge-fused white spiky hair silhouette",
+    "edge-fused red ninja suit"
+  ],
+  "composition_family": "fused-with-base",
+  "tone": [
+    "cartoonish",
+    "anime",
+    "native macOS"
+  ],
+  "palette_hints": [
+    "ivory hair",
+    "warm sage skin",
+    "deep crimson markings",
+    "deep red suit"
+  ],
+  "include_symbols": [
+    "fused white hair spikes",
+    "red cheek markings",
+    "fused red suit corners"
+  ],
+  "avoid_symbols": [
+    "text",
+    "exact character likeness",
+    "tiny costume details",
+    "heavy facial modeling"
+  ],
+  "small_size_risk": "medium"
+}

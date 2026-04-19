@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <clipPath id="squircleClip">
+      <rect x="24" y="24" width="464" height="464" rx="106"/>
+    </clipPath>
+    <linearGradient id="skin" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#F4BE96"/>
+      <stop offset="100%" stop-color="#D5846B"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="0" x2="0.85" y1="0" y2="1">
+      <stop offset="0%" stop-color="#FFFDF2"/>
+      <stop offset="62%" stop-color="#F0F2EE"/>
+      <stop offset="100%" stop-color="#C9D0CA"/>
+    </linearGradient>
+    <linearGradient id="suit" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#B93B68"/>
+      <stop offset="100%" stop-color="#742A4A"/>
+    </linearGradient>
+    <linearGradient id="innerSuit" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#31383A"/>
+      <stop offset="100%" stop-color="#1E2426"/>
+    </linearGradient>
+    <filter id="softShadow" x="-8%" y="-8%" width="116%" height="120%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#2A1115" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+
+  <rect x="24" y="24" width="464" height="464" rx="106" fill="url(#skin)"/>
+  <g clip-path="url(#squircleClip)">
+    <path d="M24 166C82 136 162 122 256 122C350 122 430 136 488 166V372C432 402 352 418 256 418C160 418 80 402 24 372V166Z" fill="url(#skin)"/>
+    <path d="M24 24H488V178L452 118L414 218L378 104L336 238L296 112L256 224L216 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="url(#hair)" filter="url(#softShadow)"/>
+
+    <g filter="url(#softShadow)">
+      <path d="M24 346C78 328 130 332 166 348L148 488H24V346Z" fill="url(#suit)"/>
+      <path d="M166 348L256 396L346 348L364 488H148L166 348Z" fill="url(#innerSuit)"/>
+      <path d="M488 346C434 328 382 332 346 348L364 488H488V346Z" fill="url(#suit)"/>
+    </g>
+
+    <path d="M134 242C166 254 199 249 226 230C202 264 164 271 134 252V242Z" fill="#C73538"/>
+    <path d="M378 242C346 254 313 249 286 230C310 264 348 271 378 252V242Z" fill="#C73538"/>
+
+    <path d="M196 340H316" fill="none" stroke="#592A28" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <rect x="24" y="24" width="464" height="464" rx="106" fill="none" stroke="#221717" stroke-opacity="0.18" stroke-width="2"/>
+</svg>
