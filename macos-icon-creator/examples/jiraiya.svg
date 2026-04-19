@@ -29,20 +29,20 @@
   <rect x="24" y="24" width="464" height="464" rx="106" fill="url(#skin)"/>
   <g clip-path="url(#squircleClip)">
     <path d="M24 166C82 136 162 122 256 122C350 122 430 136 488 166V372C432 402 352 418 256 418C160 418 80 402 24 372V166Z" fill="url(#skin)"/>
-    <path d="M24 24H488V178L452 118L414 218L378 104L336 238L304 112L256 224L208 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="#8B4A3F" opacity="0.08" transform="translate(0 7)"/>
+    <path d="M24 24H488V178L452 118L414 218L378 104L336 238L304 112L256 224L208 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="#8B4A3F" opacity="0.12" transform="translate(0 7)"/>
     <path d="M24 24H488V178L452 118L414 218L378 104L336 238L304 112L256 224L208 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="url(#hair)" filter="url(#softShadow)"/>
 
     <g filter="url(#softShadow)">
-      <path d="M24 346C78 328 130 332 166 348L148 488H24V346Z" fill="url(#suit)"/>
-      <path d="M166 348L256 396L346 348L364 488H148L166 348Z" fill="url(#innerSuit)"/>
-      <path d="M158 438H354L364 488H148L158 438Z" fill="#0D1112" opacity="0.12"/>
-      <path d="M488 346C434 328 382 332 346 348L364 488H488V346Z" fill="url(#suit)"/>
+      <path d="M24 354C78 336 132 338 172 356L150 488H24V354Z" fill="url(#suit)"/>
+      <path d="M168 354L256 402L340 356L356 488H146L168 354Z" fill="url(#innerSuit)"/>
+      <path d="M156 442H346L356 488H146L156 442Z" fill="#0D1112" opacity="0.12"/>
+      <path d="M488 354C434 336 380 338 340 356L356 488H488V354Z" fill="url(#suit)"/>
     </g>
 
-    <path d="M134 242C166 254 199 249 226 230C202 264 164 271 134 252V242Z" fill="#C73538"/>
-    <path d="M378 242C346 254 313 249 286 230C310 264 348 271 378 252V242Z" fill="#C73538"/>
+    <path d="M132 242C165 256 201 250 230 228C205 264 165 273 132 254V242Z" fill="#C73538"/>
+    <path d="M380 242C347 256 311 250 282 228C307 264 347 273 380 254V242Z" fill="#C73538"/>
 
-    <path d="M204 334H308" fill="none" stroke="#592A28" stroke-width="8" stroke-linecap="round"/>
+    <path d="M206 330H306" fill="none" stroke="#6E3A34" stroke-width="7" stroke-linecap="round"/>
   </g>
 
   <rect x="24" y="24" width="464" height="464" rx="106" fill="none" stroke="#221717" stroke-opacity="0.18" stroke-width="2"/>
