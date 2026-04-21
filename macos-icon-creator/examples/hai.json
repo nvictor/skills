@@ -1,0 +1,41 @@
+{
+  "app_concept": "A macOS app icon for Hai!, a simple attendance tracking app for taking rollcall with a playful roster of anime-style faces.",
+  "primary_metaphor": "squircle-as-face anime attendance mascot",
+  "supporting_motifs": [
+    "asymmetric brow and eye arcs",
+    "edge-fused cheeks with a wide open smile"
+  ],
+  "composition_family": "fused-with-base",
+  "tone": [
+    "playful",
+    "anime",
+    "native macOS"
+  ],
+  "palette_hints": [
+    "clear classroom blue",
+    "edge-fused soft pink cheeks",
+    "dark ink facial marks"
+  ],
+  "include_symbols": [
+    "squircle face",
+    "eyebrow arcs",
+    "closed eye arcs",
+    "edge-fused cheek marks",
+    "asymmetric open smiling mouth"
+  ],
+  "avoid_symbols": [
+    "text",
+    "roster UI",
+    "tiny name labels",
+    "literal checkboxes",
+    "separate face circle",
+    "raised hand",
+    "hair sprout",
+    "nose",
+    "drop shadow",
+    "highlight arc",
+    "highlight dot",
+    "perfectly symmetric facial layout"
+  ],
+  "small_size_risk": "low"
+}
