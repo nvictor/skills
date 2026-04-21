@@ -12,14 +12,14 @@
 
   <rect x="24" y="24" width="464" height="464" rx="106" fill="url(#base)"/>
   <g clip-path="url(#squircleClip)">
-    <ellipse cx="30" cy="326" rx="72" ry="20" fill="#F85D91" opacity="0.58"/>
-    <ellipse cx="482" cy="326" rx="72" ry="20" fill="#F85D91" opacity="0.58"/>
+    <ellipse cx="30" cy="331" rx="72" ry="20" fill="#F85D91" opacity="0.58"/>
+    <ellipse cx="482" cy="331" rx="72" ry="20" fill="#F85D91" opacity="0.58"/>
   </g>
-  <path d="M96 196C111 181 136 177 158 185" fill="none" stroke="#142334" stroke-width="7" stroke-linecap="round" opacity="0.86"/>
-  <path d="M354 185C379 178 405 188 419 211" fill="none" stroke="#142334" stroke-width="7" stroke-linecap="round" opacity="0.86"/>
+  <path d="M96 200C111 185 136 181 158 189" fill="none" stroke="#142334" stroke-width="7" stroke-linecap="round" opacity="0.86"/>
+  <path d="M354 189C379 182 405 192 419 215" fill="none" stroke="#142334" stroke-width="7" stroke-linecap="round" opacity="0.86"/>
   <path d="M118 262C118 210 184 210 184 262" fill="none" stroke="#142334" stroke-width="13" stroke-linecap="round"/>
   <path d="M328 262C328 210 394 210 394 262" fill="none" stroke="#142334" stroke-width="13" stroke-linecap="round"/>
-  <path d="M214 344C217 378 238 398 256 398C275 398 296 378 300 344" fill="none" stroke="#142334" stroke-width="12" stroke-linecap="round"/>
+  <path d="M214 344C217 378 238 398 256 398C275 398 296 378 300 344" fill="none" stroke="#142334" stroke-width="10" stroke-linecap="round"/>
 
   <rect x="24" y="24" width="464" height="464" rx="106" fill="none" stroke="#06314A" stroke-opacity="0.22" stroke-width="2"/>
 </svg>
