@@ -1,7 +1,7 @@
 {
   "diagram": {
     "title": "MCP, Tools, Skills & Agents",
-    "subtitle": "How the four layers relate — and why each one exists",
+    "subtitle": "Agents choose skills; skills call tools; tools are exposed through MCP",
     "sections": [
       {
         "id": "agent",
@@ -15,7 +15,7 @@
           {
             "id": "agent_lane",
             "direction": "vertical",
-            "x_offset": 77,
+            "y_offset": -11,
             "groups": [
               {
                 "type": "sequential",
@@ -26,10 +26,10 @@
         ],
         "nodes": [
           { "id": "goal_input", "label": "Goal", "type": "default" },
-          { "id": "agent_decision", "label": "Agent", "type": "user", "highlight": true }
+          { "id": "agent_decision", "label": "Agent", "type": "process", "highlight": true }
         ],
         "annotations": [
-          { "text": "The general contractor — decides what to do and when.", "position": "footer" }
+          { "text": "The agent interprets the goal and decides which capability path to use.", "position": "footer" }
         ]
       },
       {
@@ -44,8 +44,7 @@
           {
             "id": "skills_lane",
             "direction": "vertical",
-            "x_offset": 77,
-            "y_offset": 18,
+            "y_offset": 64,
             "groups": [
               {
                 "type": "sequential",
@@ -55,10 +54,10 @@
           }
         ],
         "nodes": [
-          { "id": "choose_skill", "label": "Skill", "type": "process", "highlight": true }
+          { "id": "choose_skill", "label": "Skill procedure", "type": "process", "highlight": true }
         ],
         "annotations": [
-          { "text": "The trade — knows how to accomplish a specific class of task.", "position": "footer" }
+          { "text": "A skill packages reusable procedure, domain guidance, and tool-use strategy.", "position": "footer" }
         ]
       },
       {
@@ -71,26 +70,13 @@
         },
         "lanes": [
           {
-            "id": "tool_a_lane",
+            "id": "tools_lane",
             "direction": "vertical",
-            "x_offset": 77,
-            "y_offset": 18,
+            "y_offset": 64,
             "groups": [
               {
                 "type": "sequential",
-                "nodes": ["tool_a"]
-              }
-            ]
-          },
-          {
-            "id": "tool_b_lane",
-            "direction": "vertical",
-            "x_offset": 77,
-            "y_offset": 18,
-            "groups": [
-              {
-                "type": "sequential",
-                "nodes": ["tool_b"]
+                "nodes": ["tool_a", "tool_b"]
               }
             ]
           }
@@ -100,7 +86,7 @@
           { "id": "tool_b", "label": "Tool B", "type": "default" }
         ],
         "annotations": [
-          { "text": "Not the hammer — but \"drive nail\". A named, callable capability.", "position": "footer" }
+          { "text": "Tools are named callable capabilities, such as search, file edits, rendering, or app control.", "position": "footer" }
         ]
       },
       {
@@ -115,8 +101,7 @@
           {
             "id": "mcp_lane",
             "direction": "vertical",
-            "x_offset": 77,
-            "y_offset": 18,
+            "y_offset": 64,
             "groups": [
               {
                 "type": "sequential",
@@ -129,7 +114,7 @@
           { "id": "mcp_protocol", "label": "MCP", "type": "database", "highlight": true }
         ],
         "annotations": [
-          { "text": "The job site infrastructure — not just a protocol, but the whole access layer.", "position": "footer" }
+          { "text": "MCP standardizes how external context and tools are exposed to the agent runtime.", "position": "footer" }
         ]
       }
     ],
