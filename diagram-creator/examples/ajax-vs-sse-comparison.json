@@ -46,7 +46,7 @@
           }
         ],
         "nodes": [
-          { "id": "ajax_client", "label": "Browser client", "type": "user" },
+          { "id": "ajax_client", "label": "Browser client", "type": "user", "label_position": "top" },
           { "id": "ajax_request", "label": "HTTP request via XHR or fetch", "type": "process", "highlight": true },
           { "id": "ajax_server", "label": "Server handles one request", "type": "default" },
           { "id": "ajax_response", "label": "One response returns data", "type": "status" },
@@ -103,7 +103,7 @@
           }
         ],
         "nodes": [
-          { "id": "sse_client", "label": "Browser client", "type": "user" },
+          { "id": "sse_client", "label": "Browser client", "type": "user", "label_position": "top" },
           { "id": "sse_open", "label": "Open EventSource HTTP connection", "type": "process", "highlight": true },
           { "id": "sse_server", "label": "Server keeps stream open", "type": "default" },
           { "id": "sse_stream", "label": "Server pushes text/event-stream messages", "type": "status" },
@@ -119,12 +119,12 @@
       }
     ],
     "connections": [
-      { "from": "ajax_client", "to": "ajax_request", "route": "vertical" },
+      { "from": "ajax_client", "to": "ajax_request", "route": "direct" },
       { "from": "ajax_request", "to": "ajax_server", "route": "vertical" },
       { "from": "ajax_server", "to": "ajax_response", "route": "vertical" },
       { "from": "ajax_response", "to": "ajax_repeat", "route": "direct" },
       { "from": "ajax_repeat", "to": "ajax_best_for", "route": "vertical" },
-      { "from": "sse_client", "to": "sse_open", "route": "vertical" },
+      { "from": "sse_client", "to": "sse_open", "route": "direct" },
       { "from": "sse_open", "to": "sse_server", "route": "vertical" },
       { "from": "sse_server", "to": "sse_stream", "route": "vertical" },
       { "from": "sse_stream", "to": "sse_push", "route": "direct" },
