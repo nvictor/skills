@@ -846,9 +846,11 @@ def layout_diagram(diagram: dict[str, Any]) -> tuple[list[SectionLayout], dict[s
         section_layouts.append(section_layout)
 
         y_base = section_layout.y + SECTION_PAD_TOP + subtitle_extra
+        inner_width = section_layout.width - SECTION_PAD_X * 2
+        x_centering_offset = max(0.0, (inner_width - content_width) / 2)
         for index, lane in enumerate(section["lanes"]):
             lane_width, lane_height = lane_sizes[index]
-            lane_x = section_layout.x + SECTION_PAD_X + (lane_offsets[index][0] - min_lane_x)
+            lane_x = section_layout.x + SECTION_PAD_X + x_centering_offset + (lane_offsets[index][0] - min_lane_x)
             lane_y = y_base + (lane_offsets[index][1] - min_lane_y)
             group_cursor = lane_y + (18 if lane.get("title") else 0)
 

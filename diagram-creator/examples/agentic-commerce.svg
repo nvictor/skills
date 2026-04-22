@@ -35,8 +35,8 @@
 <text x="1225.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">tracking</text>
 <text x="1225.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Agent handles the final purchase and</text>
 <text x="1225.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">keeps the user updated on shipping.</text>
-<rect x="421.5" y="212.0" width="118.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
-<text x="480.5" y="239.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">LLM Planner</text>
+<rect x="483.0" y="212.0" width="118.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
+<text x="542.0" y="239.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">LLM Planner</text>
 <rect x="746.0" y="212.0" width="128.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="810.0" y="239.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Retailer API A</text>
 <rect x="897.0" y="212.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
@@ -46,23 +46,23 @@
 <text x="1152.0" y="239.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Secure Payment</text>
 <rect x="1234.0" y="212.0" width="128.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="1298.0" y="239.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Track Delivery</text>
-<circle cx="126.5" cy="272.8" r="34.0" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.4"/>
-<circle cx="126.5" cy="264.8" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>
-<path d="M 114.5 285.8 C 116.5 274.8, 136.5 274.8, 138.5 285.8" fill="none" stroke="#35C89B" stroke-width="2"/>
-<text x="126.5" y="226.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">Shopper</text>
-<rect x="406.0" y="276.0" width="149.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="480.5" y="303.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Evaluation Engine</text>
+<circle cx="202.0" cy="272.8" r="34.0" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.4"/>
+<circle cx="202.0" cy="264.8" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>
+<path d="M 190.0 285.8 C 192.0 274.8, 212.0 274.8, 214.0 285.8" fill="none" stroke="#35C89B" stroke-width="2"/>
+<text x="202.0" y="226.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">Shopper</text>
+<rect x="467.5" y="276.0" width="149.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="542.0" y="303.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Evaluation Engine</text>
 <rect x="892.0" y="276.0" width="128.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="956.0" y="303.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Retailer API B</text>
 <rect x="1093.0" y="276.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="1152.0" y="303.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Place Order</text>
-<rect x="66.0" y="324.8" width="121.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="126.5" y="351.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Define Intent</text>
-<path d="M 126.5 306.8 L 126.5 323.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 187.0 347.8 L 196.0 347.8 Q 205.0 347.8 205.0 338.8 L 205.0 245.0 Q 205.0 235.0 215.0 235.0 L 420.5 235.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 480.5 258.0 L 480.5 275.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 555.0 299.0 L 564.0 299.0 Q 573.0 299.0 573.0 290.0 L 573.0 245.0 Q 573.0 235.0 583.0 235.0 L 745.0 235.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 555.0 299.0 L 891.0 299.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect x="141.5" y="324.8" width="121.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="202.0" y="351.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Define Intent</text>
+<path d="M 202.0 306.8 L 202.0 323.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 262.5 347.8 L 271.5 347.8 Q 280.5 347.8 280.5 338.8 L 280.5 245.0 Q 280.5 235.0 290.5 235.0 L 482.0 235.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 542.0 258.0 L 542.0 275.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 616.5 299.0 L 625.5 299.0 Q 634.5 299.0 634.5 290.0 L 634.5 245.0 Q 634.5 235.0 644.5 235.0 L 745.0 235.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 616.5 299.0 L 891.0 299.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
 <path d="M 874.0 235.0 L 896.0 235.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
 <path d="M 956.0 276.0 L 956.0 259.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
 <path d="M 1015.0 235.0 L 1087.0 235.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>

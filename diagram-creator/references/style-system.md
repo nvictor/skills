@@ -101,6 +101,7 @@ sizing:
 - Lane offsets may nudge a whole lane to create straighter or wider cross-lane edges.
 - Sequential groups preserve source order.
 - Parallel groups place their member nodes orthogonally in a compact cluster.
+- Content blocks are centered within the section's available width when the section is wider than its lanes.
 - Connections route around nodes and terminate at node boundaries.
 - Keep all nodes, node labels, lane labels, and annotations within their owning section panel.
 - In dense sections, prefer two-row or two-column arrangements that preserve alignment before widening the section.
