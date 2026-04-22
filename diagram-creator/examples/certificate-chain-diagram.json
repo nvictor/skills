@@ -1,89 +1,112 @@
 {
   "diagram": {
-    "title": "Certificate Chain",
-    "subtitle": "A server certificate chains through a CA to a trusted root",
+    "title": "Server and Client Certificate Validation",
+    "subtitle": "Both use certificate chains; the verifier decides which roots and identities are trusted",
     "sections": [
       {
-        "id": "chain",
-        "title": "Certificate Path",
-        "subtitle": "Each certificate is signed by the next authority in the chain",
+        "id": "server_certificate",
+        "title": "Server Certificate",
+        "subtitle": "The client validates the server's certificate chain and DNS identity",
         "layout": {
           "type": "flow",
           "direction": "horizontal"
         },
         "lanes": [
           {
-            "id": "certificate_lane",
+            "id": "server_chain",
             "title": "Presented chain",
             "direction": "vertical",
             "groups": [
               {
                 "type": "sequential",
-                "nodes": ["leaf_cert", "intermediate_ca", "root_ca"]
+                "nodes": ["server_leaf", "server_intermediate", "server_root"]
               }
             ]
           },
           {
-            "id": "trust_lane",
-            "title": "Trust anchor",
+            "id": "client_checks",
+            "title": "Client checks",
             "direction": "vertical",
-            "x_offset": 34,
-            "y_offset": 162,
+            "y_offset": 128,
             "groups": [
               {
                 "type": "sequential",
-                "nodes": ["client_trust_store"]
+                "nodes": ["client_trust_store", "server_name_check"]
               }
             ]
           }
         ],
         "nodes": [
-          {
-            "id": "leaf_cert",
-            "label": "Server certificate",
-            "type": "process",
-            "highlight": true
-          },
-          {
-            "id": "intermediate_ca",
-            "label": "Intermediate CA",
-            "type": "default"
-          },
-          {
-            "id": "root_ca",
-            "label": "Root CA",
-            "type": "default"
-          },
-          {
-            "id": "client_trust_store",
-            "label": "Client trust store",
-            "type": "database"
-          }
+          { "id": "server_leaf", "label": "Server leaf cert", "type": "process", "highlight": true },
+          { "id": "server_intermediate", "label": "Intermediate CA", "type": "default" },
+          { "id": "server_root", "label": "Trusted root CA", "type": "default" },
+          { "id": "client_trust_store", "label": "Client trust store", "type": "database" },
+          { "id": "server_name_check", "label": "Hostname/SAN + server auth", "type": "status" }
         ],
         "annotations": [
           {
-            "text": "The client validates the server certificate by walking upward to a root CA it already trusts.",
+            "text": "The client accepts the server only when the chain reaches a trusted root and the certificate matches the requested hostname.",
+            "position": "footer"
+          }
+        ]
+      },
+      {
+        "id": "client_certificate",
+        "title": "Client Certificate",
+        "subtitle": "The server validates the client's certificate chain and application identity",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "client_chain",
+            "title": "Presented chain",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["client_leaf", "client_intermediate", "client_root"]
+              }
+            ]
+          },
+          {
+            "id": "server_checks",
+            "title": "Server checks",
+            "direction": "vertical",
+            "y_offset": 128,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["server_trust_store", "client_identity_check"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "client_leaf", "label": "Client leaf cert", "type": "process", "highlight": true },
+          { "id": "client_intermediate", "label": "Intermediate CA", "type": "default" },
+          { "id": "client_root", "label": "Trusted client CA", "type": "default" },
+          { "id": "server_trust_store", "label": "Server trust store", "type": "database" },
+          { "id": "client_identity_check", "label": "Client auth + identity", "type": "status" }
+        ],
+        "annotations": [
+          {
+            "text": "The server accepts the client only when the chain reaches an allowed CA and the resulting identity is authorized.",
             "position": "footer"
           }
         ]
       }
     ],
     "connections": [
-      {
-        "from": "leaf_cert",
-        "to": "intermediate_ca",
-        "route": "vertical"
-      },
-      {
-        "from": "intermediate_ca",
-        "to": "root_ca",
-        "route": "vertical"
-      },
-      {
-        "from": "client_trust_store",
-        "to": "root_ca",
-        "route": "elbow"
-      }
+      { "from": "server_leaf", "to": "server_intermediate", "route": "vertical" },
+      { "from": "server_intermediate", "to": "server_root", "route": "vertical" },
+      { "from": "client_trust_store", "to": "server_root", "route": "direct" },
+      { "from": "client_trust_store", "to": "server_name_check", "route": "vertical" },
+      { "from": "client_leaf", "to": "client_intermediate", "route": "vertical" },
+      { "from": "client_intermediate", "to": "client_root", "route": "vertical" },
+      { "from": "server_trust_store", "to": "client_root", "route": "direct" },
+      { "from": "server_trust_store", "to": "client_identity_check", "route": "vertical" }
     ]
   }
 }
