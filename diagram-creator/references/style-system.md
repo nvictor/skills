@@ -81,7 +81,7 @@ spacing:
 ```yaml
 sizing:
   section_min_width: 320
-  section_max_width: 420
+  section_target_max_width: 420
   node_height: 46
   node_min_width: 118
   node_max_width: 190
@@ -102,6 +102,9 @@ sizing:
 - Sequential groups preserve source order.
 - Parallel groups place their member nodes orthogonally in a compact cluster.
 - Connections route around nodes and terminate at node boundaries.
+- Keep all nodes, node labels, lane labels, and annotations within their owning section panel.
+- In dense sections, prefer two-row or two-column arrangements that preserve alignment before widening the section.
+- Sections may exceed the target max width when required to keep owned content inside the panel.
 - The renderer must never reorder sections, lanes, groups, or nodes.
 - Section panels may be hidden with `show_sections: false`, but sections still define grouping and layout.
 
@@ -117,7 +120,8 @@ sizing:
 - Section titles use title case.
 - Section subtitles sit directly below section titles.
 - Node labels are centered by default.
-- `user`, `storage`, `cloud`, and `security` render as canonical badge-style semantic nodes with the label below.
+- `user`, `storage`, `cloud`, and `security` render as canonical badge-style semantic nodes with the label below by default.
+- Badge labels may move above the pictogram when the default below-node label would force an avoidable bend or hide an arrowhead.
 - `highlight: true` uses orange emphasis, except process nodes may use a blue callout style when they act as the focal instruction block.
 - `status` nodes render as compact pills for outcomes such as `Allow` or `Deny`.
 - Arrowheads are always visible and terminate outside target shapes.

@@ -49,6 +49,7 @@ STORAGE_NODE_SIZE = 68
 CLOUD_NODE_SIZE = 68
 SECURITY_NODE_SIZE = 68
 BADGE_LABEL_BASELINE_OFFSET = 18
+BADGE_LABEL_TOP_BASELINE_OFFSET = -12
 BADGE_LABEL_FONT_SIZE = 12
 STATUS_MIN_WIDTH = 92
 STATUS_MAX_WIDTH = 180
@@ -66,6 +67,8 @@ SECTION_MAX_WIDTH = 420
 EDGE_CLEARANCE = 12.0
 EDGE_STUB = 18.0
 GRID_MARGIN = 16.0
+TURN_PENALTY = 32.0
+PORT_PREFERENCE_PENALTY = 4.0
 
 VALID_SECTION_LAYOUTS = {"flow", "comparison", "stack", "grid"}
 VALID_DIRECTIONS = {"horizontal", "vertical"}
@@ -85,6 +88,7 @@ VALID_NODE_TYPES = {
 VALID_ROUTES = {"direct", "elbow", "vertical"}
 VALID_CHART_KINDS = {"line", "area", "bar", "pie"}
 VALID_REFERENCE_LINE_STYLES = {"solid", "dashed"}
+VALID_BADGE_LABEL_POSITIONS = {"top", "bottom"}
 CHART_SERIES_COLORS = ["#F27A2B", "#58A6F4", "#76C68B", "#C98BFF"]
 CHART_REFERENCE_COLORS = ["#6D685F", "#F06A63", "#58A6F4"]
 BADGE_NODE_SIZES = {
@@ -115,6 +119,14 @@ class Rect:
             self.bottom + amount,
         )
 
+    def contains(self, other: "Rect", tolerance: float = 0.01) -> bool:
+        return (
+            other.left >= self.left - tolerance
+            and other.top >= self.top - tolerance
+            and other.right <= self.right + tolerance
+            and other.bottom <= self.bottom + tolerance
+        )
+
 
 @dataclass
 class NodeLayout:
@@ -123,6 +135,7 @@ class NodeLayout:
     node_type: str
     highlight: bool
     chart: dict[str, Any] | None
+    label_position: str
     x: float
     y: float
     width: float
@@ -282,17 +295,39 @@ def measure_node_footprint(node: dict[str, Any]) -> tuple[float, float]:
     if node["type"] not in BADGE_NODE_TYPES:
         return float(width), float(height)
 
+    label_position = node.get("label_position", "bottom")
+    label_baseline_y = (
+        BADGE_LABEL_TOP_BASELINE_OFFSET
+        if label_position == "top"
+        else height + BADGE_LABEL_BASELINE_OFFSET
+    )
     label_rect = centered_text_rect(
         0.0,
-        height + BADGE_LABEL_BASELINE_OFFSET,
+        label_baseline_y,
         node["label"],
         BADGE_LABEL_FONT_SIZE,
         padding_x=8.0,
         padding_y=5.0,
     )
     footprint_width = max(float(width), label_rect.right - label_rect.left)
-    footprint_height = max(float(height), label_rect.bottom)
+    footprint_height = max(float(height), label_rect.bottom) - min(0.0, label_rect.top)
     return footprint_width, footprint_height
+
+
+def node_offset_within_footprint(node: dict[str, Any]) -> tuple[float, float]:
+    if node["type"] not in BADGE_NODE_TYPES:
+        return 0.0, 0.0
+    if node.get("label_position", "bottom") != "top":
+        return 0.0, 0.0
+    label_rect = centered_text_rect(
+        0.0,
+        BADGE_LABEL_TOP_BASELINE_OFFSET,
+        node["label"],
+        BADGE_LABEL_FONT_SIZE,
+        padding_x=8.0,
+        padding_y=5.0,
+    )
+    return 0.0, max(0.0, -label_rect.top)
 
 
 def validate_chart(node_id: str, chart_obj: Any) -> dict[str, Any]:
@@ -476,6 +511,13 @@ def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
             node_type = require_non_empty_string(node, "type")
             if node_type not in VALID_NODE_TYPES:
                 raise DiagramError(f"Node '{node_id}' has invalid type '{node_type}'.")
+            label_position = node.get("label_position", "bottom")
+            if label_position not in VALID_BADGE_LABEL_POSITIONS:
+                raise DiagramError(f"Node '{node_id}' has invalid label_position '{label_position}'.")
+            if node_type not in BADGE_NODE_TYPES and "label_position" in node:
+                raise DiagramError(
+                    f"Node '{node_id}' can only set label_position on badge-style node types."
+                )
             seen_node_ids.add(node_id)
             chart = validate_chart(node_id, node.get("chart")) if node_type == "chart" else None
             section_node_map[node_id] = {
@@ -484,6 +526,7 @@ def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
                 "type": node_type,
                 "highlight": bool(node.get("highlight", False)),
                 "chart": chart,
+                "label_position": label_position,
             }
             node_to_section[node_id] = section_id
 
@@ -677,13 +720,14 @@ def layout_group(
         track_width = max(footprint_width for _, _, _, footprint_width, _ in node_sizes)
         track_height = max(footprint_height for _, _, _, _, footprint_height in node_sizes)
         for node_id, width, height, footprint_width, footprint_height in node_sizes:
+            node_dx, node_dy = node_offset_within_footprint(node_specs[node_id])
             if lane["direction"] == "vertical":
-                node_x = x + (track_width - footprint_width) / 2 + (footprint_width - width) / 2
-                node_y = y + advance
+                node_x = x + (track_width - footprint_width) / 2 + (footprint_width - width) / 2 + node_dx
+                node_y = y + advance + node_dy
                 advance += footprint_height + NODE_GAP
             else:
-                node_x = x + advance
-                node_y = y + (track_height - footprint_height) / 2
+                node_x = x + advance + node_dx
+                node_y = y + (track_height - footprint_height) / 2 + node_dy
                 advance += footprint_width + NODE_GAP
             positioned[node_id] = NodeLayout(
                 node_id=node_id,
@@ -691,6 +735,7 @@ def layout_group(
                 node_type=node_specs[node_id]["type"],
                 highlight=node_specs[node_id]["highlight"],
                 chart=node_specs[node_id].get("chart"),
+                label_position=node_specs[node_id]["label_position"],
                 x=node_x,
                 y=node_y,
                 width=width,
@@ -710,14 +755,16 @@ def layout_group(
     if lane["direction"] == "vertical":
         row_height = max(footprint_height for _, _, _, _, footprint_height in node_sizes)
         for node_id, width, height, footprint_width, footprint_height in node_sizes:
-            node_x = x + advance
-            node_y = y + (row_height - footprint_height) / 2
+            node_dx, node_dy = node_offset_within_footprint(node_specs[node_id])
+            node_x = x + advance + node_dx
+            node_y = y + (row_height - footprint_height) / 2 + node_dy
             positioned[node_id] = NodeLayout(
                 node_id=node_id,
                 label=node_specs[node_id]["label"],
                 node_type=node_specs[node_id]["type"],
                 highlight=node_specs[node_id]["highlight"],
                 chart=node_specs[node_id].get("chart"),
+                label_position=node_specs[node_id]["label_position"],
                 x=node_x,
                 y=node_y,
                 width=width,
@@ -732,14 +779,16 @@ def layout_group(
 
     column_width = max(footprint_width for _, _, _, footprint_width, _ in node_sizes)
     for node_id, width, height, footprint_width, footprint_height in node_sizes:
-        node_x = x + (column_width - footprint_width) / 2 + (footprint_width - width) / 2
-        node_y = y + advance
+        node_dx, node_dy = node_offset_within_footprint(node_specs[node_id])
+        node_x = x + (column_width - footprint_width) / 2 + (footprint_width - width) / 2 + node_dx
+        node_y = y + advance + node_dy
         positioned[node_id] = NodeLayout(
             node_id=node_id,
             label=node_specs[node_id]["label"],
             node_type=node_specs[node_id]["type"],
             highlight=node_specs[node_id]["highlight"],
             chart=node_specs[node_id].get("chart"),
+            label_position=node_specs[node_id]["label_position"],
             x=node_x,
             y=node_y,
             width=width,
@@ -778,7 +827,7 @@ def layout_diagram(diagram: dict[str, Any]) -> tuple[list[SectionLayout], dict[s
         )
         footer_height = footer_line_count * 14
         subtitle_extra = len(subtitle_lines) * 14
-        section_width = max(SECTION_MIN_WIDTH, min(SECTION_MAX_WIDTH, content_width + SECTION_PAD_X * 2))
+        section_width = max(SECTION_MIN_WIDTH, content_width + SECTION_PAD_X * 2)
         section_height = max(
             360.0,
             SECTION_PAD_TOP + subtitle_extra + content_height + SECTION_PAD_BOTTOM + footer_height,
@@ -851,7 +900,7 @@ def layout_diagram(diagram: dict[str, Any]) -> tuple[list[SectionLayout], dict[s
 
 
 def candidate_port_sides(source: NodeLayout, target: NodeLayout, route: str) -> list[tuple[str, str]]:
-    if route == "vertical" and abs(target.center_x - source.center_x) < 0.01:
+    if abs(target.center_x - source.center_x) < 0.01:
         if target.center_y >= source.center_y:
             return [("bottom", "top"), ("right", "left"), ("left", "right")]
         return [("top", "bottom"), ("right", "left"), ("left", "right")]
@@ -863,6 +912,14 @@ def candidate_port_sides(source: NodeLayout, target: NodeLayout, route: str) -> 
         if target.center_y >= source.center_y:
             return [("bottom", "top"), ("right", "left"), ("left", "right")]
         return [("top", "bottom"), ("right", "left"), ("left", "right")]
+    if target.center_y < source.center_y - 0.01:
+        if target.center_x >= source.center_x:
+            return [("top", "bottom"), ("right", "bottom"), ("right", "left"), ("left", "right"), ("bottom", "top")]
+        return [("top", "bottom"), ("left", "bottom"), ("left", "right"), ("right", "left"), ("bottom", "top")]
+    if target.center_y > source.center_y + 0.01:
+        if target.center_x >= source.center_x:
+            return [("bottom", "top"), ("right", "top"), ("right", "left"), ("left", "right"), ("top", "bottom")]
+        return [("bottom", "top"), ("left", "top"), ("left", "right"), ("right", "left"), ("top", "bottom")]
     if target.center_x >= source.center_x:
         return [("right", "left"), ("bottom", "top"), ("top", "bottom")]
     return [("left", "right"), ("bottom", "top"), ("top", "bottom")]
@@ -887,6 +944,10 @@ def stub_point(point: tuple[float, float], side: str) -> tuple[float, float]:
     if side == "top":
         return x, y - EDGE_STUB
     return x, y + EDGE_STUB
+
+
+def side_axis(side: str) -> str:
+    return "h" if side in {"left", "right"} else "v"
 
 
 def point_in_rect(point: tuple[float, float], rect: Rect) -> bool:
@@ -925,6 +986,36 @@ def segment_is_clear(
             if obstacle.top < y < obstacle.bottom and x1 < obstacle.right and x2 > obstacle.left:
                 return False
     return True
+
+
+def preferred_elbow_points(
+    source_port: tuple[float, float],
+    source_stub: tuple[float, float],
+    source_side: str,
+    target_stub: tuple[float, float],
+    target_port: tuple[float, float],
+    target_side: str,
+    obstacles: list[tuple[str, Rect]],
+    allowed: set[str],
+) -> list[tuple[float, float]] | None:
+    source_axis = side_axis(source_side)
+    target_axis = side_axis(target_side)
+    if source_axis == "h" and target_axis == "h":
+        corner = (source_stub[0], target_stub[1])
+    elif source_axis == "v" and target_axis == "v":
+        corner = (target_stub[0], source_stub[1])
+    elif source_axis == "h" and target_axis == "v":
+        corner = (target_stub[0], source_stub[1])
+    else:
+        corner = (source_stub[0], target_stub[1])
+
+    if not point_is_clear(corner, obstacles, allowed):
+        return None
+    if not segment_is_clear(source_stub, corner, obstacles, allowed):
+        return None
+    if not segment_is_clear(corner, target_stub, obstacles, allowed):
+        return None
+    return [source_port, source_stub, corner, target_stub, target_port]
 
 
 def unique_sorted_coords(values: list[float]) -> list[float]:
@@ -988,14 +1079,7 @@ def node_text_obstacles(nodes: dict[str, NodeLayout]) -> list[tuple[str, Rect]]:
             obstacles.append(
                 (
                     f"node_label:{node.node_id}",
-                    centered_text_rect(
-                        node.center_x,
-                        node.bottom + BADGE_LABEL_BASELINE_OFFSET,
-                        node.label,
-                        BADGE_LABEL_FONT_SIZE,
-                        padding_x=8.0,
-                        padding_y=5.0,
-                    ),
+                    badge_label_rect(node),
                 )
             )
         if node.node_type == "chart":
@@ -1019,6 +1103,22 @@ def node_text_obstacles(nodes: dict[str, NodeLayout]) -> list[tuple[str, Rect]]:
                     )
                 )
     return obstacles
+
+
+def badge_label_rect(node: NodeLayout) -> Rect:
+    baseline_y = (
+        node.top + BADGE_LABEL_TOP_BASELINE_OFFSET
+        if node.label_position == "top"
+        else node.bottom + BADGE_LABEL_BASELINE_OFFSET
+    )
+    return centered_text_rect(
+        node.center_x,
+        baseline_y,
+        node.label,
+        BADGE_LABEL_FONT_SIZE,
+        padding_x=8.0,
+        padding_y=5.0,
+    )
 
 
 def build_edge_obstacles(
@@ -1051,8 +1151,9 @@ def route_connection_points(
     source = nodes[connection["from"]]
     target = nodes[connection["to"]]
     allowed = {source.node_id, target.node_id}
+    candidates: list[tuple[float, list[tuple[float, float]]]] = []
 
-    for source_side, target_side in candidate_port_sides(source, target, connection["route"]):
+    for preference_index, (source_side, target_side) in enumerate(candidate_port_sides(source, target, connection["route"])):
         source_port = port_point(source, source_side)
         target_port = port_point(target, target_side)
         source_stub = stub_point(source_port, source_side)
@@ -1062,6 +1163,19 @@ def route_connection_points(
             continue
         if not point_is_clear(target_stub, obstacles, allowed):
             continue
+
+        preferred = preferred_elbow_points(
+            source_port,
+            source_stub,
+            source_side,
+            target_stub,
+            target_port,
+            target_side,
+            obstacles,
+            allowed,
+        )
+        if preferred:
+            candidates.append((route_rank(preferred, preference_index), preferred))
 
         x_values = [
             CANVAS_PAD_X / 2,
@@ -1108,10 +1222,13 @@ def route_connection_points(
 
         start = point_to_index[source_stub]
         goal = point_to_index[target_stub]
-        heap: list[tuple[float, float, int, str | None]] = [(0.0, 0.0, start, None)]
-        best_cost: dict[tuple[int, str | None], float] = {(start, None): 0.0}
+        start_direction = side_axis(source_side)
+        target_direction = side_axis(target_side)
+        heap: list[tuple[float, float, int, str | None]] = [(0.0, 0.0, start, start_direction)]
+        best_cost: dict[tuple[int, str | None], float] = {(start, start_direction): 0.0}
         previous: dict[tuple[int, str | None], tuple[int, str | None]] = {}
         end_state: tuple[int, str | None] | None = None
+        end_total_cost = float("inf")
 
         while heap:
             _, cost, index, direction = heapq.heappop(heap)
@@ -1119,8 +1236,12 @@ def route_connection_points(
             if cost > best_cost.get(state, float("inf")) + 0.01:
                 continue
             if index == goal:
-                end_state = state
-                break
+                final_bend_penalty = TURN_PENALTY if direction and direction != target_direction else 0.0
+                total_cost = cost + final_bend_penalty
+                if total_cost + 0.01 < end_total_cost:
+                    end_total_cost = total_cost
+                    end_state = state
+                continue
 
             current = points[index]
             for next_index, next_direction in neighbors[index]:
@@ -1144,11 +1265,25 @@ def route_connection_points(
             state = previous[state]
             routed.append(points[state[0]])
         routed.reverse()
-        return [source_port, source_stub, *routed[1:-1], target_stub, target_port]
+        candidate = [source_port, source_stub, *routed[1:-1], target_stub, target_port]
+        candidates.append((route_rank(candidate, preference_index), candidate))
+
+    if candidates:
+        candidates.sort(key=lambda item: item[0])
+        return candidates[0][1]
 
     raise DiagramError(
         f"Could not route connection '{source.node_id}->{target.node_id}' without crossing nodes or text."
     )
+
+
+def route_rank(points: list[tuple[float, float]], preference_index: int) -> float:
+    simplified = simplify_points(points)
+    length = 0.0
+    for start, end in zip(simplified, simplified[1:]):
+        length += abs(start[0] - end[0]) + abs(start[1] - end[1])
+    turns = max(0, len(simplified) - 2)
+    return length + turns * TURN_PENALTY + preference_index * PORT_PREFERENCE_PENALTY
 
 
 def simplify_points(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
@@ -1257,9 +1392,14 @@ def render_badge_shell(node: NodeLayout) -> list[str]:
     cx = node.center_x
     cy = node.center_y
     r = node.width / 2
+    label_y = (
+        node.top + BADGE_LABEL_TOP_BASELINE_OFFSET
+        if node.label_position == "top"
+        else node.bottom + BADGE_LABEL_BASELINE_OFFSET
+    )
     return [
         f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{TOKENS["panel"]}" stroke="{TOKENS["border"]}" stroke-width="1.4"/>',
-        f'<text x="{cx:.1f}" y="{node.bottom + BADGE_LABEL_BASELINE_OFFSET:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="{BADGE_LABEL_FONT_SIZE}" font-weight="500" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
+        f'<text x="{cx:.1f}" y="{label_y:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="{BADGE_LABEL_FONT_SIZE}" font-weight="500" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
     ]
 
 
@@ -1703,13 +1843,41 @@ def render_svg(spec: dict[str, Any]) -> str:
     if diagram.get("show_sections", True):
         for section in sections:
             parts.append(render_section(section))
-    for connection in diagram["connections"]:
-        parts.append(render_connection(connection, nodes, obstacles, width, height))
     for node_id in sorted(nodes.keys(), key=lambda key: (nodes[key].y, nodes[key].x)):
         parts.append(render_node(nodes[node_id]))
+    for connection in diagram["connections"]:
+        parts.append(render_connection(connection, nodes, obstacles, width, height))
 
     parts.append("</svg>")
     return "\n".join(parts)
+
+
+def validate_geometry(spec: dict[str, Any]) -> None:
+    diagram = spec["diagram"]
+    sections, nodes, width, height = layout_diagram(diagram)
+    section_by_id = {section.section_id: section for section in sections}
+    obstacles = build_edge_obstacles(diagram["title"], diagram.get("subtitle"), sections, nodes, width)
+
+    for node in nodes.values():
+        section = section_by_id[node.section_id]
+        section_rect = Rect(section.x, section.y, section.x + section.width, section.y + section.height)
+        if not section_rect.contains(node.rect):
+            raise DiagramError(f"Node '{node.node_id}' crosses its section boundary.")
+        if node.node_type in BADGE_NODE_TYPES and not section_rect.contains(badge_label_rect(node)):
+            raise DiagramError(f"Badge label for node '{node.node_id}' crosses its section boundary.")
+
+    for connection in diagram["connections"]:
+        points = route_connection_points(connection, nodes, obstacles, width, height)
+        source = nodes[connection["from"]]
+        target = nodes[connection["to"]]
+        if source.section_id == target.section_id:
+            section = section_by_id[source.section_id]
+            section_rect = Rect(section.x, section.y, section.x + section.width, section.y + section.height)
+            for x, y in points:
+                if not section_rect.contains(Rect(x, y, x, y), tolerance=1.0):
+                    raise DiagramError(
+                        f"Connection '{source.node_id}->{target.node_id}' exits its section boundary."
+                    )
 
 
 def parse_args() -> argparse.Namespace:
@@ -1725,6 +1893,8 @@ def main() -> int:
     path = Path(args.input).resolve()
     try:
         spec = validate_spec(load_spec(path))
+        if args.validate_only:
+            validate_geometry(spec)
     except (OSError, json.JSONDecodeError, DiagramError) as exc:
         print(f"ERROR: {exc}")
         return 1

@@ -46,6 +46,7 @@ Use this state sequence: semantic model -> layout intent -> JSON spec -> rendere
    - section direction
    - lane order
    - lane offsets when a cross-lane edge needs more width or cleaner alignment
+   - badge label position when the default label placement would block a straight edge
    - node order inside each lane
    - connection routing hints only where needed
 3. Write the JSON spec to a file.
@@ -56,6 +57,12 @@ Use this state sequence: semantic model -> layout intent -> JSON spec -> rendere
    - Alignment: sections, lanes, node centers, labels, and routes follow a visible grid.
    - Repetition: repeated node roles, charts, panels, annotations, and connection styles use consistent treatment.
    - Contrast: title, sections, highlighted nodes, and normal nodes form a clear hierarchy within three seconds.
+7. Run a geometry sanity pass:
+   - Every edge has a visible arrowhead at the target.
+   - Straight semantic edges stay straight when node centers align.
+   - Badge labels sit above or below the pictogram according to whichever side leaves the intended edge path clear.
+   - Nodes, labels, annotations, and edge routes stay inside their owning section unless the connection intentionally crosses to another section.
+   - Dense sections use the full panel efficiently before increasing section width.
 
 ## Output contract
 

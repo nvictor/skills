@@ -110,9 +110,12 @@ Sequential groups place nodes along the lane direction. Parallel groups place no
 - `label`: required string
 - `type`: required enum: `default`, `process`, `model`, `database`, `user`, `storage`, `cloud`, `security`, `status`, `chart`
 - `highlight`: optional boolean
+- `label_position`: optional enum for badge-style nodes only: `top`, `bottom`; defaults to `bottom`
 - `chart`: required object when `type` is `chart`
 
 Nodes do not declare their lane directly. Lane membership comes from lane groups.
+
+Badge-style node types are `user`, `storage`, `cloud`, and `security`. Use `label_position: "top"` when the default below-node label would block a vertical edge from the badge to the next node.
 
 ## Chart node
 
@@ -205,6 +208,7 @@ Edge labels are not supported.
 - lane offsets must be numeric when provided
 - connections must reference existing nodes
 - routes must be one of the supported enums
+- `label_position` may only be set on badge-style nodes
 - labels and annotation text must be non-empty after trimming
 - chart nodes must define a valid `chart` object
 - chart series must have equal lengths

@@ -25,7 +25,7 @@
           }
         ],
         "nodes": [
-          { "id": "shopper", "label": "Shopper", "type": "user" },
+          { "id": "shopper", "label": "Shopper", "type": "user", "label_position": "top" },
           { "id": "intent_prompt", "label": "Define Intent", "type": "process" }
         ],
         "annotations": [
@@ -76,8 +76,8 @@
             "direction": "vertical",
             "groups": [
               {
-                "type": "parallel",
-                "nodes": ["vendor_a", "vendor_b"]
+                "type": "sequential",
+                "nodes": ["vendor_a"]
               }
             ]
           },
@@ -88,7 +88,7 @@
             "groups": [
               {
                 "type": "sequential",
-                "nodes": ["price_check"]
+                "nodes": ["price_check", "vendor_b"]
               }
             ]
           }
