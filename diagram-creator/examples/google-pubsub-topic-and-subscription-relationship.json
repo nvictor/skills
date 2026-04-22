@@ -1,12 +1,12 @@
 {
   "diagram": {
-    "title": "Terraform Pub/Sub Topic and Subscription Relationship",
-    "subtitle": "Publishers send to a topic, and one topic can fan out to multiple subscriptions managed by Terraform",
+    "title": "Pub/Sub Topic and Subscription Relationship",
+    "subtitle": "A topic accepts published messages and fans out to independently managed subscriptions",
     "sections": [
       {
         "id": "publishers",
         "title": "Publishers",
-        "subtitle": "Applications publish messages to a single topic",
+        "subtitle": "Applications publish messages into one topic resource",
         "layout": {
           "type": "flow",
           "direction": "horizontal"
@@ -16,7 +16,6 @@
             "id": "publish_flow",
             "title": "Publish flow",
             "direction": "vertical",
-            "x_offset": 48,
             "groups": [
               {
                 "type": "sequential",
@@ -26,8 +25,8 @@
           }
         ],
         "nodes": [
-          { "id": "publisher_app", "label": "Publisher app / service", "type": "user" },
-          { "id": "pubsub_topic", "label": "google_pubsub_topic", "type": "default", "highlight": true }
+          { "id": "publisher_app", "label": "Publisher app", "type": "user", "label_position": "top" },
+          { "id": "pubsub_topic", "label": "google_pubsub_topic", "type": "process", "highlight": true }
         ],
         "annotations": [
           {
@@ -39,43 +38,31 @@
       {
         "id": "subscriptions",
         "title": "Subscriptions",
-        "subtitle": "Each subscription resource points at one topic, and one topic may have many subscriptions",
+        "subtitle": "Each subscription points at one topic; a topic can have many subscriptions",
         "layout": {
           "type": "flow",
           "direction": "horizontal"
         },
         "lanes": [
           {
-            "id": "pull_lane",
-            "title": "Pull subscription",
+            "id": "subscription_rows",
+            "title": "Subscription resources",
             "direction": "vertical",
             "groups": [
               {
                 "type": "sequential",
-                "nodes": ["pull_subscription"]
-              }
-            ]
-          },
-          {
-            "id": "push_lane",
-            "title": "Push subscription",
-            "direction": "vertical",
-            "y_offset": 82,
-            "groups": [
-              {
-                "type": "sequential",
-                "nodes": ["push_subscription"]
+                "nodes": ["pull_subscription", "push_subscription"]
               }
             ]
           }
         ],
         "nodes": [
-          { "id": "pull_subscription", "label": "google_pubsub_subscription (pull)", "type": "process", "highlight": true },
-          { "id": "push_subscription", "label": "google_pubsub_subscription (push)", "type": "process" }
+          { "id": "pull_subscription", "label": "Pull subscription", "type": "process", "highlight": true },
+          { "id": "push_subscription", "label": "Push subscription", "type": "process" }
         ],
         "annotations": [
           {
-            "text": "Subscriptions configure delivery behavior such as ack deadlines, retention, filters, dead-lettering, and push or pull delivery.",
+            "text": "A google_pubsub_subscription configures ack deadlines, retention, filters, dead-lettering, and delivery mode.",
             "position": "footer"
           }
         ]
@@ -83,53 +70,41 @@
       {
         "id": "consumers",
         "title": "Consumers",
-        "subtitle": "Applications receive from subscriptions, not directly from the topic",
+        "subtitle": "Pull workers request messages; push subscriptions deliver to endpoints",
         "layout": {
           "type": "flow",
           "direction": "horizontal"
         },
         "lanes": [
           {
-            "id": "pull_consumers",
-            "title": "Pull workers",
+            "id": "consumer_rows",
+            "title": "Consumer targets",
             "direction": "vertical",
             "groups": [
               {
                 "type": "sequential",
-                "nodes": ["subscriber_workers"]
-              }
-            ]
-          },
-          {
-            "id": "push_consumers",
-            "title": "Push endpoint",
-            "direction": "vertical",
-            "y_offset": 82,
-            "groups": [
-              {
-                "type": "sequential",
-                "nodes": ["push_endpoint"]
+                "nodes": ["subscriber_workers", "push_endpoint"]
               }
             ]
           }
         ],
         "nodes": [
-          { "id": "subscriber_workers", "label": "Subscriber workers", "type": "process" },
+          { "id": "subscriber_workers", "label": "Pull workers", "type": "process" },
           { "id": "push_endpoint", "label": "HTTPS push endpoint", "type": "process" }
         ],
         "annotations": [
           {
-            "text": "Consumers read from subscriptions so each subscriber group can manage its own delivery semantics independently.",
+            "text": "Pull consumers initiate reads from the subscription; push subscriptions deliver messages to the configured HTTPS endpoint.",
             "position": "footer"
           }
         ]
       }
     ],
     "connections": [
-      { "from": "publisher_app", "to": "pubsub_topic", "route": "vertical" },
+      { "from": "publisher_app", "to": "pubsub_topic", "route": "direct" },
       { "from": "pubsub_topic", "to": "pull_subscription", "route": "direct" },
       { "from": "pubsub_topic", "to": "push_subscription", "route": "direct" },
-      { "from": "pull_subscription", "to": "subscriber_workers", "route": "direct" },
+      { "from": "subscriber_workers", "to": "pull_subscription", "route": "direct" },
       { "from": "push_subscription", "to": "push_endpoint", "route": "direct" }
     ]
   }

@@ -61,6 +61,7 @@ Use this state sequence: semantic model -> layout intent -> JSON spec -> rendere
    - Every edge has a visible arrowhead at the target.
    - Straight semantic edges stay straight when node centers align.
    - Single-path diagrams should keep node centers on one visible axis and avoid adding secondary lanes unless the separation carries meaning.
+   - Adjacent sections with corresponding roles should align equivalent node rows or columns before adding staggered lanes or extra width.
    - Badge labels sit above or below the pictogram according to whichever side leaves the intended edge path clear.
    - Nodes, labels, annotations, and edge routes stay inside their owning section unless the connection intentionally crosses to another section.
    - Dense sections use the full panel efficiently before increasing section width.
