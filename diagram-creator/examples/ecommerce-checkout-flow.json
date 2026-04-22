@@ -1,7 +1,7 @@
 {
   "diagram": {
     "title": "Ecommerce Checkout Flow",
-    "subtitle": "From cart review through payment approval to order confirmation",
+    "subtitle": "From shopper intent through validation, payment, confirmation, and fulfillment",
     "sections": [
       {
         "id": "storefront",
@@ -36,9 +36,9 @@
           }
         ],
         "nodes": [
-          { "id": "shopper", "label": "Shopper", "type": "user" },
+          { "id": "shopper", "label": "Shopper", "type": "user", "label_position": "top" },
           { "id": "review_cart", "label": "Review cart", "type": "process" },
-          { "id": "enter_details", "label": "Enter shipping + payment", "type": "process" },
+          { "id": "enter_details", "label": "Enter shipping and payment", "type": "process" },
           { "id": "submit_order", "label": "Submit order", "type": "process", "highlight": true }
         ],
         "annotations": [
@@ -48,7 +48,7 @@
       {
         "id": "checkout_services",
         "title": "Checkout Services",
-        "subtitle": "Backend services validate, authorize, and create the order",
+        "subtitle": "Backend services check the order before committing it",
         "layout": {
           "type": "flow",
           "direction": "horizontal"
@@ -66,9 +66,10 @@
             ]
           },
           {
-            "id": "payment",
-            "title": "Payment + order",
+            "id": "commit",
+            "title": "Commit",
             "direction": "vertical",
+            "y_offset": 64,
             "groups": [
               {
                 "type": "sequential",
@@ -84,22 +85,23 @@
           { "id": "create_order", "label": "Create order record", "type": "database" }
         ],
         "annotations": [
-          { "text": "Checkout succeeds only after inventory and payment both clear.", "position": "footer" }
+          { "text": "The order is created only after price, inventory, and payment checks clear.", "position": "footer" }
         ]
       },
       {
         "id": "post_purchase",
         "title": "Post-Purchase",
-        "subtitle": "The customer receives confirmation while fulfillment begins",
+        "subtitle": "The confirmed order fans out to customer messaging and operations",
         "layout": {
           "type": "flow",
           "direction": "horizontal"
         },
         "lanes": [
           {
-            "id": "customer_updates",
+            "id": "confirmation",
             "title": "Customer updates",
             "direction": "vertical",
+            "y_offset": 64,
             "groups": [
               {
                 "type": "sequential",
@@ -111,6 +113,7 @@
             "id": "operations",
             "title": "Operations",
             "direction": "vertical",
+            "y_offset": 62,
             "groups": [
               {
                 "type": "sequential",
@@ -120,7 +123,7 @@
           }
         ],
         "nodes": [
-          { "id": "order_confirmed", "label": "Order confirmed", "type": "process", "highlight": true },
+          { "id": "order_confirmed", "label": "Order confirmed", "type": "status", "highlight": true },
           { "id": "receipt_email", "label": "Send receipt email", "type": "process" },
           { "id": "fulfillment_queue", "label": "Queue fulfillment", "type": "database" }
         ],
@@ -130,7 +133,7 @@
       }
     ],
     "connections": [
-      { "from": "shopper", "to": "review_cart", "route": "elbow" },
+      { "from": "shopper", "to": "review_cart", "route": "direct" },
       { "from": "review_cart", "to": "enter_details", "route": "vertical" },
       { "from": "enter_details", "to": "submit_order", "route": "vertical" },
       { "from": "submit_order", "to": "price_check", "route": "direct" },

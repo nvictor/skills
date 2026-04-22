@@ -9,7 +9,7 @@
 </defs>
 <rect width="1179" height="520" fill="#F7F4EE"/>
 <text x="589.5" y="56" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700" fill="#1F1F1C">Ecommerce Checkout Flow</text>
-<text x="589.5" y="80" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="500" fill="#6D685F">From cart review through payment approval to order confirmation</text>
+<text x="589.5" y="80" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="500" fill="#6D685F">From shopper intent through validation, payment, confirmation, and fulfillment</text>
 <rect x="42.0" y="126.0" width="320.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
 <text x="202.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Storefront</text>
 <text x="202.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">The shopper moves from cart review</text>
@@ -19,50 +19,50 @@
 <text x="202.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">submission.</text>
 <rect x="382.0" y="126.0" width="364.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
 <text x="564.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Checkout Services</text>
-<text x="564.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Backend services validate, authorize, and</text>
-<text x="564.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">create the order</text>
-<text x="564.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Checkout succeeds only after inventory and</text>
-<text x="564.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">payment both clear.</text>
+<text x="564.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Backend services check the order before</text>
+<text x="564.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">committing it</text>
+<text x="564.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">The order is created only after price,</text>
+<text x="564.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">inventory, and payment checks clear.</text>
 <rect x="766.0" y="126.0" width="371.0" height="360.0" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
 <text x="951.5" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Post-Purchase</text>
-<text x="951.5" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">The customer receives confirmation while</text>
-<text x="951.5" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">fulfillment begins</text>
+<text x="951.5" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">The confirmed order fans out to customer</text>
+<text x="951.5" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">messaging and operations</text>
 <text x="951.5" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Confirmation and fulfillment can proceed in</text>
 <text x="951.5" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">parallel once the order exists.</text>
-<path d="M 134.0 246.0 L 146.5 246.0 Q 152.0 246.0 152.0 240.5 L 152.0 240.5 Q 152.0 235.0 157.5 235.0 L 182.0 235.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 241.0 258.0 L 241.0 276.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 241.0 322.0 L 241.0 340.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 300.0 363.0 L 384.0 363.0 Q 394.0 363.0 394.0 353.0 L 394.0 258.5 Q 394.0 249.0 403.5 249.0 L 413.0 249.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 480.5 272.0 L 480.5 290.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 480.5 336.0 L 480.5 345.0 Q 480.5 354.0 489.5 354.0 L 566.5 354.0 Q 576.5 354.0 576.5 344.0 L 576.5 218.0 Q 576.5 208.0 586.5 208.0 L 638.5 208.0 Q 647.5 208.0 647.5 217.0 L 647.5 226.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 647.5 272.0 L 647.5 290.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 706.5 313.0 L 768.0 313.0 Q 778.0 313.0 778.0 303.0 L 778.0 259.0 Q 778.0 249.0 788.0 249.0 L 800.5 249.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 868.0 272.0 L 868.0 290.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 935.5 249.0 L 964.0 249.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<circle cx="100.0" cy="246.0" r="34.0" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.4"/>
-<circle cx="100.0" cy="238.0" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>
-<path d="M 88.0 259.0 C 90.0 248.0, 110.0 248.0, 112.0 259.0" fill="none" stroke="#35C89B" stroke-width="2"/>
-<text x="100.0" y="298.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">Shopper</text>
-<rect x="182.0" y="212.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="241.0" y="239.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Review cart</text>
+<rect x="195.0" y="212.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="254.0" y="239.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Review cart</text>
 <rect x="413.0" y="226.0" width="135.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="480.5" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Validate prices</text>
-<rect x="573.0" y="226.0" width="149.0" height="46.0" rx="8" fill="#EAF4FF" stroke="#58A6F4" stroke-width="2"/>
-<text x="647.5" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Authorize payment</text>
-<rect x="800.5" y="226.0" width="135.0" height="46.0" rx="8" fill="#EAF4FF" stroke="#58A6F4" stroke-width="2"/>
-<text x="868.0" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Order confirmed</text>
-<rect x="964.0" y="226.0" width="149.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="1038.5" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Queue fulfillment</text>
-<rect x="170.0" y="276.0" width="142.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="241.0" y="295.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Enter shipping +</text>
-<text x="241.0" y="310.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">payment</text>
+<circle cx="120.0" cy="272.8" r="34.0" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.4"/>
+<circle cx="120.0" cy="264.8" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>
+<path d="M 108.0 285.8 C 110.0 274.8, 130.0 274.8, 132.0 285.8" fill="none" stroke="#35C89B" stroke-width="2"/>
+<text x="120.0" y="226.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">Shopper</text>
+<rect x="190.0" y="276.0" width="128.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="254.0" y="295.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Enter shipping</text>
+<text x="254.0" y="310.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">and payment</text>
+<rect x="964.0" y="288.0" width="149.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="1038.5" y="315.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Queue fulfillment</text>
 <rect x="406.0" y="290.0" width="149.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="480.5" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Reserve inventory</text>
-<rect x="588.5" y="290.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="647.5" y="309.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Create order</text>
-<text x="647.5" y="324.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">record</text>
-<rect x="790.0" y="290.0" width="156.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="868.0" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Send receipt email</text>
-<rect x="182.0" y="340.0" width="118.0" height="46.0" rx="8" fill="#EAF4FF" stroke="#58A6F4" stroke-width="2"/>
-<text x="241.0" y="367.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Submit order</text>
+<rect x="573.0" y="290.0" width="149.0" height="46.0" rx="8" fill="#EAF4FF" stroke="#58A6F4" stroke-width="2"/>
+<text x="647.5" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Authorize payment</text>
+<rect x="801.5" y="290.0" width="133.0" height="42.0" rx="8" fill="#76C68B" stroke="#5CAD73" stroke-width="1.6"/>
+<text x="868.0" y="315.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#2C6C3C">Order confirmed</text>
+<rect x="195.0" y="340.0" width="118.0" height="46.0" rx="8" fill="#EAF4FF" stroke="#58A6F4" stroke-width="2"/>
+<text x="254.0" y="367.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Submit order</text>
+<rect x="790.0" y="350.0" width="156.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="868.0" y="377.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Send receipt email</text>
+<rect x="588.5" y="354.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="647.5" y="373.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Create order</text>
+<text x="647.5" y="388.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">record</text>
+<path d="M 154.0 272.8 L 163.0 272.8 Q 172.0 272.8 172.0 263.8 L 172.0 245.0 Q 172.0 235.0 182.0 235.0 L 194.0 235.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 254.0 258.0 L 254.0 275.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 254.0 322.0 L 254.0 339.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 313.0 363.0 L 322.0 363.0 Q 331.0 363.0 331.0 354.0 L 331.0 259.0 Q 331.0 249.0 341.0 249.0 L 412.0 249.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 480.5 272.0 L 480.5 289.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 555.0 313.0 L 572.0 313.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 647.5 336.0 L 647.5 353.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 706.5 377.0 L 768.0 377.0 Q 778.0 377.0 778.0 367.0 L 778.0 321.0 Q 778.0 311.0 788.0 311.0 L 800.5 311.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 868.0 332.0 L 868.0 349.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 934.5 311.0 L 963.0 311.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
 </svg>
