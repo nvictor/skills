@@ -23,24 +23,24 @@
 <text x="545.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">entrypoints, and routes</text>
 <text x="545.0" y="460.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Gateway API separates platform</text>
 <text x="545.0" y="474.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">ownership from app routing intent.</text>
-<path d="M 202.0 272.0 L 202.0 289.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 202.0 336.0 L 202.0 353.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 465.0 272.0 L 465.0 289.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 524.0 313.0 L 565.0 313.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 625.0 336.0 L 625.0 353.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<rect x="131.0" y="226.0" width="142.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
-<text x="202.0" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Ingress resource</text>
+<rect x="160.0" y="226.0" width="142.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
+<text x="231.0" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Ingress resource</text>
 <rect x="406.0" y="226.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="465.0" y="253.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">GatewayClass</text>
-<rect x="124.0" y="290.0" width="156.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="202.0" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Ingress controller</text>
+<rect x="153.0" y="290.0" width="156.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="231.0" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Ingress controller</text>
 <rect x="406.0" y="290.0" width="118.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
 <text x="465.0" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Gateway</text>
 <rect x="566.0" y="290.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="625.0" y="317.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">HTTPRoute</text>
-<rect x="134.5" y="354.0" width="135.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="202.0" y="381.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Backend service</text>
+<rect x="163.5" y="354.0" width="135.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
+<text x="231.0" y="381.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Backend service</text>
 <rect x="566.0" y="354.0" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
 <text x="625.0" y="373.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">BackendRef /</text>
 <text x="625.0" y="388.5" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Service</text>
+<path d="M 231.0 272.0 L 231.0 289.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 231.0 336.0 L 231.0 353.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 465.0 272.0 L 465.0 289.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 524.0 313.0 L 565.0 313.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<path d="M 625.0 336.0 L 625.0 353.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
 </svg>
