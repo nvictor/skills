@@ -26,8 +26,9 @@
     </filter>
   </defs>
 
-  <rect x="24" y="24" width="464" height="464" rx="106" fill="url(#skin)"/>
-  <g clip-path="url(#squircleClip)">
+  <g transform="matrix(1.103448 0 0 1.103448 -26.482759 -26.482759)">
+    <rect x="24" y="24" width="464" height="464" rx="106" fill="url(#skin)"/>
+    <g clip-path="url(#squircleClip)">
     <path d="M24 166C82 136 162 122 256 122C350 122 430 136 488 166V372C432 402 352 418 256 418C160 418 80 402 24 372V166Z" fill="url(#skin)"/>
     <path d="M24 24H488V178L452 118L414 218L378 104L336 238L304 112L256 224L208 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="#8B4A3F" opacity="0.12" transform="translate(0 7)"/>
     <path d="M24 24H488V178L452 118L414 218L378 104L336 238L304 112L256 224L208 112L176 238L134 104L98 218L60 118L24 178V24Z" fill="url(#hair)" filter="url(#softShadow)"/>
@@ -43,7 +44,8 @@
     <path d="M380 242C347 256 311 250 282 228C307 264 347 273 380 254V242Z" fill="#C73538"/>
 
     <path d="M206 330H306" fill="none" stroke="#6E3A34" stroke-width="7" stroke-linecap="round"/>
-  </g>
+    </g>
 
-  <rect x="24" y="24" width="464" height="464" rx="106" fill="none" stroke="#221717" stroke-opacity="0.18" stroke-width="2"/>
+    <rect x="24" y="24" width="464" height="464" rx="106" fill="none" stroke="#221717" stroke-opacity="0.18" stroke-width="2"/>
+  </g>
 </svg>

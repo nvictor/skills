@@ -15,8 +15,10 @@
       <stop offset="100%" stop-color="#FFB963"/>
     </linearGradient>
   </defs>
-  <rect x="24" y="24" width="464" height="464" rx="104" fill="url(#bg)"/>
-  <rect x="24" y="24" width="464" height="464" rx="104" fill="url(#surface)"/>
-  <path d="M24 128C24 70.562 70.562 24 128 24H230V78H132C102.177 78 78 102.177 78 132V230H24V128Z" fill="url(#guideLight)"/>
-  <path d="M488 384C488 441.438 441.438 488 384 488H282V434H380C409.823 434 434 409.823 434 380V282H488V384Z" fill="#A54120" opacity="0.92"/>
+  <g transform="matrix(1.103448 0 0 1.103448 -26.482759 -26.482759)">
+    <rect x="24" y="24" width="464" height="464" rx="104" fill="url(#bg)"/>
+    <rect x="24" y="24" width="464" height="464" rx="104" fill="url(#surface)"/>
+    <path d="M24 128C24 70.562 70.562 24 128 24H230V78H132C102.177 78 78 102.177 78 132V230H24V128Z" fill="url(#guideLight)"/>
+    <path d="M488 384C488 441.438 441.438 488 384 488H282V434H380C409.823 434 434 409.823 434 380V282H488V384Z" fill="#A54120" opacity="0.92"/>
+  </g>
 </svg>

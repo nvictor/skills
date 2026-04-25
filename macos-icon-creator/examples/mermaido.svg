@@ -29,21 +29,23 @@
     </filter>
   </defs>
 
-  <rect x="24" y="24" width="464" height="464" rx="106" fill="url(#base)"/>
-  <g clip-path="url(#squircleClip)" transform="translate(0 30)">
-    <path d="M24 315C78 285 142 283 205 309C277 338 344 339 416 302C444 288 468 283 488 287V488H24V315Z" fill="url(#waveA)"/>
-    <path d="M24 445C93 412 165 409 240 435C330 466 405 459 488 410V488H24V445Z" fill="#045C72" opacity="0.2"/>
-  </g>
+  <g transform="matrix(1.103448 0 0 1.103448 -26.482759 -26.482759)">
+    <rect x="24" y="24" width="464" height="464" rx="106" fill="url(#base)"/>
+    <g clip-path="url(#squircleClip)" transform="translate(0 30)">
+      <path d="M24 315C78 285 142 283 205 309C277 338 344 339 416 302C444 288 468 283 488 287V488H24V315Z" fill="url(#waveA)"/>
+      <path d="M24 445C93 412 165 409 240 435C330 466 405 459 488 410V488H24V445Z" fill="#045C72" opacity="0.2"/>
+    </g>
 
-  <g filter="url(#softShadow)" transform="translate(0 30)">
-    <path d="M256 344C236 285 209 237 176 199C137 154 101 119 64 88C148 74 220 118 256 194C292 118 364 74 448 88C411 119 375 154 336 199C303 237 276 285 256 344Z" fill="#065E74" opacity="0.2"/>
-    <path d="M256 194C220 118 148 74 64 88C79 161 129 231 205 286C228 303 246 326 256 344V194Z" fill="url(#tailL)"/>
-    <path d="M256 194C292 118 364 74 448 88C433 161 383 231 307 286C284 303 266 326 256 344V194Z" fill="url(#tailR)"/>
-    <path d="M126 108C169 108 213 139 240 188" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" opacity="0.16"/>
-  </g>
+    <g filter="url(#softShadow)" transform="translate(0 30)">
+      <path d="M256 344C236 285 209 237 176 199C137 154 101 119 64 88C148 74 220 118 256 194C292 118 364 74 448 88C411 119 375 154 336 199C303 237 276 285 256 344Z" fill="#065E74" opacity="0.2"/>
+      <path d="M256 194C220 118 148 74 64 88C79 161 129 231 205 286C228 303 246 326 256 344V194Z" fill="url(#tailL)"/>
+      <path d="M256 194C292 118 364 74 448 88C433 161 383 231 307 286C284 303 266 326 256 344V194Z" fill="url(#tailR)"/>
+      <path d="M126 108C169 108 213 139 240 188" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" opacity="0.16"/>
+    </g>
 
-  <g clip-path="url(#squircleClip)" transform="translate(0 30)">
-    <path d="M24 367C87 332 150 332 211 361C282 394 352 392 424 351C450 336 471 332 488 335V488H24V367Z" fill="url(#waveB)"/>
+    <g clip-path="url(#squircleClip)" transform="translate(0 30)">
+      <path d="M24 367C87 332 150 332 211 361C282 394 352 392 424 351C450 336 471 332 488 335V488H24V367Z" fill="url(#waveB)"/>
+    </g>
   </g>
 
 </svg>
