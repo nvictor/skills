@@ -1,0 +1,118 @@
+{
+  "diagram": {
+    "title": "Sparkle Integration",
+    "subtitle": "A generic macOS app wiring Sparkle through app code, release automation, and runtime verification",
+    "sections": [
+      {
+        "id": "app_wiring",
+        "title": "App Wiring",
+        "subtitle": "The macOS app owns a small Sparkle bridge",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "app_steps",
+            "title": "App setup",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["sparkle_package", "info_plist", "app_updater", "check_menu_item"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "sparkle_package", "label": "Sparkle Swift package", "type": "default" },
+          { "id": "info_plist", "label": "SUFeedURL and SUPublicEDKey", "type": "process", "highlight": true },
+          { "id": "app_updater", "label": "AppUpdater wraps SPU controller", "type": "process", "highlight": true },
+          { "id": "check_menu_item", "label": "Check for Updates command", "type": "process" }
+        ],
+        "annotations": [
+          { "text": "The application keeps Sparkle behind one app-owned bridge and exposes only availability plus manual check actions to the UI.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "release_pipeline",
+        "title": "Release Pipeline",
+        "subtitle": "GitHub Actions turns a tag into signed update assets",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "release_steps",
+            "title": "Release steps",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["tag_push", "archive_app", "notarize_app", "create_dmg", "generate_appcast", "github_release"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "tag_push", "label": "Push version tag", "type": "default" },
+          { "id": "archive_app", "label": "Archive with Developer ID", "type": "process" },
+          { "id": "notarize_app", "label": "Notarize and staple app", "type": "process" },
+          { "id": "create_dmg", "label": "Create signed DMG", "type": "database" },
+          { "id": "generate_appcast", "label": "generate_appcast signs feed", "type": "process", "highlight": true },
+          { "id": "github_release", "label": "Upload DMG, appcast, deltas", "type": "cloud" }
+        ],
+        "annotations": [
+          { "text": "The private EdDSA key only exists in the release job; the hosted feed is consumed by apps with the matching public key.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "update_runtime",
+        "title": "Update Runtime",
+        "subtitle": "Sparkle verifies the feed before installing the newer build",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "runtime_steps",
+            "title": "Runtime steps",
+            "direction": "vertical",
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["published_appcast", "manual_check", "fetch_appcast", "verify_signature", "install_update"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "published_appcast", "label": "Published appcast.xml", "type": "cloud", "label_position": "top" },
+          { "id": "manual_check", "label": "Select Check for Updates", "type": "process" },
+          { "id": "fetch_appcast", "label": "Sparkle downloads feed", "type": "process" },
+          { "id": "verify_signature", "label": "Verify EdDSA signature", "type": "process", "highlight": true },
+          { "id": "install_update", "label": "Install update and relaunch", "type": "status", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "Sparkle handles feed retrieval, signature verification, download, replacement, and relaunch outside the app menu code.", "position": "footer" }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "sparkle_package", "to": "info_plist", "route": "vertical" },
+      { "from": "info_plist", "to": "app_updater", "route": "vertical" },
+      { "from": "app_updater", "to": "check_menu_item", "route": "vertical" },
+      { "from": "tag_push", "to": "archive_app", "route": "vertical" },
+      { "from": "archive_app", "to": "notarize_app", "route": "vertical" },
+      { "from": "notarize_app", "to": "create_dmg", "route": "vertical" },
+      { "from": "create_dmg", "to": "generate_appcast", "route": "vertical" },
+      { "from": "generate_appcast", "to": "github_release", "route": "vertical" },
+      { "from": "published_appcast", "to": "manual_check", "route": "vertical" },
+      { "from": "manual_check", "to": "fetch_appcast", "route": "vertical" },
+      { "from": "fetch_appcast", "to": "verify_signature", "route": "vertical" },
+      { "from": "verify_signature", "to": "install_update", "route": "vertical" }
+    ]
+  }
+}
