@@ -1,0 +1,4 @@
+interface:
+  display_name: "Situational Narrative Writer"
+  short_description: "Shape leadership and behavioral stories"
+  default_prompt: "Use $situational-narrative-writer to turn these notes into a concise behavioral interview answer."
