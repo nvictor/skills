@@ -1,13 +1,13 @@
 ---
 name: technical-narrative-writer
-description: Turn technical systems work into concise career narratives for interview answers, resumes, promotion packets, project summaries, performance reviews, and skill-positioning blurbs. Use when the user wants a short paragraph or two that explains technical work through operational problem, system boundary, control model, automation, governance, outcome, and engineering leverage.
+description: Turn technical systems work into concise career narratives for interview answers, resumes, promotion packets, project summaries, performance reviews, and skill-positioning blurbs. Use when the user wants a 2-5 sentence written narrative or a 60-90 second spoken answer that explains technical work through operational problem, system boundary, control model, automation, governance, outcome, and engineering leverage.
 ---
 
 # Technical Narrative Writer
 
 ## Purpose
 
-Use this skill to turn technical systems into short, career-ready narratives. The default output is one paragraph. Use two paragraphs only when the material has enough scope that combining it would make the result dense or hard to read. Do not produce long writeups, visible worksheets, or section-by-section analysis unless the user explicitly asks for them.
+Use this skill to turn technical systems into short, career-ready narratives. The default output is one paragraph of 2-5 sentences. For spoken interview answers, aim for 60-90 seconds. Use two paragraphs only when the material has enough scope that combining it would make the result dense or hard to read. Do not produce long writeups, visible worksheets, or section-by-section analysis unless the user explicitly asks for them.
 
 The goal is to show systems thinking instead of listing tools: how technical work turned a risky, unclear, manual, or expensive operating space into a repeatable system that teams could use, trust, govern, and maintain.
 
@@ -27,7 +27,7 @@ Start with the problem and boundary so the reader understands the scale. Then de
 
 ## Output Rules
 
-- Prefer one paragraph of 2-5 sentences.
+- Prefer one paragraph of 2-5 sentences, or a 60-90 second answer when the user wants spoken interview material.
 - Use two shorter paragraphs only when it improves readability.
 - Keep claims source-backed. Do not invent metrics, scope, ownership, or business impact.
 - Use exact names for systems, repositories, tools, and platforms when available.
