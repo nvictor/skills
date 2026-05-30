@@ -1,0 +1,246 @@
+{
+  "diagram": {
+    "title": "Diagram Color Scheme Gallery",
+    "subtitle": "The same compact flow rendered with each built-in palette",
+    "color_scheme": "warm-neutral",
+    "sections": [
+      {
+        "id": "warm_neutral",
+        "title": "Warm Neutral",
+        "subtitle": "Default house style",
+        "color_scheme": "warm-neutral",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "warm_neutral_primary",
+            "direction": "vertical",
+            "y_offset": 8,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["warm_neutral_user", "warm_neutral_process", "warm_neutral_storage"]
+              }
+            ]
+          },
+          {
+            "id": "warm_neutral_status_lane",
+            "direction": "vertical",
+            "x_offset": 20,
+            "y_offset": 182,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["warm_neutral_status"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "warm_neutral_user", "label": "User", "type": "user", "label_position": "top" },
+          { "id": "warm_neutral_process", "label": "Approve request", "type": "process", "highlight": true },
+          { "id": "warm_neutral_storage", "label": "Storage", "type": "storage" },
+          { "id": "warm_neutral_status", "label": "Ready", "type": "status", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "Warm canvas, orange emphasis, and blue callouts.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "studio_paper",
+        "title": "Studio Paper",
+        "subtitle": "Soft documentation palette",
+        "color_scheme": "studio-paper",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "studio_paper_primary",
+            "direction": "vertical",
+            "y_offset": 8,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["studio_paper_user", "studio_paper_process", "studio_paper_storage"]
+              }
+            ]
+          },
+          {
+            "id": "studio_paper_status_lane",
+            "direction": "vertical",
+            "x_offset": 20,
+            "y_offset": 182,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["studio_paper_status"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "studio_paper_user", "label": "User", "type": "user", "label_position": "top" },
+          { "id": "studio_paper_process", "label": "Approve request", "type": "process", "highlight": true },
+          { "id": "studio_paper_storage", "label": "Storage", "type": "storage" },
+          { "id": "studio_paper_status", "label": "Ready", "type": "status", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "Gentler paper tones for explainers and long-form docs.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "ink_signal",
+        "title": "Ink Signal",
+        "subtitle": "Technical green and teal",
+        "color_scheme": "ink-signal",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "ink_signal_primary",
+            "direction": "vertical",
+            "y_offset": 8,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["ink_signal_user", "ink_signal_process", "ink_signal_storage"]
+              }
+            ]
+          },
+          {
+            "id": "ink_signal_status_lane",
+            "direction": "vertical",
+            "x_offset": 20,
+            "y_offset": 182,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["ink_signal_status"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "ink_signal_user", "label": "User", "type": "user", "label_position": "top" },
+          { "id": "ink_signal_process", "label": "Approve request", "type": "process", "highlight": true },
+          { "id": "ink_signal_storage", "label": "Storage", "type": "storage" },
+          { "id": "ink_signal_status", "label": "Ready", "type": "status", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "A cleaner systems feel with green signal accents.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "console_light",
+        "title": "Console Light",
+        "subtitle": "Crisp engineering UI",
+        "color_scheme": "console-light",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "console_light_primary",
+            "direction": "vertical",
+            "y_offset": 8,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["console_light_user", "console_light_process", "console_light_storage"]
+              }
+            ]
+          },
+          {
+            "id": "console_light_status_lane",
+            "direction": "vertical",
+            "x_offset": 20,
+            "y_offset": 182,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["console_light_status"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "console_light_user", "label": "User", "type": "user", "label_position": "top" },
+          { "id": "console_light_process", "label": "Approve request", "type": "process", "highlight": true },
+          { "id": "console_light_storage", "label": "Storage", "type": "storage" },
+          { "id": "console_light_status", "label": "Ready", "type": "status", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "Cooler neutrals and blue emphasis for tool surfaces.", "position": "footer" }
+        ]
+      },
+      {
+        "id": "graphite_citrus",
+        "title": "Graphite Citrus",
+        "subtitle": "Higher-contrast accent set",
+        "color_scheme": "graphite-citrus",
+        "layout": {
+          "type": "flow",
+          "direction": "horizontal"
+        },
+        "lanes": [
+          {
+            "id": "graphite_citrus_primary",
+            "direction": "vertical",
+            "y_offset": 8,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["graphite_citrus_user", "graphite_citrus_process", "graphite_citrus_storage"]
+              }
+            ]
+          },
+          {
+            "id": "graphite_citrus_status_lane",
+            "direction": "vertical",
+            "x_offset": 20,
+            "y_offset": 182,
+            "groups": [
+              {
+                "type": "sequential",
+                "nodes": ["graphite_citrus_status"]
+              }
+            ]
+          }
+        ],
+        "nodes": [
+          { "id": "graphite_citrus_user", "label": "User", "type": "user", "label_position": "top" },
+          { "id": "graphite_citrus_process", "label": "Approve request", "type": "process", "highlight": true },
+          { "id": "graphite_citrus_storage", "label": "Storage", "type": "storage" },
+          { "id": "graphite_citrus_status", "label": "Ready", "type": "status", "highlight": true }
+        ],
+        "annotations": [
+          { "text": "Graphite structure with a sharper citrus highlight.", "position": "footer" }
+        ]
+      }
+    ],
+    "connections": [
+      { "from": "warm_neutral_user", "to": "warm_neutral_process", "route": "vertical" },
+      { "from": "warm_neutral_process", "to": "warm_neutral_storage", "route": "vertical" },
+      { "from": "warm_neutral_process", "to": "warm_neutral_status", "route": "elbow" },
+      { "from": "studio_paper_user", "to": "studio_paper_process", "route": "vertical" },
+      { "from": "studio_paper_process", "to": "studio_paper_storage", "route": "vertical" },
+      { "from": "studio_paper_process", "to": "studio_paper_status", "route": "elbow" },
+      { "from": "ink_signal_user", "to": "ink_signal_process", "route": "vertical" },
+      { "from": "ink_signal_process", "to": "ink_signal_storage", "route": "vertical" },
+      { "from": "ink_signal_process", "to": "ink_signal_status", "route": "elbow" },
+      { "from": "console_light_user", "to": "console_light_process", "route": "vertical" },
+      { "from": "console_light_process", "to": "console_light_storage", "route": "vertical" },
+      { "from": "console_light_process", "to": "console_light_status", "route": "elbow" },
+      { "from": "graphite_citrus_user", "to": "graphite_citrus_process", "route": "vertical" },
+      { "from": "graphite_citrus_process", "to": "graphite_citrus_storage", "route": "vertical" },
+      { "from": "graphite_citrus_process", "to": "graphite_citrus_status", "route": "elbow" }
+    ]
+  }
+}

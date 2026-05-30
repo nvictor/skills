@@ -14,21 +14,135 @@ from typing import Any
 from xml.sax.saxutils import escape
 
 
-TOKENS = {
-    "canvas": "#F7F4EE",
-    "panel": "#FFFFFF",
-    "section": "#FCFBF8",
-    "callout": "#EAF4FF",
-    "border": "#DAD4CA",
-    "panel_border": "#E6E0D5",
-    "callout_border": "#58A6F4",
-    "text": "#1F1F1C",
-    "muted_text": "#6D685F",
-    "accent": "#F27A2B",
-    "ok": "#76C68B",
-    "danger": "#F06A63",
-    "edge": "#8E877C",
+PALETTES = {
+    "warm-neutral": {
+        "canvas": "#F2E8D0",
+        "panel": "#FFFDF7",
+        "section": "#FDF3E3",
+        "callout": "#EAF4FF",
+        "border": "#DAD4CA",
+        "panel_border": "#DDD0B8",
+        "callout_border": "#58A6F4",
+        "text": "#1F1F1C",
+        "muted_text": "#6D685F",
+        "accent": "#F27A2B",
+        "highlight_fill": "#FCE7D8",
+        "chart_highlight_fill": "#FFF9F3",
+        "plot_fill": "#FBFAF7",
+        "badge_accent": "#35C89B",
+        "ok": "#76C68B",
+        "ok_stroke": "#5CAD73",
+        "ok_text": "#1F1F1C",
+        "danger": "#F06A63",
+        "danger_fill": "#FDE3E1",
+        "danger_text": "#C94F48",
+        "edge": "#8E877C",
+        "chart_series": ["#F27A2B", "#58A6F4", "#76C68B", "#C98BFF"],
+        "chart_reference": ["#6D685F", "#F06A63", "#58A6F4"],
+    },
+    "studio-paper": {
+        "canvas": "#EAE0C4",
+        "panel": "#FDF8EE",
+        "section": "#F6EDD6",
+        "callout": "#E8F1F8",
+        "border": "#D8D1C3",
+        "panel_border": "#D4C9AE",
+        "callout_border": "#4D8FC7",
+        "text": "#25231F",
+        "muted_text": "#756F64",
+        "accent": "#D96C2C",
+        "highlight_fill": "#F7E2D2",
+        "chart_highlight_fill": "#FFF6ED",
+        "plot_fill": "#FDF9F2",
+        "badge_accent": "#4D8FC7",
+        "ok": "#6FAE7E",
+        "ok_stroke": "#528D61",
+        "ok_text": "#25231F",
+        "danger": "#D95F59",
+        "danger_fill": "#F8E0DD",
+        "danger_text": "#A94743",
+        "edge": "#8A8378",
+        "chart_series": ["#D96C2C", "#4D8FC7", "#6FAE7E", "#B983C9"],
+        "chart_reference": ["#756F64", "#D95F59", "#4D8FC7"],
+    },
+    "ink-signal": {
+        "canvas": "#DDE9D9",
+        "panel": "#F6FBF5",
+        "section": "#EBF5E8",
+        "callout": "#E7F3F1",
+        "border": "#C4D5BE",
+        "panel_border": "#C4D5BE",
+        "callout_border": "#2A9D8F",
+        "text": "#1D2420",
+        "muted_text": "#657067",
+        "accent": "#E4572E",
+        "highlight_fill": "#F9DED6",
+        "chart_highlight_fill": "#FFF4EF",
+        "plot_fill": "#F7FAF7",
+        "badge_accent": "#2A9D8F",
+        "ok": "#5DAE73",
+        "ok_stroke": "#438A56",
+        "ok_text": "#1D2420",
+        "danger": "#D65C5C",
+        "danger_fill": "#F7DDDD",
+        "danger_text": "#A34646",
+        "edge": "#7D857E",
+        "chart_series": ["#E4572E", "#2A9D8F", "#5DAE73", "#8B7ED8"],
+        "chart_reference": ["#657067", "#D65C5C", "#2A9D8F"],
+    },
+    "console-light": {
+        "canvas": "#DCE5F0",
+        "panel": "#F5F8FC",
+        "section": "#E9EFF7",
+        "callout": "#EEF6FF",
+        "border": "#C5D2E2",
+        "panel_border": "#C5D2E2",
+        "callout_border": "#3B82F6",
+        "text": "#17202A",
+        "muted_text": "#637083",
+        "accent": "#2563EB",
+        "highlight_fill": "#E4EDFF",
+        "chart_highlight_fill": "#F2F7FF",
+        "plot_fill": "#F8FAFC",
+        "badge_accent": "#2563EB",
+        "ok": "#22A06B",
+        "ok_stroke": "#178255",
+        "ok_text": "#17202A",
+        "danger": "#E5484D",
+        "danger_fill": "#FBE3E5",
+        "danger_text": "#B72D35",
+        "edge": "#7B8794",
+        "chart_series": ["#2563EB", "#22A06B", "#F59E0B", "#A855F7"],
+        "chart_reference": ["#637083", "#E5484D", "#3B82F6"],
+    },
+    "graphite-citrus": {
+        "canvas": "#E5E4DF",
+        "panel": "#F9F8F5",
+        "section": "#EEECEA",
+        "callout": "#EAF2EA",
+        "border": "#D0CECA",
+        "panel_border": "#D0CECA",
+        "callout_border": "#4C956C",
+        "text": "#202124",
+        "muted_text": "#666A70",
+        "accent": "#C6A100",
+        "highlight_fill": "#F5E9A9",
+        "chart_highlight_fill": "#FFF9D8",
+        "plot_fill": "#FAFAF4",
+        "badge_accent": "#4C956C",
+        "ok": "#4C956C",
+        "ok_stroke": "#36764F",
+        "ok_text": "#202124",
+        "danger": "#D1495B",
+        "danger_fill": "#F7DDE1",
+        "danger_text": "#A33645",
+        "edge": "#777B80",
+        "chart_series": ["#C6A100", "#4C956C", "#6B7280", "#D1495B"],
+        "chart_reference": ["#666A70", "#D1495B", "#4C956C"],
+    },
 }
+
+DEFAULT_COLOR_SCHEME = "warm-neutral"
 
 FONT_STACK = "Inter, ui-sans-serif, system-ui, sans-serif"
 CANVAS_PAD_X = 42
@@ -89,8 +203,6 @@ VALID_ROUTES = {"direct", "elbow", "vertical"}
 VALID_CHART_KINDS = {"line", "area", "bar", "pie"}
 VALID_REFERENCE_LINE_STYLES = {"solid", "dashed"}
 VALID_BADGE_LABEL_POSITIONS = {"top", "bottom"}
-CHART_SERIES_COLORS = ["#F27A2B", "#58A6F4", "#76C68B", "#C98BFF"]
-CHART_REFERENCE_COLORS = ["#6D685F", "#F06A63", "#58A6F4"]
 BADGE_NODE_SIZES = {
     "user": USER_NODE_SIZE,
     "storage": STORAGE_NODE_SIZE,
@@ -177,6 +289,7 @@ class SectionLayout:
     section_id: str
     title: str
     subtitle: str | None
+    color_scheme: str
     x: float
     y: float
     width: float
@@ -468,6 +581,12 @@ def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
     show_sections = diagram.get("show_sections", True)
     if not isinstance(show_sections, bool):
         raise DiagramError("'show_sections' must be a boolean when provided.")
+    color_scheme = diagram.get("color_scheme", DEFAULT_COLOR_SCHEME)
+    if not isinstance(color_scheme, str) or not color_scheme.strip():
+        raise DiagramError("'color_scheme' must be a non-empty string when provided.")
+    color_scheme = color_scheme.strip()
+    if color_scheme not in PALETTES:
+        raise DiagramError(f"Unknown color scheme '{color_scheme}'.")
 
     sections = require_list(diagram, "sections")
     connections = require_list(diagram, "connections")
@@ -494,6 +613,12 @@ def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
             raise DiagramError(f"Section '{section_id}' has invalid layout type '{layout_type}'.")
         if direction not in VALID_DIRECTIONS:
             raise DiagramError(f"Section '{section_id}' has invalid layout direction '{direction}'.")
+        section_color_scheme = section.get("color_scheme", color_scheme)
+        if not isinstance(section_color_scheme, str) or not section_color_scheme.strip():
+            raise DiagramError(f"Section '{section_id}' color_scheme must be a non-empty string when provided.")
+        section_color_scheme = section_color_scheme.strip()
+        if section_color_scheme not in PALETTES:
+            raise DiagramError(f"Section '{section_id}' has unknown color scheme '{section_color_scheme}'.")
 
         lanes = require_list(section, "lanes")
         nodes = require_list(section, "nodes")
@@ -600,6 +725,7 @@ def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
                 "id": section_id,
                 "title": require_non_empty_string(section, "title"),
                 "subtitle": section.get("subtitle"),
+                "color_scheme": section_color_scheme,
                 "layout": {"type": layout_type, "direction": direction},
                 "lanes": normalized_lanes,
                 "nodes": list(section_node_map.values()),
@@ -629,6 +755,7 @@ def validate_spec(data: dict[str, Any]) -> dict[str, Any]:
             "title": title,
             "subtitle": subtitle.strip() if isinstance(subtitle, str) and subtitle.strip() else None,
             "show_sections": show_sections,
+            "color_scheme": color_scheme,
             "sections": normalized_sections,
             "connections": normalized_connections,
         }
@@ -837,6 +964,7 @@ def layout_diagram(diagram: dict[str, Any]) -> tuple[list[SectionLayout], dict[s
             section_id=section["id"],
             title=section["title"],
             subtitle=section.get("subtitle"),
+            color_scheme=section["color_scheme"],
             x=x_cursor,
             y=CANVAS_PAD_Y + TITLE_BLOCK_H,
             width=section_width,
@@ -1152,7 +1280,12 @@ def route_connection_points(
 ) -> list[tuple[float, float]]:
     source = nodes[connection["from"]]
     target = nodes[connection["to"]]
-    allowed = {source.node_id, target.node_id}
+    allowed = {
+        source.node_id,
+        target.node_id,
+        f"node_label:{source.node_id}",
+        f"node_label:{target.node_id}",
+    }
     candidates: list[tuple[float, list[tuple[float, float]]]] = []
 
     for preference_index, (source_side, target_side) in enumerate(candidate_port_sides(source, target, connection["route"])):
@@ -1354,28 +1487,32 @@ def marker_adjusted_points(points: list[tuple[float, float]], offset: float = 1.
     return adjusted
 
 
-def render_title(title: str, subtitle: str | None, width: int) -> str:
+def palette_for_scheme(color_scheme: str) -> dict[str, Any]:
+    return PALETTES[color_scheme]
+
+
+def render_title(title: str, subtitle: str | None, width: int, palette: dict[str, Any]) -> str:
     lines = [
-        f'<text x="{width / 2:.1f}" y="56" text-anchor="middle" font-family="{FONT_STACK}" font-size="32" font-weight="700" fill="{TOKENS["text"]}">{escape(title)}</text>'
+        f'<text x="{width / 2:.1f}" y="56" text-anchor="middle" font-family="{FONT_STACK}" font-size="32" font-weight="700" fill="{palette["text"]}">{escape(title)}</text>'
     ]
     if subtitle:
         lines.append(
-            f'<text x="{width / 2:.1f}" y="80" text-anchor="middle" font-family="{FONT_STACK}" font-size="14" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(subtitle)}</text>'
+            f'<text x="{width / 2:.1f}" y="80" text-anchor="middle" font-family="{FONT_STACK}" font-size="14" font-weight="500" fill="{palette["muted_text"]}">{escape(subtitle)}</text>'
         )
     return "\n".join(lines)
 
 
-def render_section(section: SectionLayout) -> str:
+def render_section(section: SectionLayout, palette: dict[str, Any]) -> str:
     title_y = section.y + 34
     parts = [
-        f'<rect x="{section.x:.1f}" y="{section.y:.1f}" width="{section.width:.1f}" height="{section.height:.1f}" rx="{SECTION_RADIUS}" fill="{TOKENS["section"]}" stroke="{TOKENS["panel_border"]}" filter="url(#panelShadow)"/>',
-        f'<text x="{section.x + section.width / 2:.1f}" y="{title_y:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="14" font-weight="700" letter-spacing="0.06em" fill="{TOKENS["text"]}">{escape(section.title)}</text>',
+        f'<rect x="{section.x:.1f}" y="{section.y:.1f}" width="{section.width:.1f}" height="{section.height:.1f}" rx="{SECTION_RADIUS}" fill="{palette["section"]}" stroke="{palette["panel_border"]}" filter="url(#panelShadow)"/>',
+        f'<text x="{section.x + section.width / 2:.1f}" y="{title_y:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="14" font-weight="700" letter-spacing="0.06em" fill="{palette["text"]}">{escape(section.title)}</text>',
     ]
     if section.subtitle:
         subtitle_lines = wrap_text_to_width(section.subtitle, section.width - SECTION_PAD_X * 2, max_lines=3)
         for idx, line in enumerate(subtitle_lines):
             parts.append(
-                f'<text x="{section.x + section.width / 2:.1f}" y="{title_y + 20 + idx * 14:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="12" font-weight="600" fill="{TOKENS["text"]}">{escape(line)}</text>'
+                f'<text x="{section.x + section.width / 2:.1f}" y="{title_y + 20 + idx * 14:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="12" font-weight="600" fill="{palette["text"]}">{escape(line)}</text>'
             )
 
     consumed_lines = 0
@@ -1384,13 +1521,13 @@ def render_section(section: SectionLayout) -> str:
         base_y = section.y + section.height - 12 - consumed_lines * 14 - (len(note_lines) - 1) * 14
         for line_index, line in enumerate(note_lines):
             parts.append(
-                f'<text x="{section.x + section.width / 2:.1f}" y="{base_y + line_index * 14:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="11" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(line)}</text>'
+                f'<text x="{section.x + section.width / 2:.1f}" y="{base_y + line_index * 14:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="11" font-weight="500" fill="{palette["muted_text"]}">{escape(line)}</text>'
             )
         consumed_lines += len(note_lines)
     return "\n".join(parts)
 
 
-def render_badge_shell(node: NodeLayout) -> list[str]:
+def render_badge_shell(node: NodeLayout, palette: dict[str, Any]) -> list[str]:
     cx = node.center_x
     cy = node.center_y
     r = node.width / 2
@@ -1400,54 +1537,56 @@ def render_badge_shell(node: NodeLayout) -> list[str]:
         else node.bottom + BADGE_LABEL_BASELINE_OFFSET
     )
     return [
-        f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{TOKENS["panel"]}" stroke="{TOKENS["border"]}" stroke-width="1.4"/>',
-        f'<text x="{cx:.1f}" y="{label_y:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="{BADGE_LABEL_FONT_SIZE}" font-weight="500" fill="{TOKENS["text"]}">{escape(node.label)}</text>',
+        f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{palette["panel"]}" stroke="{palette["border"]}" stroke-width="1.4"/>',
+        f'<text x="{cx:.1f}" y="{label_y:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="{BADGE_LABEL_FONT_SIZE}" font-weight="500" fill="{palette["text"]}">{escape(node.label)}</text>',
     ]
 
 
-def render_user_node(node: NodeLayout) -> str:
+def render_user_node(node: NodeLayout, palette: dict[str, Any]) -> str:
     cx = node.center_x
     cy = node.center_y
-    parts = render_badge_shell(node)
+    badge_accent = palette["badge_accent"]
+    parts = render_badge_shell(node, palette)
     parts.insert(
         1,
-        f'<circle cx="{cx:.1f}" cy="{cy - 8:.1f}" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>',
+        f'<circle cx="{cx:.1f}" cy="{cy - 8:.1f}" r="8" fill="none" stroke="{badge_accent}" stroke-width="2"/>',
     )
     parts.insert(
         2,
-        f'<path d="M {cx - 12:.1f} {cy + 13:.1f} C {cx - 10:.1f} {cy + 2:.1f}, {cx + 10:.1f} {cy + 2:.1f}, {cx + 12:.1f} {cy + 13:.1f}" fill="none" stroke="#35C89B" stroke-width="2"/>',
+        f'<path d="M {cx - 12:.1f} {cy + 13:.1f} C {cx - 10:.1f} {cy + 2:.1f}, {cx + 10:.1f} {cy + 2:.1f}, {cx + 12:.1f} {cy + 13:.1f}" fill="none" stroke="{badge_accent}" stroke-width="2"/>',
     )
     return "\n".join(parts)
 
 
-def render_storage_node(node: NodeLayout) -> str:
+def render_storage_node(node: NodeLayout, palette: dict[str, Any]) -> str:
     cx = node.center_x
     cy = node.center_y
     left = cx - 14
     right = cx + 14
     top = cy - 12
     bottom = cy + 12
-    parts = render_badge_shell(node)
+    badge_accent = palette["badge_accent"]
+    parts = render_badge_shell(node, palette)
     parts.insert(
         1,
-        f'<ellipse cx="{cx:.1f}" cy="{top:.1f}" rx="14" ry="5.5" fill="{TOKENS["panel"]}" stroke="#35C89B" stroke-width="1.8"/>',
+        f'<ellipse cx="{cx:.1f}" cy="{top:.1f}" rx="14" ry="5.5" fill="{palette["panel"]}" stroke="{badge_accent}" stroke-width="1.8"/>',
     )
     parts.insert(
         2,
-        f'<path d="M {left:.1f} {top:.1f} L {left:.1f} {bottom:.1f} M {right:.1f} {top:.1f} L {right:.1f} {bottom:.1f}" fill="none" stroke="#35C89B" stroke-width="1.8" stroke-linecap="round"/>',
+        f'<path d="M {left:.1f} {top:.1f} L {left:.1f} {bottom:.1f} M {right:.1f} {top:.1f} L {right:.1f} {bottom:.1f}" fill="none" stroke="{badge_accent}" stroke-width="1.8" stroke-linecap="round"/>',
     )
     parts.insert(
         3,
-        f'<path d="M {left:.1f} {bottom:.1f} A 14 5.5 0 0 0 {right:.1f} {bottom:.1f}" fill="none" stroke="#35C89B" stroke-width="1.8"/>',
+        f'<path d="M {left:.1f} {bottom:.1f} A 14 5.5 0 0 0 {right:.1f} {bottom:.1f}" fill="none" stroke="{badge_accent}" stroke-width="1.8"/>',
     )
     parts.insert(
         4,
-        f'<path d="M {left:.1f} {cy - 1:.1f} A 14 5.5 0 0 0 {right:.1f} {cy - 1:.1f}" fill="none" stroke="#35C89B" stroke-width="1.4"/>',
+        f'<path d="M {left:.1f} {cy - 1:.1f} A 14 5.5 0 0 0 {right:.1f} {cy - 1:.1f}" fill="none" stroke="{badge_accent}" stroke-width="1.4"/>',
     )
     return "\n".join(parts)
 
 
-def render_cloud_node(node: NodeLayout) -> str:
+def render_cloud_node(node: NodeLayout, palette: dict[str, Any]) -> str:
     cx = node.center_x
     cy = node.center_y
     scale = 0.42
@@ -1462,41 +1601,42 @@ def render_cloud_node(node: NodeLayout) -> str:
         "c9.319,0,17.689,5.851,20.828,14.557c0.063,0.175,0.15,0.34,0.26,0.491l0.078,0.109c0.497,0.691,1.378,0.992,2.195,0.748 "
         "c1.863-0.558,3.365-0.806,4.872-0.806c9.521,0,17.266,7.532,17.266,17.024C94.523,67.987,86.778,75.5,77.258,75.5z"
     )
-    parts = render_badge_shell(node)
+    parts = render_badge_shell(node, palette)
     parts.insert(
         1,
-        f'<path d="{cloud_path}" fill="#35C89B" transform="translate({translate_x:.1f} {translate_y:.1f}) scale({scale:.3f})"/>',
+        f'<path d="{cloud_path}" fill="{palette["badge_accent"]}" transform="translate({translate_x:.1f} {translate_y:.1f}) scale({scale:.3f})"/>',
     )
     return "\n".join(parts)
 
 
-def render_security_node(node: NodeLayout) -> str:
+def render_security_node(node: NodeLayout, palette: dict[str, Any]) -> str:
     cx = node.center_x
     cy = node.center_y
-    parts = render_badge_shell(node)
+    badge_accent = palette["badge_accent"]
+    parts = render_badge_shell(node, palette)
     parts.insert(
         1,
-        f'<path d="M {cx - 10:.1f} {cy - 4:.1f} A 10 10 0 0 1 {cx + 10:.1f} {cy - 4:.1f}" fill="none" stroke="#35C89B" stroke-width="2" stroke-linecap="round"/>',
+        f'<path d="M {cx - 10:.1f} {cy - 4:.1f} A 10 10 0 0 1 {cx + 10:.1f} {cy - 4:.1f}" fill="none" stroke="{badge_accent}" stroke-width="2" stroke-linecap="round"/>',
     )
     parts.insert(
         2,
-        f'<rect x="{cx - 14:.1f}" y="{cy - 3:.1f}" width="28" height="22" rx="6" fill="{TOKENS["panel"]}" stroke="#35C89B" stroke-width="1.8"/>',
+        f'<rect x="{cx - 14:.1f}" y="{cy - 3:.1f}" width="28" height="22" rx="6" fill="{palette["panel"]}" stroke="{badge_accent}" stroke-width="1.8"/>',
     )
     parts.insert(
         3,
-        f'<circle cx="{cx:.1f}" cy="{cy + 7:.1f}" r="2.8" fill="#35C89B"/>',
+        f'<circle cx="{cx:.1f}" cy="{cy + 7:.1f}" r="2.8" fill="{badge_accent}"/>',
     )
     parts.insert(
         4,
-        f'<path d="M {cx:.1f} {cy + 9.8:.1f} L {cx:.1f} {cy + 14.5:.1f}" fill="none" stroke="#35C89B" stroke-width="1.8" stroke-linecap="round"/>',
+        f'<path d="M {cx:.1f} {cy + 9.8:.1f} L {cx:.1f} {cy + 14.5:.1f}" fill="none" stroke="{badge_accent}" stroke-width="1.8" stroke-linecap="round"/>',
     )
     return "\n".join(parts)
 
 
-def render_status_node(node: NodeLayout) -> str:
-    fill = TOKENS["ok"] if node.highlight else "#FDE3E1"
-    stroke = "#5CAD73" if node.highlight else TOKENS["danger"]
-    text = "#2C6C3C" if node.highlight else "#C94F48"
+def render_status_node(node: NodeLayout, palette: dict[str, Any]) -> str:
+    fill = palette["ok"] if node.highlight else palette["danger_fill"]
+    stroke = palette["ok_stroke"] if node.highlight else palette["danger"]
+    text = palette["ok_text"] if node.highlight else palette["danger_text"]
     lines = wrap_label(node.label, 16 if len(node.label) > 18 else 18)
     line_height = 15
     first_baseline = node.center_y + 4 - ((len(lines) - 1) * line_height) / 2
@@ -1510,11 +1650,11 @@ def render_status_node(node: NodeLayout) -> str:
     return "\n".join(parts)
 
 
-def chart_color(explicit_color: str | None, index: int, reference: bool = False) -> str:
+def chart_color(palette: dict[str, Any], explicit_color: str | None, index: int, reference: bool = False) -> str:
     if explicit_color:
         return explicit_color
-    palette = CHART_REFERENCE_COLORS if reference else CHART_SERIES_COLORS
-    return palette[index % len(palette)]
+    colors = palette["chart_reference"] if reference else palette["chart_series"]
+    return colors[index % len(colors)]
 
 
 def chart_value_range(chart: dict[str, Any]) -> tuple[float, float]:
@@ -1590,7 +1730,7 @@ def format_percentage(value: float, total: float) -> str:
     return f"{percent:.1f}%"
 
 
-def render_chart_node(node: NodeLayout) -> str:
+def render_chart_node(node: NodeLayout, palette: dict[str, Any]) -> str:
     assert node.chart is not None
     chart = node.chart
     caption = chart.get("caption")
@@ -1613,14 +1753,14 @@ def render_chart_node(node: NodeLayout) -> str:
         legend_entries.append(
             {
                 "label": label,
-                "color": chart_color(series["color"], series["index"]),
+                "color": chart_color(palette, series["color"], series["index"]),
                 "style": "solid",
             }
         )
     legend_entries.extend(
         {
             "label": reference_line["label"] or reference_line["id"],
-            "color": chart_color(reference_line["color"], reference_line["index"], reference=True),
+            "color": chart_color(palette, reference_line["color"], reference_line["index"], reference=True),
             "style": reference_line["style"],
         }
         for reference_line in chart["reference_lines"]
@@ -1652,15 +1792,15 @@ def render_chart_node(node: NodeLayout) -> str:
     plot_bottom = plot_y + plot_height
     y_min, y_max = chart_value_range(chart)
 
-    fill = "#FFF9F3" if node.highlight else TOKENS["panel"]
-    stroke = TOKENS["accent"] if node.highlight else TOKENS["border"]
+    fill = palette["chart_highlight_fill"] if node.highlight else palette["panel"]
+    stroke = palette["accent"] if node.highlight else palette["border"]
     parts = [
         f'<rect x="{node.x:.1f}" y="{node.y:.1f}" width="{node.width:.1f}" height="{node.height:.1f}" rx="{CHART_RADIUS}" fill="{fill}" stroke="{stroke}" stroke-width="{1.8 if node.highlight else 1.2}"/>',
     ]
 
     for index, line in enumerate(title_lines):
         parts.append(
-            f'<text x="{text_center:.1f}" y="{content_top + 12 + index * title_line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="12" font-weight="700" fill="{TOKENS["text"]}">{escape(line)}</text>'
+            f'<text x="{text_center:.1f}" y="{content_top + 12 + index * title_line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="12" font-weight="700" fill="{palette["text"]}">{escape(line)}</text>'
         )
 
     legend_y = content_top + title_h + title_legend_gap
@@ -1673,13 +1813,13 @@ def render_chart_node(node: NodeLayout) -> str:
                 f'<line x1="{legend_x:.1f}" y1="{row_y:.1f}" x2="{legend_x + 10:.1f}" y2="{row_y:.1f}" stroke="{entry["color"]}" stroke-width="2.2" stroke-linecap="round"{dash}/>'
             )
             parts.append(
-                f'<text x="{legend_x + 14:.1f}" y="{row_y + 3:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(entry["label"])}</text>'
+                f'<text x="{legend_x + 14:.1f}" y="{row_y + 3:.1f}" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{palette["muted_text"]}">{escape(entry["label"])}</text>'
             )
             legend_x += 18.0 + estimate_text_width(entry["label"], 10) + 16.0
 
     if chart["kind"] == "pie":
         parts.append(
-            f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="#FBFAF7" stroke="{TOKENS["border"]}" stroke-width="1"/>'
+            f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="{palette["plot_fill"]}" stroke="{palette["border"]}" stroke-width="1"/>'
         )
         values = [series["points"][0] for series in chart["series"]]
         total = sum(values) or 1.0
@@ -1691,21 +1831,21 @@ def render_chart_node(node: NodeLayout) -> str:
             value = series["points"][0]
             sweep = (value / total) * math.tau
             next_angle = angle + sweep
-            color = chart_color(series["color"], series["index"])
+            color = chart_color(palette, series["color"], series["index"])
             if sweep > 0:
                 parts.append(
-                    f'<path d="{pie_slice_path(cx, cy, radius, angle, next_angle)}" fill="{color}" stroke="{TOKENS["panel"]}" stroke-width="1.2" opacity="0.96"/>'
+                    f'<path d="{pie_slice_path(cx, cy, radius, angle, next_angle)}" fill="{color}" stroke="{palette["panel"]}" stroke-width="1.2" opacity="0.96"/>'
                 )
             angle = next_angle
     else:
         parts.append(
-            f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="#FBFAF7" stroke="{TOKENS["border"]}" stroke-width="1"/>'
+            f'<rect x="{plot_x:.1f}" y="{plot_y:.1f}" width="{plot_width:.1f}" height="{plot_height:.1f}" rx="8" fill="{palette["plot_fill"]}" stroke="{palette["border"]}" stroke-width="1"/>'
         )
         parts.append(
-            f'<line x1="{plot_x:.1f}" y1="{plot_bottom:.1f}" x2="{plot_x + plot_width:.1f}" y2="{plot_bottom:.1f}" stroke="{TOKENS["border"]}" stroke-width="1"/>'
+            f'<line x1="{plot_x:.1f}" y1="{plot_bottom:.1f}" x2="{plot_x + plot_width:.1f}" y2="{plot_bottom:.1f}" stroke="{palette["border"]}" stroke-width="1"/>'
         )
         for reference_line in chart["reference_lines"]:
-            ref_color = chart_color(reference_line["color"], reference_line["index"], reference=True)
+            ref_color = chart_color(palette, reference_line["color"], reference_line["index"], reference=True)
             points = (
                 chart_point_coordinates(reference_line["points"], plot_x, plot_y, plot_width, plot_height, y_min, y_max)
                 if reference_line["points"] is not None
@@ -1739,7 +1879,7 @@ def render_chart_node(node: NodeLayout) -> str:
             inter_series_gap = 7.0
             bar_width = max(8.0, min(13.0, (slot_width - inter_series_gap * (series_count - 1)) / max(1, series_count)))
         for series in chart["series"]:
-            color = chart_color(series["color"], series["index"])
+            color = chart_color(palette, series["color"], series["index"])
             for point_index, value in enumerate(series["points"]):
                 normalized = 0.5 if math.isclose(y_max - y_min, 0.0) else (value - y_min) / (y_max - y_min)
                 bar_height = max(2.0, normalized * plot_height)
@@ -1752,7 +1892,7 @@ def render_chart_node(node: NodeLayout) -> str:
                 )
     elif chart["kind"] != "pie":
         for series in chart["series"]:
-            color = chart_color(series["color"], series["index"])
+            color = chart_color(palette, series["color"], series["index"])
             points = chart_point_coordinates(series["points"], plot_x, plot_y, plot_width, plot_height, y_min, y_max)
             if chart["kind"] == "area":
                 area_path = polyline_path(points)
@@ -1768,34 +1908,31 @@ def render_chart_node(node: NodeLayout) -> str:
         )
         for index, line in enumerate(caption_lines):
             parts.append(
-                f'<text x="{text_center:.1f}" y="{caption_y + index * caption_line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{TOKENS["muted_text"]}">{escape(line)}</text>'
+                f'<text x="{text_center:.1f}" y="{caption_y + index * caption_line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="10" font-weight="500" fill="{palette["muted_text"]}">{escape(line)}</text>'
             )
     return "\n".join(parts)
 
 
-def render_node(node: NodeLayout) -> str:
+def render_node(node: NodeLayout, palette: dict[str, Any]) -> str:
     if node.node_type == "user":
-        return render_user_node(node)
+        return render_user_node(node, palette)
     if node.node_type == "storage":
-        return render_storage_node(node)
+        return render_storage_node(node, palette)
     if node.node_type == "cloud":
-        return render_cloud_node(node)
+        return render_cloud_node(node, palette)
     if node.node_type == "security":
-        return render_security_node(node)
+        return render_security_node(node, palette)
     if node.node_type == "status":
-        return render_status_node(node)
+        return render_status_node(node, palette)
     if node.node_type == "chart":
-        return render_chart_node(node)
+        return render_chart_node(node, palette)
 
-    if node.highlight and node.node_type == "process":
-        fill = TOKENS["callout"]
-        stroke = TOKENS["callout_border"]
-    elif node.highlight:
-        fill = "#FCE7D8"
-        stroke = TOKENS["accent"]
+    if node.highlight:
+        fill = palette["highlight_fill"]
+        stroke = palette["accent"]
     else:
-        fill = TOKENS["panel"]
-        stroke = TOKENS["border"]
+        fill = palette["panel"]
+        stroke = palette["border"]
 
     lines = wrap_label(node.label, 17 if len(node.label) > 22 else 18)
     line_height = 15
@@ -1805,7 +1942,7 @@ def render_node(node: NodeLayout) -> str:
     ]
     for idx, line in enumerate(lines):
         parts.append(
-            f'<text x="{node.center_x:.1f}" y="{first_baseline + idx * line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="13" font-weight="500" fill="{TOKENS["text"]}">{escape(line)}</text>'
+            f'<text x="{node.center_x:.1f}" y="{first_baseline + idx * line_height:.1f}" text-anchor="middle" font-family="{FONT_STACK}" font-size="13" font-weight="500" fill="{palette["text"]}">{escape(line)}</text>'
         )
     return "\n".join(parts)
 
@@ -1816,17 +1953,26 @@ def render_connection(
     obstacles: list[tuple[str, Rect]],
     width: int,
     height: int,
+    palette: dict[str, Any],
+    marker_id: str,
 ) -> str:
     points = route_connection_points(connection, nodes, obstacles, width, height)
     points = marker_adjusted_points(points)
     path = rounded_orthogonal_path(points, radius=10)
-    return f'<path d="{path}" fill="none" stroke="{TOKENS["edge"]}" stroke-width="1.7" marker-end="url(#arrow)"/>'
+    return f'<path d="{path}" fill="none" stroke="{palette["edge"]}" stroke-width="1.7" marker-end="url(#{marker_id})"/>'
 
 
 def render_svg(spec: dict[str, Any]) -> str:
     diagram = spec["diagram"]
     sections, nodes, width, height = layout_diagram(diagram)
     obstacles = build_edge_obstacles(diagram["title"], diagram.get("subtitle"), sections, nodes, width)
+    diagram_palette = palette_for_scheme(diagram["color_scheme"])
+    section_by_id = {section.section_id: section for section in sections}
+    section_palettes = {
+        section.section_id: palette_for_scheme(section.color_scheme)
+        for section in sections
+    }
+    used_schemes = sorted({diagram["color_scheme"]} | {section.color_scheme for section in sections})
 
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(diagram["title"])}">',
@@ -1834,21 +1980,36 @@ def render_svg(spec: dict[str, Any]) -> str:
         '<filter id="panelShadow" x="-10%" y="-10%" width="120%" height="140%">',
         '<feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="rgba(0,0,0,0.05)"/>',
         "</filter>",
-        '<marker id="arrow" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">',
-        f'<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="{TOKENS["edge"]}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
-        "</marker>",
-        "</defs>",
-        f'<rect width="{width}" height="{height}" fill="{TOKENS["canvas"]}"/>',
-        render_title(diagram["title"], diagram.get("subtitle"), width),
     ]
+    for color_scheme in used_schemes:
+        marker_id = f"arrow-{color_scheme}"
+        palette = palette_for_scheme(color_scheme)
+        parts.extend(
+            [
+                f'<marker id="{marker_id}" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">',
+                f'<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="{palette["edge"]}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>',
+                "</marker>",
+            ]
+        )
+    parts.extend(
+        [
+            "</defs>",
+            f'<rect width="{width}" height="{height}" fill="{diagram_palette["canvas"]}"/>',
+            render_title(diagram["title"], diagram.get("subtitle"), width, diagram_palette),
+        ]
+    )
 
     if diagram.get("show_sections", True):
         for section in sections:
-            parts.append(render_section(section))
+            parts.append(render_section(section, section_palettes[section.section_id]))
     for node_id in sorted(nodes.keys(), key=lambda key: (nodes[key].y, nodes[key].x)):
-        parts.append(render_node(nodes[node_id]))
+        node = nodes[node_id]
+        parts.append(render_node(node, section_palettes[node.section_id]))
     for connection in diagram["connections"]:
-        parts.append(render_connection(connection, nodes, obstacles, width, height))
+        source_section = section_by_id[nodes[connection["from"]].section_id]
+        palette = section_palettes[source_section.section_id]
+        marker_id = f"arrow-{source_section.color_scheme}"
+        parts.append(render_connection(connection, nodes, obstacles, width, height, palette, marker_id))
 
     parts.append("</svg>")
     return "\n".join(parts)

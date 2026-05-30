@@ -14,6 +14,7 @@ The renderer reads both layers and computes only geometry.
   "diagram": {
     "title": "Ingress vs Gateway API Resources",
     "subtitle": "Comparing two Kubernetes front-door models",
+    "color_scheme": "warm-neutral",
     "sections": [],
     "connections": []
   }
@@ -24,9 +25,12 @@ The renderer reads both layers and computes only geometry.
 
 - `title`: required string
 - `subtitle`: optional string
+- `color_scheme`: optional enum, defaults to `warm-neutral`
 - `sections`: required ordered array
 - `connections`: required array
 - `show_sections`: optional boolean, defaults to `true`
+
+Supported color schemes are `warm-neutral`, `studio-paper`, `ink-signal`, `console-light`, and `graphite-citrus`.
 
 ## Section
 
@@ -35,6 +39,7 @@ The renderer reads both layers and computes only geometry.
   "id": "publish_gateway",
   "title": "Publish Gateway",
   "subtitle": "Policy checks before network write",
+  "color_scheme": "studio-paper",
   "layout": {
     "type": "flow",
     "direction": "vertical"
@@ -48,6 +53,7 @@ The renderer reads both layers and computes only geometry.
 - `id`: required unique string
 - `title`: required string
 - `subtitle`: optional string
+- `color_scheme`: optional enum, defaults to the diagram color scheme
 - `layout.type`: required enum: `flow`, `comparison`, `stack`, `grid`
 - `layout.direction`: required enum: `horizontal`, `vertical`
 - `lanes`: required ordered array
@@ -213,6 +219,7 @@ Edge labels are not supported.
 - chart nodes must define a valid `chart` object
 - chart series must have equal lengths
 - chart `y_range.min` must be less than `chart.y_range.max`
+- diagram and section color schemes must be supported scheme names
 
 ## Reference examples
 

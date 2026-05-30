@@ -3,7 +3,7 @@ name: macos-icon-creator
 description: Create macOS-style app icon SVGs from a product brief or concept prompt. Use this skill when the user wants a dock-style icon, app-icon SVG, or Big Sur-inspired macOS icon concept rather than a flat logo in a rounded square.
 ---
 
-# MacOS Icon Creator
+# macOS Icon Creator
 
 Use this skill to design a single polished macOS app icon with paired JSON brief and SVG artifacts. The goal is not brand extraction. The goal is a native-feeling icon concept with a clear metaphor, readable silhouette, and material depth.
 

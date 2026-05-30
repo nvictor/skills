@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "MacOS Icon Brief",
+  "title": "macOS Icon Brief",
   "description": "Optional internal structure for normalizing a macOS app icon brief before SVG generation.",
   "type": "object",
   "additionalProperties": false,

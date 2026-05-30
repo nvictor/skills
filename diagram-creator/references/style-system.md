@@ -1,6 +1,6 @@
 # Style System
 
-This skill uses one fixed house style derived from the attached references:
+This skill uses configurable named color schemes derived from one fixed house style:
 
 - warm canvas
 - white section panels
@@ -8,6 +8,8 @@ This skill uses one fixed house style derived from the attached references:
 - dark neutral typography
 - orange highlight for emphasis
 - light blue for action callouts when a highlighted process needs stronger contrast
+
+The default scheme is `warm-neutral`. A diagram may set `diagram.color_scheme`; a section may set `section.color_scheme` when a comparison diagram intentionally needs mixed palettes.
 
 ## Design tokens
 
@@ -34,6 +36,16 @@ color:
   edge:
     default: "#8E877C"
 ```
+
+### Built-In Schemes
+
+- `warm-neutral`: the original house style; warm canvas, orange emphasis, and blue process callouts.
+- `studio-paper`: softer paper tones for documentation and explanatory diagrams.
+- `ink-signal`: green and teal signal colors for technical systems diagrams.
+- `console-light`: crisp blue engineering-tool palette for operational diagrams.
+- `graphite-citrus`: higher contrast graphite structure with citrus emphasis.
+
+Every scheme provides the same token roles: canvas, panel, section, borders, primary and secondary text, accent/highlight fills, process callout colors, badge accent, status colors, edge color, chart series colors, and chart reference colors.
 
 ### Typography
 

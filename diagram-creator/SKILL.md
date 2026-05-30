@@ -47,6 +47,7 @@ Use this state sequence: semantic model -> layout intent -> JSON spec -> rendere
    - lane order
    - lane offsets when a cross-lane edge needs more width or cleaner alignment
    - badge label position when the default label placement would block a straight edge
+   - color scheme when the default `warm-neutral` palette is not the right fit
    - node order inside each lane
    - connection routing hints only where needed
 3. Write the JSON spec to a file.
@@ -92,6 +93,7 @@ Operational notes:
 - Run commands from this skill directory, or use absolute paths for both the script and the spec.
 - The renderer uses only the Python standard library. Do not stop to install `cairosvg`, `lxml`, or other SVG packages for this skill.
 - `--validate-only` prints `OK` on success and exits without producing SVG output.
+- Specs may set `diagram.color_scheme`; supported schemes are `warm-neutral`, `studio-paper`, `ink-signal`, `console-light`, and `graphite-citrus`.
 - Common failure pattern: weak diagrams often fail through accumulated mild disorder across grouping, almost-aligned elements, drifting styles, and weak hierarchy.
 
 Validate:

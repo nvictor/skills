@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1764" height="560" viewBox="0 0 1764 560" role="img" aria-label="Diagram Color Scheme Gallery">
+<defs>
+<filter id="panelShadow" x="-10%" y="-10%" width="120%" height="140%">
+<feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="rgba(0,0,0,0.05)"/>
+</filter>
+<marker id="arrow-console-light" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#7B8794" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+<marker id="arrow-graphite-citrus" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#777B80" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+<marker id="arrow-ink-signal" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#7D857E" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+<marker id="arrow-studio-paper" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#8A8378" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+<marker id="arrow-warm-neutral" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#8E877C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect width="1764" height="560" fill="#F2E8D0"/>
+<text x="882.0" y="56" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700" fill="#1F1F1C">Diagram Color Scheme Gallery</text>
+<text x="882.0" y="80" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="500" fill="#6D685F">The same compact flow rendered with each built-in palette</text>
+<rect x="42.0" y="126.0" width="320.0" height="386.7" rx="18" fill="#FDF3E3" stroke="#DDD0B8" filter="url(#panelShadow)"/>
+<text x="202.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">Warm Neutral</text>
+<text x="202.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Default house style</text>
+<text x="202.0" y="486.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">Warm canvas, orange emphasis, and</text>
+<text x="202.0" y="500.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">blue callouts.</text>
+<rect x="382.0" y="126.0" width="320.0" height="400.7" rx="18" fill="#F6EDD6" stroke="#D4C9AE" filter="url(#panelShadow)"/>
+<text x="542.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#25231F">Studio Paper</text>
+<text x="542.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#25231F">Soft documentation palette</text>
+<text x="542.0" y="500.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#756F64">Gentler paper tones for explainers</text>
+<text x="542.0" y="514.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#756F64">and long-form docs.</text>
+<rect x="722.0" y="126.0" width="320.0" height="386.7" rx="18" fill="#EBF5E8" stroke="#C4D5BE" filter="url(#panelShadow)"/>
+<text x="882.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1D2420">Ink Signal</text>
+<text x="882.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1D2420">Technical green and teal</text>
+<text x="882.0" y="486.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#657067">A cleaner systems feel with green</text>
+<text x="882.0" y="500.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#657067">signal accents.</text>
+<rect x="1062.0" y="126.0" width="320.0" height="400.7" rx="18" fill="#E9EFF7" stroke="#C5D2E2" filter="url(#panelShadow)"/>
+<text x="1222.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#17202A">Console Light</text>
+<text x="1222.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#17202A">Crisp engineering UI</text>
+<text x="1222.0" y="500.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#637083">Cooler neutrals and blue emphasis for</text>
+<text x="1222.0" y="514.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#637083">tool surfaces.</text>
+<rect x="1402.0" y="126.0" width="320.0" height="386.7" rx="18" fill="#EEECEA" stroke="#D0CECA" filter="url(#panelShadow)"/>
+<text x="1562.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#202124">Graphite Citrus</text>
+<text x="1562.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#202124">Higher-contrast accent set</text>
+<text x="1562.0" y="486.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#666A70">Graphite structure with a sharper</text>
+<text x="1562.0" y="500.7" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#666A70">citrus highlight.</text>
+<circle cx="137.0" cy="262.8" r="34.0" fill="#FFFDF7" stroke="#DAD4CA" stroke-width="1.4"/>
+<circle cx="137.0" cy="254.8" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>
+<path d="M 125.0 275.8 C 127.0 264.8, 147.0 264.8, 149.0 275.8" fill="none" stroke="#35C89B" stroke-width="2"/>
+<text x="137.0" y="216.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">User</text>
+<circle cx="477.0" cy="262.8" r="34.0" fill="#FDF8EE" stroke="#D8D1C3" stroke-width="1.4"/>
+<circle cx="477.0" cy="254.8" r="8" fill="none" stroke="#4D8FC7" stroke-width="2"/>
+<path d="M 465.0 275.8 C 467.0 264.8, 487.0 264.8, 489.0 275.8" fill="none" stroke="#4D8FC7" stroke-width="2"/>
+<text x="477.0" y="216.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#25231F">User</text>
+<circle cx="817.0" cy="262.8" r="34.0" fill="#F6FBF5" stroke="#C4D5BE" stroke-width="1.4"/>
+<circle cx="817.0" cy="254.8" r="8" fill="none" stroke="#2A9D8F" stroke-width="2"/>
+<path d="M 805.0 275.8 C 807.0 264.8, 827.0 264.8, 829.0 275.8" fill="none" stroke="#2A9D8F" stroke-width="2"/>
+<text x="817.0" y="216.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1D2420">User</text>
+<circle cx="1157.0" cy="262.8" r="34.0" fill="#F5F8FC" stroke="#C5D2E2" stroke-width="1.4"/>
+<circle cx="1157.0" cy="254.8" r="8" fill="none" stroke="#2563EB" stroke-width="2"/>
+<path d="M 1145.0 275.8 C 1147.0 264.8, 1167.0 264.8, 1169.0 275.8" fill="none" stroke="#2563EB" stroke-width="2"/>
+<text x="1157.0" y="216.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#17202A">User</text>
+<circle cx="1497.0" cy="262.8" r="34.0" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.4"/>
+<circle cx="1497.0" cy="254.8" r="8" fill="none" stroke="#4C956C" stroke-width="2"/>
+<path d="M 1485.0 275.8 C 1487.0 264.8, 1507.0 264.8, 1509.0 275.8" fill="none" stroke="#4C956C" stroke-width="2"/>
+<text x="1497.0" y="216.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#202124">User</text>
+<rect x="69.5" y="314.8" width="135.0" height="46.0" rx="8" fill="#FCE7D8" stroke="#F27A2B" stroke-width="2"/>
+<text x="137.0" y="341.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Approve request</text>
+<rect x="409.5" y="314.8" width="135.0" height="46.0" rx="8" fill="#F7E2D2" stroke="#D96C2C" stroke-width="2"/>
+<text x="477.0" y="341.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#25231F">Approve request</text>
+<rect x="749.5" y="314.8" width="135.0" height="46.0" rx="8" fill="#F9DED6" stroke="#E4572E" stroke-width="2"/>
+<text x="817.0" y="341.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1D2420">Approve request</text>
+<rect x="1089.5" y="314.8" width="135.0" height="46.0" rx="8" fill="#E4EDFF" stroke="#2563EB" stroke-width="2"/>
+<text x="1157.0" y="341.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#17202A">Approve request</text>
+<rect x="1429.5" y="314.8" width="135.0" height="46.0" rx="8" fill="#F5E9A9" stroke="#C6A100" stroke-width="2"/>
+<text x="1497.0" y="341.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">Approve request</text>
+<rect x="242.5" y="376.0" width="92.0" height="42.0" rx="8" fill="#76C68B" stroke="#5CAD73" stroke-width="1.6"/>
+<text x="288.5" y="401.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#1F1F1C">Ready</text>
+<rect x="582.5" y="376.0" width="92.0" height="42.0" rx="8" fill="#6FAE7E" stroke="#528D61" stroke-width="1.6"/>
+<text x="628.5" y="401.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#25231F">Ready</text>
+<rect x="922.5" y="376.0" width="92.0" height="42.0" rx="8" fill="#5DAE73" stroke="#438A56" stroke-width="1.6"/>
+<text x="968.5" y="401.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#1D2420">Ready</text>
+<rect x="1262.5" y="376.0" width="92.0" height="42.0" rx="8" fill="#22A06B" stroke="#178255" stroke-width="1.6"/>
+<text x="1308.5" y="401.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#17202A">Ready</text>
+<rect x="1602.5" y="376.0" width="92.0" height="42.0" rx="8" fill="#4C956C" stroke="#36764F" stroke-width="1.6"/>
+<text x="1648.5" y="401.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#202124">Ready</text>
+<circle cx="137.0" cy="412.8" r="34.0" fill="#FFFDF7" stroke="#DAD4CA" stroke-width="1.4"/>
+<ellipse cx="137.0" cy="400.8" rx="14" ry="5.5" fill="#FFFDF7" stroke="#35C89B" stroke-width="1.8"/>
+<path d="M 123.0 400.8 L 123.0 424.8 M 151.0 400.8 L 151.0 424.8" fill="none" stroke="#35C89B" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M 123.0 424.8 A 14 5.5 0 0 0 151.0 424.8" fill="none" stroke="#35C89B" stroke-width="1.8"/>
+<path d="M 123.0 411.8 A 14 5.5 0 0 0 151.0 411.8" fill="none" stroke="#35C89B" stroke-width="1.4"/>
+<text x="137.0" y="464.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">Storage</text>
+<circle cx="477.0" cy="412.8" r="34.0" fill="#FDF8EE" stroke="#D8D1C3" stroke-width="1.4"/>
+<ellipse cx="477.0" cy="400.8" rx="14" ry="5.5" fill="#FDF8EE" stroke="#4D8FC7" stroke-width="1.8"/>
+<path d="M 463.0 400.8 L 463.0 424.8 M 491.0 400.8 L 491.0 424.8" fill="none" stroke="#4D8FC7" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M 463.0 424.8 A 14 5.5 0 0 0 491.0 424.8" fill="none" stroke="#4D8FC7" stroke-width="1.8"/>
+<path d="M 463.0 411.8 A 14 5.5 0 0 0 491.0 411.8" fill="none" stroke="#4D8FC7" stroke-width="1.4"/>
+<text x="477.0" y="464.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#25231F">Storage</text>
+<circle cx="817.0" cy="412.8" r="34.0" fill="#F6FBF5" stroke="#C4D5BE" stroke-width="1.4"/>
+<ellipse cx="817.0" cy="400.8" rx="14" ry="5.5" fill="#F6FBF5" stroke="#2A9D8F" stroke-width="1.8"/>
+<path d="M 803.0 400.8 L 803.0 424.8 M 831.0 400.8 L 831.0 424.8" fill="none" stroke="#2A9D8F" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M 803.0 424.8 A 14 5.5 0 0 0 831.0 424.8" fill="none" stroke="#2A9D8F" stroke-width="1.8"/>
+<path d="M 803.0 411.8 A 14 5.5 0 0 0 831.0 411.8" fill="none" stroke="#2A9D8F" stroke-width="1.4"/>
+<text x="817.0" y="464.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1D2420">Storage</text>
+<circle cx="1157.0" cy="412.8" r="34.0" fill="#F5F8FC" stroke="#C5D2E2" stroke-width="1.4"/>
+<ellipse cx="1157.0" cy="400.8" rx="14" ry="5.5" fill="#F5F8FC" stroke="#2563EB" stroke-width="1.8"/>
+<path d="M 1143.0 400.8 L 1143.0 424.8 M 1171.0 400.8 L 1171.0 424.8" fill="none" stroke="#2563EB" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M 1143.0 424.8 A 14 5.5 0 0 0 1171.0 424.8" fill="none" stroke="#2563EB" stroke-width="1.8"/>
+<path d="M 1143.0 411.8 A 14 5.5 0 0 0 1171.0 411.8" fill="none" stroke="#2563EB" stroke-width="1.4"/>
+<text x="1157.0" y="464.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#17202A">Storage</text>
+<circle cx="1497.0" cy="412.8" r="34.0" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.4"/>
+<ellipse cx="1497.0" cy="400.8" rx="14" ry="5.5" fill="#F9F8F5" stroke="#4C956C" stroke-width="1.8"/>
+<path d="M 1483.0 400.8 L 1483.0 424.8 M 1511.0 400.8 L 1511.0 424.8" fill="none" stroke="#4C956C" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M 1483.0 424.8 A 14 5.5 0 0 0 1511.0 424.8" fill="none" stroke="#4C956C" stroke-width="1.8"/>
+<path d="M 1483.0 411.8 A 14 5.5 0 0 0 1511.0 411.8" fill="none" stroke="#4C956C" stroke-width="1.4"/>
+<text x="1497.0" y="464.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#202124">Storage</text>
+<path d="M 137.0 296.8 L 137.0 313.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow-warm-neutral)"/>
+<path d="M 137.0 360.8 L 137.0 377.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow-warm-neutral)"/>
+<path d="M 204.5 337.8 L 278.5 337.8 Q 288.5 337.8 288.5 347.8 L 288.5 375.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow-warm-neutral)"/>
+<path d="M 477.0 296.8 L 477.0 313.8" fill="none" stroke="#8A8378" stroke-width="1.7" marker-end="url(#arrow-studio-paper)"/>
+<path d="M 477.0 360.8 L 477.0 377.8" fill="none" stroke="#8A8378" stroke-width="1.7" marker-end="url(#arrow-studio-paper)"/>
+<path d="M 544.5 337.8 L 618.5 337.8 Q 628.5 337.8 628.5 347.8 L 628.5 375.0" fill="none" stroke="#8A8378" stroke-width="1.7" marker-end="url(#arrow-studio-paper)"/>
+<path d="M 817.0 296.8 L 817.0 313.8" fill="none" stroke="#7D857E" stroke-width="1.7" marker-end="url(#arrow-ink-signal)"/>
+<path d="M 817.0 360.8 L 817.0 377.8" fill="none" stroke="#7D857E" stroke-width="1.7" marker-end="url(#arrow-ink-signal)"/>
+<path d="M 884.5 337.8 L 958.5 337.8 Q 968.5 337.8 968.5 347.8 L 968.5 375.0" fill="none" stroke="#7D857E" stroke-width="1.7" marker-end="url(#arrow-ink-signal)"/>
+<path d="M 1157.0 296.8 L 1157.0 313.8" fill="none" stroke="#7B8794" stroke-width="1.7" marker-end="url(#arrow-console-light)"/>
+<path d="M 1157.0 360.8 L 1157.0 377.8" fill="none" stroke="#7B8794" stroke-width="1.7" marker-end="url(#arrow-console-light)"/>
+<path d="M 1224.5 337.8 L 1298.5 337.8 Q 1308.5 337.8 1308.5 347.8 L 1308.5 375.0" fill="none" stroke="#7B8794" stroke-width="1.7" marker-end="url(#arrow-console-light)"/>
+<path d="M 1497.0 296.8 L 1497.0 313.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 1497.0 360.8 L 1497.0 377.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 1564.5 337.8 L 1638.5 337.8 Q 1648.5 337.8 1648.5 347.8 L 1648.5 375.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+</svg>
