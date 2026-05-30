@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Pub/Sub Topic and Subscription Relationship",
+    "color_scheme": "ink-signal",
     "subtitle": "A topic accepts published messages and fans out to independently managed subscriptions",
     "sections": [
       {

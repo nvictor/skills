@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "AJAX vs SSE",
+    "color_scheme": "graphite-citrus",
     "subtitle": "AJAX is request/response driven, while SSE keeps one HTTP stream open for server-to-client updates",
     "sections": [
       {

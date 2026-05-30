@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Operational Load Distribution",
+    "color_scheme": "console-light",
     "subtitle": "One dataset shown as a bar chart for comparison and a pie chart for share-of-whole",
     "sections": [
       {

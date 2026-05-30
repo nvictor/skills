@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Ecommerce Checkout Flow",
+    "color_scheme": "studio-paper",
     "subtitle": "From shopper intent through validation, payment, confirmation, and fulfillment",
     "sections": [
       {

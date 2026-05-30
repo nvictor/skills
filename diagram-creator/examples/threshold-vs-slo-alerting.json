@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Threshold-Based vs SLO-Based Alerting",
+    "color_scheme": "console-light",
     "subtitle": "Fixed metric thresholds react to signal spikes, while SLO alerting reacts to user-impacting error-budget burn",
     "sections": [
       {

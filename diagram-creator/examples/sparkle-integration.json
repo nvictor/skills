@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Sparkle Integration",
+    "color_scheme": "warm-neutral",
     "subtitle": "A generic macOS app wiring Sparkle through app code, release automation, and runtime verification",
     "sections": [
       {

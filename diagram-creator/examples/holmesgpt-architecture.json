@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "HolmesGPT Architecture",
+    "color_scheme": "ink-signal",
     "subtitle": "Evidence-backed incident investigation from hypothesis to root cause",
     "sections": [
       {

@@ -3,78 +3,78 @@
 <filter id="panelShadow" x="-10%" y="-10%" width="120%" height="140%">
 <feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="rgba(0,0,0,0.05)"/>
 </filter>
-<marker id="arrow" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
-<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#8E877C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+<marker id="arrow-graphite-citrus" viewBox="0 0 11 12" markerWidth="11" markerHeight="12" refX="9.5" refY="6" orient="auto" markerUnits="userSpaceOnUse" overflow="visible">
+<path d="M 1.5 1.0 L 9.5 6 L 1.5 11.0" fill="none" stroke="#777B80" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
 </marker>
 </defs>
-<rect width="873" height="642" fill="#F7F4EE"/>
-<text x="436.5" y="56" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700" fill="#1F1F1C">AJAX vs SSE</text>
-<text x="436.5" y="80" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="500" fill="#6D685F">AJAX is request/response driven, while SSE keeps one HTTP stream open for server-to-client updates</text>
-<rect x="53.0" y="126.0" width="377.0" height="454.8" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
-<text x="241.5" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">AJAX</text>
-<text x="241.5" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Client asks for data each time it needs an</text>
-<text x="241.5" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">update</text>
-<text x="241.5" y="540.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">AJAX fits interactions where the client</text>
-<text x="241.5" y="554.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">decides when to ask for data, but frequent</text>
-<text x="241.5" y="568.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">updates add request overhead and polling</text>
-<rect x="450.0" y="126.0" width="370.0" height="482.8" rx="18" fill="#FCFBF8" stroke="#E6E0D5" filter="url(#panelShadow)"/>
-<text x="635.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#1F1F1C">SSE</text>
-<text x="635.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">Client opens one stream and the server</text>
-<text x="635.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#1F1F1C">pushes events over time</text>
-<text x="635.0" y="568.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">SSE is ideal when updates flow mainly from</text>
-<text x="635.0" y="582.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">server to browser, trading bidirectional</text>
-<text x="635.0" y="596.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#6D685F">flexibility for a simpler real-time stream</text>
-<circle cx="148.0" cy="272.8" r="34.0" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.4"/>
-<circle cx="148.0" cy="264.8" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>
-<path d="M 136.0 285.8 C 138.0 274.8, 158.0 274.8, 160.0 285.8" fill="none" stroke="#35C89B" stroke-width="2"/>
-<text x="148.0" y="226.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">Browser client</text>
-<circle cx="545.0" cy="286.8" r="34.0" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.4"/>
-<circle cx="545.0" cy="278.8" r="8" fill="none" stroke="#35C89B" stroke-width="2"/>
-<path d="M 533.0 299.8 C 535.0 288.8, 555.0 288.8, 557.0 299.8" fill="none" stroke="#35C89B" stroke-width="2"/>
-<text x="545.0" y="240.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#1F1F1C">Browser client</text>
-<rect x="260.5" y="278.0" width="142.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="331.5" y="290.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">New update needs</text>
-<text x="331.5" y="305.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">another request</text>
-<text x="331.5" y="320.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">or polling cycle</text>
-<rect x="654.0" y="292.0" width="142.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="725.0" y="304.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Updates arrive</text>
-<text x="725.0" y="319.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">continuously</text>
-<text x="725.0" y="334.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">without repeated</text>
-<rect x="77.0" y="324.8" width="142.0" height="46.0" rx="8" fill="#EAF4FF" stroke="#58A6F4" stroke-width="2"/>
-<text x="148.0" y="344.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">HTTP request via</text>
-<text x="148.0" y="359.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">XHR or fetch</text>
-<rect x="474.0" y="338.8" width="142.0" height="46.0" rx="8" fill="#EAF4FF" stroke="#58A6F4" stroke-width="2"/>
-<text x="545.0" y="358.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Open EventSource</text>
-<text x="545.0" y="373.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">HTTP connection</text>
-<rect x="257.0" y="342.0" width="149.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="331.5" y="354.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Good for forms,</text>
-<text x="331.5" y="369.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">CRUD, search, and</text>
-<text x="331.5" y="384.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">on-demand fetches</text>
-<rect x="661.0" y="356.0" width="128.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="725.0" y="368.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Good for</text>
-<text x="725.0" y="383.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">dashboards,</text>
-<text x="725.0" y="398.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">notifications,</text>
-<rect x="84.0" y="388.8" width="128.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="148.0" y="408.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Server handles</text>
-<text x="148.0" y="423.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">one request</text>
-<rect x="486.0" y="402.8" width="118.0" height="46.0" rx="8" fill="#FFFFFF" stroke="#DAD4CA" stroke-width="1.2"/>
-<text x="545.0" y="422.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">Server keeps</text>
-<text x="545.0" y="437.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#1F1F1C">stream open</text>
-<rect x="92.0" y="452.8" width="112.0" height="56.0" rx="8" fill="#FDE3E1" stroke="#F06A63" stroke-width="1.6"/>
-<text x="148.0" y="477.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#C94F48">One response</text>
-<text x="148.0" y="492.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#C94F48">returns data</text>
-<rect x="478.5" y="466.8" width="133.0" height="70.0" rx="8" fill="#FDE3E1" stroke="#F06A63" stroke-width="1.6"/>
-<text x="545.0" y="490.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#C94F48">Server pushes</text>
-<text x="545.0" y="505.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#C94F48">text/event-</text>
-<text x="545.0" y="520.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#C94F48">stream messages</text>
-<path d="M 148.0 306.8 L 148.0 323.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 148.0 370.8 L 148.0 387.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 148.0 434.8 L 148.0 451.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 204.0 480.8 L 230.0 480.8 Q 240.0 480.8 240.0 470.8 L 240.0 310.8 Q 240.0 301.0 249.8 301.0 L 259.5 301.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 331.5 324.0 L 331.5 341.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 545.0 320.8 L 545.0 337.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 545.0 384.8 L 545.0 401.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 545.0 448.8 L 545.0 465.8" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 611.5 501.8 L 620.5 501.8 Q 629.5 501.8 629.5 492.8 L 629.5 325.0 Q 629.5 315.0 639.5 315.0 L 653.0 315.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
-<path d="M 725.0 338.0 L 725.0 355.0" fill="none" stroke="#8E877C" stroke-width="1.7" marker-end="url(#arrow)"/>
+<rect width="873" height="642" fill="#E5E4DF"/>
+<text x="436.5" y="56" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700" fill="#202124">AJAX vs SSE</text>
+<text x="436.5" y="80" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="500" fill="#666A70">AJAX is request/response driven, while SSE keeps one HTTP stream open for server-to-client updates</text>
+<rect x="53.0" y="126.0" width="377.0" height="454.8" rx="18" fill="#EEECEA" stroke="#D0CECA" filter="url(#panelShadow)"/>
+<text x="241.5" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#202124">AJAX</text>
+<text x="241.5" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#202124">Client asks for data each time it needs an</text>
+<text x="241.5" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#202124">update</text>
+<text x="241.5" y="540.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#666A70">AJAX fits interactions where the client</text>
+<text x="241.5" y="554.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#666A70">decides when to ask for data, but frequent</text>
+<text x="241.5" y="568.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#666A70">updates add request overhead and polling</text>
+<rect x="450.0" y="126.0" width="370.0" height="482.8" rx="18" fill="#EEECEA" stroke="#D0CECA" filter="url(#panelShadow)"/>
+<text x="635.0" y="160.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="0.06em" fill="#202124">SSE</text>
+<text x="635.0" y="180.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#202124">Client opens one stream and the server</text>
+<text x="635.0" y="194.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="600" fill="#202124">pushes events over time</text>
+<text x="635.0" y="568.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#666A70">SSE is ideal when updates flow mainly from</text>
+<text x="635.0" y="582.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#666A70">server to browser, trading bidirectional</text>
+<text x="635.0" y="596.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="500" fill="#666A70">flexibility for a simpler real-time stream</text>
+<circle cx="148.0" cy="272.8" r="34.0" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.4"/>
+<circle cx="148.0" cy="264.8" r="8" fill="none" stroke="#4C956C" stroke-width="2"/>
+<path d="M 136.0 285.8 C 138.0 274.8, 158.0 274.8, 160.0 285.8" fill="none" stroke="#4C956C" stroke-width="2"/>
+<text x="148.0" y="226.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#202124">Browser client</text>
+<circle cx="545.0" cy="286.8" r="34.0" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.4"/>
+<circle cx="545.0" cy="278.8" r="8" fill="none" stroke="#4C956C" stroke-width="2"/>
+<path d="M 533.0 299.8 C 535.0 288.8, 555.0 288.8, 557.0 299.8" fill="none" stroke="#4C956C" stroke-width="2"/>
+<text x="545.0" y="240.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#202124">Browser client</text>
+<rect x="260.5" y="278.0" width="142.0" height="46.0" rx="8" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.2"/>
+<text x="331.5" y="290.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">New update needs</text>
+<text x="331.5" y="305.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">another request</text>
+<text x="331.5" y="320.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">or polling cycle</text>
+<rect x="654.0" y="292.0" width="142.0" height="46.0" rx="8" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.2"/>
+<text x="725.0" y="304.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">Updates arrive</text>
+<text x="725.0" y="319.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">continuously</text>
+<text x="725.0" y="334.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">without repeated</text>
+<rect x="77.0" y="324.8" width="142.0" height="46.0" rx="8" fill="#F5E9A9" stroke="#C6A100" stroke-width="2"/>
+<text x="148.0" y="344.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">HTTP request via</text>
+<text x="148.0" y="359.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">XHR or fetch</text>
+<rect x="474.0" y="338.8" width="142.0" height="46.0" rx="8" fill="#F5E9A9" stroke="#C6A100" stroke-width="2"/>
+<text x="545.0" y="358.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">Open EventSource</text>
+<text x="545.0" y="373.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">HTTP connection</text>
+<rect x="257.0" y="342.0" width="149.0" height="46.0" rx="8" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.2"/>
+<text x="331.5" y="354.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">Good for forms,</text>
+<text x="331.5" y="369.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">CRUD, search, and</text>
+<text x="331.5" y="384.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">on-demand fetches</text>
+<rect x="661.0" y="356.0" width="128.0" height="46.0" rx="8" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.2"/>
+<text x="725.0" y="368.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">Good for</text>
+<text x="725.0" y="383.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">dashboards,</text>
+<text x="725.0" y="398.0" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">notifications,</text>
+<rect x="84.0" y="388.8" width="128.0" height="46.0" rx="8" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.2"/>
+<text x="148.0" y="408.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">Server handles</text>
+<text x="148.0" y="423.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">one request</text>
+<rect x="486.0" y="402.8" width="118.0" height="46.0" rx="8" fill="#F9F8F5" stroke="#D0CECA" stroke-width="1.2"/>
+<text x="545.0" y="422.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">Server keeps</text>
+<text x="545.0" y="437.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="500" fill="#202124">stream open</text>
+<rect x="92.0" y="452.8" width="112.0" height="56.0" rx="8" fill="#F7DDE1" stroke="#D1495B" stroke-width="1.6"/>
+<text x="148.0" y="477.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#A33645">One response</text>
+<text x="148.0" y="492.3" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#A33645">returns data</text>
+<rect x="478.5" y="466.8" width="133.0" height="70.0" rx="8" fill="#F7DDE1" stroke="#D1495B" stroke-width="1.6"/>
+<text x="545.0" y="490.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#A33645">Server pushes</text>
+<text x="545.0" y="505.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#A33645">text/event-</text>
+<text x="545.0" y="520.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#A33645">stream messages</text>
+<path d="M 148.0 306.8 L 148.0 323.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 148.0 370.8 L 148.0 387.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 148.0 434.8 L 148.0 451.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 204.0 480.8 L 230.0 480.8 Q 240.0 480.8 240.0 470.8 L 240.0 310.8 Q 240.0 301.0 249.8 301.0 L 259.5 301.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 331.5 324.0 L 331.5 341.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 545.0 320.8 L 545.0 337.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 545.0 384.8 L 545.0 401.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 545.0 448.8 L 545.0 465.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 611.5 501.8 L 620.5 501.8 Q 629.5 501.8 629.5 492.8 L 629.5 325.0 Q 629.5 315.0 639.5 315.0 L 653.0 315.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 725.0 338.0 L 725.0 355.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
 </svg>

@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "MCP, Tools, Skills & Agents",
+    "color_scheme": "graphite-citrus",
     "subtitle": "Agents choose skills; skills call tools; tools are exposed through MCP",
     "sections": [
       {

@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Agentic Commerce Experience",
+    "color_scheme": "studio-paper",
     "subtitle": "AI agents acting as autonomous proxies for multi-step shopping and fulfillment",
     "sections": [
       {

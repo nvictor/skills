@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Server and Client Certificate Validation",
+    "color_scheme": "console-light",
     "subtitle": "Both use certificate chains; the verifier decides which roots and identities are trusted",
     "sections": [
       {

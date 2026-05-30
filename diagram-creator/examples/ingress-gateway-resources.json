@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Ingress vs Gateway API Resources",
+    "color_scheme": "console-light",
     "subtitle": "Comparing the monolithic ingress model with the modular Gateway API resource stack",
     "sections": [
       {

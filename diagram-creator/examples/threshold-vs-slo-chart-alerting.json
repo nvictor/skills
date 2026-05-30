@@ -1,6 +1,7 @@
 {
   "diagram": {
     "title": "Threshold vs Multi-Window SLO Alerting",
+    "color_scheme": "graphite-citrus",
     "subtitle": "Compact chart nodes show noisy threshold crossings versus sustained long-window burn",
     "sections": [
       {
