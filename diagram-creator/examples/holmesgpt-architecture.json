@@ -68,7 +68,7 @@
           }
         ],
         "nodes": [
-          { "id": "model_providers", "label": "OpenAI GPT-4 / Anthropic Claude", "type": "model" },
+          { "id": "model_providers", "label": "AI Agent (GPT 5, Sonnet, Gemini)", "type": "model" },
           { "id": "hypothesis", "label": "Hypothesis", "type": "process" },
           { "id": "targeted_query", "label": "Targeted Query", "type": "process" },
           { "id": "evidence_check", "label": "Evidence Check", "type": "process", "highlight": true },
