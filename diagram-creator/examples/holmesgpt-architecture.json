@@ -2,46 +2,41 @@
   "diagram": {
     "title": "HolmesGPT Architecture",
     "color_scheme": "ink-signal",
-    "subtitle": "Agentic troubleshooting across cloud-native evidence sources",
+    "subtitle": "Evidence-backed incident investigation from hypothesis to root cause",
     "sections": [
       {
-        "id": "inputs",
-        "title": "Inputs",
-        "subtitle": "Questions and incident signals",
+        "id": "triggers",
+        "title": "Incident Triggers",
+        "subtitle": "Signals entering the workflow",
         "layout": {
           "type": "flow",
           "direction": "vertical"
         },
         "lanes": [
           {
-            "id": "input_lane",
+            "id": "trigger_lane",
             "direction": "vertical",
             "y_offset": 7,
             "groups": [
               {
-                "type": "parallel",
-                "nodes": ["user_question", "alert_incident"]
-              },
-              {
                 "type": "sequential",
-                "nodes": ["entrypoints"]
+                "nodes": ["alerting", "dev_questions"]
               }
             ]
           }
         ],
         "nodes": [
-          { "id": "user_question", "label": "User Question", "type": "user" },
-          { "id": "alert_incident", "label": "Alert / Incident", "type": "status", "highlight": true },
-          { "id": "entrypoints", "label": "Slack / CLI / Web UI / API", "type": "user" }
+          { "id": "alerting", "label": "Alerting & On-Call", "type": "user" },
+          { "id": "dev_questions", "label": "Slack / Web UI / API", "type": "user" }
         ],
         "annotations": [
-          { "text": "On-demand questions and operational alerts start the investigation.", "position": "footer" }
+          { "text": "PagerDuty, Opsgenie, New Relic alerts and developer queries.", "position": "footer" }
         ]
       },
       {
-        "id": "agent",
-        "title": "HolmesGPT Agent",
-        "subtitle": "AI SRE orchestration loop",
+        "id": "core",
+        "title": "HolmesGPT",
+        "subtitle": "Hypothesis-driven investigation loop",
         "layout": {
           "type": "flow",
           "direction": "horizontal"
@@ -54,125 +49,76 @@
             "groups": [
               {
                 "type": "sequential",
-                "nodes": [
-                  "understand_goal",
-                  "create_task_list",
-                  "query_toolsets",
-                  "correlate_evidence",
-                  "refine_hypothesis",
-                  "rca_suggested_fixes"
-                ]
+                "nodes": ["hypothesis", "targeted_query", "evidence_check", "refine", "rca"]
               }
             ]
           },
           {
-            "id": "reasoning_lane",
-            "title": "Reasoning Layer",
+            "id": "models_lane",
+            "title": "Model Layer",
             "direction": "horizontal",
             "x_offset": 0,
-            "y_offset": 192,
+            "y_offset": 128,
             "groups": [
               {
                 "type": "sequential",
-                "nodes": ["ai_agent"]
+                "nodes": ["model_providers"]
               }
             ]
           }
         ],
         "nodes": [
-          { "id": "understand_goal", "label": "Understand Goal", "type": "process" },
-          { "id": "create_task_list", "label": "Create Task List", "type": "process" },
-          { "id": "query_toolsets", "label": "Query Toolsets", "type": "process", "highlight": true },
-          { "id": "correlate_evidence", "label": "Correlate Evidence", "type": "process", "highlight": true },
-          { "id": "refine_hypothesis", "label": "Refine / Fetch More", "type": "process" },
-          { "id": "rca_suggested_fixes", "label": "RCA & Suggested Fixes", "type": "process", "highlight": true },
-          { "id": "ai_agent", "label": "AI Agent (GPT 5, Sonnet, Gemini)", "type": "model" }
+          { "id": "model_providers", "label": "AI Agent (GPT 5, Sonnet, Gemini)", "type": "model" },
+          { "id": "hypothesis", "label": "Hypothesis", "type": "process" },
+          { "id": "targeted_query", "label": "Targeted Query", "type": "process" },
+          { "id": "evidence_check", "label": "Evidence Check", "type": "process", "highlight": true },
+          { "id": "refine", "label": "Refine & Branch", "type": "process" },
+          { "id": "rca", "label": "RCA & Remediation", "type": "process", "highlight": true }
         ],
         "annotations": [
-          { "text": "Runs in your environment; refinement can repeat tool queries before RCA.", "position": "footer" }
+          { "text": "Each step validates against observed signals before advancing.", "position": "footer" }
         ]
       },
       {
-        "id": "toolsets",
-        "title": "Toolsets & Evidence",
-        "subtitle": "Live systems and operational context",
+        "id": "evidence",
+        "title": "Evidence Sources",
+        "subtitle": "Observability, infrastructure, and knowledge",
         "layout": {
           "type": "flow",
-          "direction": "vertical"
+          "direction": "horizontal"
         },
         "lanes": [
           {
             "id": "evidence_lane",
+            "title": "Evidence Sources",
             "direction": "vertical",
-            "y_offset": 7,
+            "x_offset": 62,
             "groups": [
               {
                 "type": "sequential",
-                "nodes": [
-                  "kubernetes",
-                  "observability",
-                  "cloud_database_saas",
-                  "runbooks_custom"
-                ]
+                "nodes": ["knowledge_base", "observability", "platforms"]
               }
             ]
           }
         ],
         "nodes": [
-          { "id": "kubernetes", "label": "Kubernetes", "type": "cloud" },
-          { "id": "observability", "label": "Prometheus / Grafana / Datadog / Loki", "type": "database" },
-          { "id": "cloud_database_saas", "label": "AWS / Azure / PostgreSQL", "type": "cloud" },
-          { "id": "runbooks_custom", "label": "Jira / GitHub / Slack / Runbooks", "type": "storage" }
-        ],
-        "annotations": [
-          { "text": "Toolsets expose logs, metrics, traces, events, config, deploys, and runbooks.", "position": "footer" }
-        ]
-      },
-      {
-        "id": "findings",
-        "title": "Findings",
-        "subtitle": "Data-backed diagnosis",
-        "layout": {
-          "type": "flow",
-          "direction": "vertical"
-        },
-        "lanes": [
-          {
-            "id": "findings_lane",
-            "direction": "vertical",
-            "y_offset": 7,
-            "groups": [
-              {
-                "type": "sequential",
-                "nodes": ["root_cause", "evidence_summary", "remediation_steps"]
-              }
-            ]
-          }
-        ],
-        "nodes": [
-          { "id": "root_cause", "label": "Root Cause", "type": "status", "highlight": true },
-          { "id": "evidence_summary", "label": "Evidence Summary", "type": "default" },
-          { "id": "remediation_steps", "label": "Remediation Steps", "type": "process", "highlight": true }
-        ],
-        "annotations": [
-          { "text": "Findings explain likely cause, supporting evidence, and next actions.", "position": "footer" }
+          { "id": "observability", "label": "Prometheus / Loki / Tempo / Elasticsearch", "type": "database" },
+          { "id": "platforms", "label": "Kubernetes / AWS / Argo", "type": "model" },
+          { "id": "knowledge_base", "label": "Runbooks / Confluence / Docs", "type": "default" }
         ]
       }
     ],
     "connections": [
-      { "from": "user_question", "to": "entrypoints", "route": "direct" },
-      { "from": "alert_incident", "to": "entrypoints", "route": "direct" },
-      { "from": "entrypoints", "to": "understand_goal", "route": "direct" },
-      { "from": "understand_goal", "to": "create_task_list", "route": "vertical" },
-      { "from": "create_task_list", "to": "query_toolsets", "route": "vertical" },
-      { "from": "query_toolsets", "to": "correlate_evidence", "route": "vertical" },
-      { "from": "correlate_evidence", "to": "refine_hypothesis", "route": "vertical" },
-      { "from": "refine_hypothesis", "to": "rca_suggested_fixes", "route": "vertical" },
-      { "from": "ai_agent", "to": "correlate_evidence", "route": "direct" },
-      { "from": "query_toolsets", "to": "observability", "route": "direct" },
-      { "from": "rca_suggested_fixes", "to": "root_cause", "route": "elbow" },
-      { "from": "root_cause", "to": "evidence_summary", "route": "vertical" },
-      { "from": "evidence_summary", "to": "remediation_steps", "route": "vertical" }
+      { "from": "alerting", "to": "hypothesis", "route": "direct" },
+      { "from": "dev_questions", "to": "hypothesis", "route": "direct" },
+      { "from": "hypothesis", "to": "targeted_query", "route": "vertical" },
+      { "from": "targeted_query", "to": "evidence_check", "route": "vertical" },
+      { "from": "evidence_check", "to": "refine", "route": "vertical" },
+      { "from": "refine", "to": "rca", "route": "vertical" },
+      { "from": "model_providers", "to": "evidence_check", "route": "direct" },
+      { "from": "observability", "to": "targeted_query", "route": "direct" },
+      { "from": "platforms", "to": "targeted_query", "route": "direct" },
+      { "from": "knowledge_base", "to": "hypothesis", "route": "direct" }
     ]
   }
 }
