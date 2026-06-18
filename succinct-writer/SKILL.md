@@ -39,7 +39,8 @@ Rules:
 - Omit unimportant unknowns.
 - Do not copy large sections verbatim.
 - Do not preserve the source structure unless it helps the reader.
-- Include source links or file paths in `Source notes`.
+- Include source links or file paths only when the user asks for sources.
+- When sources are requested, put them in a `Source notes` section.
 
 Ignore unless explicitly requested:
 
@@ -110,7 +111,8 @@ Known issues and fixes, only if present in the source.
 
 ## Source notes
 
-- Source link or file path.
+- Source link or file path. Include this section only when the user asks for
+  sources.
 ```
 
 Formatting rules:
@@ -181,4 +183,4 @@ Run this checklist before finalizing:
 - [ ] Every section helps the reader act or decide.
 - [ ] No buzzwords, filler, or duplicated points.
 - [ ] No unsupported claims.
-- [ ] Source links are included.
+- [ ] Source links are omitted unless the user asked for sources.
