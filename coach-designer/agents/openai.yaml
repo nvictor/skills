@@ -1,0 +1,4 @@
+interface:
+  display_name: "Coach Designer"
+  short_description: "Design long-running deliberate-practice coaches"
+  default_prompt: "Use $coach-designer to design a long-running AI coach for the skill I want to develop."
