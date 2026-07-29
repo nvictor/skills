@@ -1,4 +1,0 @@
-interface:
-  display_name: "Technical Narrative Writer"
-  short_description: "Turn systems work into career narratives"
-  default_prompt: "Use $technical-narrative-writer to turn this technical project into one concise career narrative paragraph."

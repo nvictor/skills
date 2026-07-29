@@ -1,0 +1,4 @@
+interface:
+  display_name: "Career Narrative Writer"
+  short_description: "Shape experience into strong career narratives"
+  default_prompt: "Use $career-narrative-writer to turn these notes into a concise, source-backed career narrative."

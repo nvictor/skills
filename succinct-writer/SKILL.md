@@ -53,9 +53,7 @@ Ignore unless explicitly requested:
 - reaction comments
 - status updates
 
-## Plain language rules
-
-Apply the `clear-language` principles:
+## Writing rules
 
 - Know the reader and write for their task.
 - Put the most important information first.
@@ -64,20 +62,6 @@ Apply the `clear-language` principles:
 - Use numbered lists for steps and bullets for facts or options.
 - Define technical terms when the reader may not know them.
 - Cut filler, buzzwords, marketing language, and unsupported claims.
-
-Prefer these words:
-
-| Instead of | Use |
-| --- | --- |
-| utilize / leverage | use |
-| implement / facilitate | build, add, set up, help |
-| initiate / terminate | start / stop |
-| subsequently | then, next |
-| in order to | to |
-| due to the fact that | because |
-| functionality | feature, behavior |
-| robust / performant | say what it handles or how fast it is |
-| scalable / seamless / intuitive | explain the specific behavior |
 
 ## Output structure
 
