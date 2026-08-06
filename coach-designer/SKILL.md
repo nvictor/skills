@@ -23,6 +23,32 @@ Treat deployment as a separate operation. Package creation or migration never au
 
 For create, refine, or review, read `references/quality-rubric.md` completely. For any package operation, also read `references/package-format.md` completely. Copy `assets/coach-package/` when a new package needs a starting structure, replace every template marker, and run `scripts/validate_coach_package.py` before delivery.
 
+## Examples
+
+Create a package without deploying it:
+
+```text
+Use the coach-designer skill to create a five-minute architecture judgment coach in design/agents/coaches/architecture-judgment-coach. Schedule it for weekdays at 07:30 America/New_York, but do not deploy it.
+```
+
+Migrate a live coach without changing its behavior:
+
+```text
+Use the coach-designer skill to migrate this scheduled coach into design/agents/coaches/<coach-id>. Preserve its prompt, state, schedule, timezone, and enabled status. Do not change the live task.
+```
+
+Review a package without editing it:
+
+```text
+Use the coach-designer skill to review design/agents/coaches/communication-coach for deliberate practice, useful progression, portability, and overlap with other coaches. Report findings only.
+```
+
+Deploy an already validated package:
+
+```text
+Use the coach-designer skill to deploy design/agents/coaches/confidence-coach as a scheduled task. Preserve the package schedule and runtime settings, and make the task prompt delegate to runner.md.
+```
+
 ## Workflow
 
 ### 1. Inspect existing context
