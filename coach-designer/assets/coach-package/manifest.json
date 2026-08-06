@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "{{coach-id}}",
+  "name": "{{Coach Name}}",
+  "status": "draft",
+  "version": 1,
+  "prompt_file": "prompt.md",
+  "state_file": "state.md",
+  "schedule": {
+    "enabled": false,
+    "frequency": "manual",
+    "interval": 1,
+    "start_date": null,
+    "days": [],
+    "local_time": null,
+    "timezone": null
+  },
+  "session": {
+    "minimum_minutes": 5,
+    "maximum_minutes": 10,
+    "interaction": "conversational"
+  },
+  "continuity": {
+    "read_before_session": true,
+    "update_after_session": true
+  },
+  "privacy": "private"
+}
