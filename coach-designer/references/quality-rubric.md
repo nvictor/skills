@@ -46,7 +46,9 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 - Track only observable work, strengths, gaps, feedback, difficulty, recent practice, and next targets.
 - Never invent learner history, preferences, results, or mastery.
 - Keep incomplete interactions distinct from completed sessions.
-- Produce a compact handoff when durable storage is unavailable.
+- Treat package state as canonical and update it after every coaching turn.
+- Reread state before writing so switching or concurrent agents do not overwrite newer evidence.
+- Produce a complete replacement-state handoff when durable storage is unavailable.
 
 ## Safety and respect
 
@@ -61,6 +63,7 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 - Keep schedules, timezones, and source status in the manifest.
 - Keep model names, project IDs, notifications, machine paths, and scheduler expressions outside the canonical package.
 - Make the prompt usable alone while allowing state to improve continuity.
+- Provide a provider-neutral runner that makes state behavior explicit.
 - Make the package understandable without proprietary tooling.
 
 ## Portfolio fit

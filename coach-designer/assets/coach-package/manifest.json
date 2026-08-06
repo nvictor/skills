@@ -1,9 +1,10 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "{{coach-id}}",
   "name": "{{Coach Name}}",
   "status": "draft",
   "version": 1,
+  "runner_file": "runner.md",
   "prompt_file": "prompt.md",
   "state_file": "state.md",
   "schedule": {
@@ -21,8 +22,10 @@
     "interaction": "conversational"
   },
   "continuity": {
+    "state_authority": "package",
     "read_before_session": true,
-    "update_after_session": true
+    "update_after_turn": true,
+    "handoff_when_read_only": true
   },
   "privacy": "private"
 }

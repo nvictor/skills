@@ -7,7 +7,7 @@ description: Design, review, refine, and package portable long-running AI coache
 
 ## Purpose
 
-Design learning systems that produce durable changes in what a learner can do. Author portable coach packages whose behavior, schedule, and progress can survive a change of AI agent or scheduler. Do not teach the requested subject or deploy a scheduled task unless the user explicitly asks.
+Design learning systems that produce durable changes in what a learner can do. Author portable coach packages whose behavior, schedule, and canonical state can survive a change of AI agent or scheduler. Do not teach the requested subject or deploy a scheduled task unless the user explicitly asks.
 
 ## Select the operation
 
@@ -103,7 +103,7 @@ Tailor the feedback rubric to the skill. Require feedback to:
 - acknowledge strong work precisely
 - create an immediate opportunity to apply the feedback
 
-Track only completed work, demonstrated strengths, recurring errors, feedback already given, current difficulty, recent practice, and next targets. Never invent history. Update durable state only from evidence available in the session.
+Track only completed work, demonstrated strengths, recurring errors, feedback already given, current difficulty, recent practice, and next targets. Never invent history. Treat package `state.md` as canonical when a runner is available, update it after every coaching turn, and preserve incomplete interactions. When file writing is unavailable, produce the complete replacement state as a handoff.
 
 ### 5. Write the artifacts
 
@@ -125,7 +125,7 @@ Include relevant concerns when they improve execution:
 
 Use “session,” not platform terms such as “automation run.” Do not include model names, scheduler syntax, notification settings, project identifiers, or machine-specific paths in `prompt.md`.
 
-For packages, write the manifest, prompt, and state according to `references/package-format.md`. Include `migration.json` only for migrations.
+For packages, write the manifest, runner, prompt, and state according to `references/package-format.md`. Include `migration.json` only for migrations. Keep the runner generic: it must locate files from the package root supplied by the launcher rather than embed a provider or machine path.
 
 ## Preservation-first migration
 
@@ -167,7 +167,7 @@ Run the package validator after every create, refine, or migrate operation. Fix 
 
 For prompt-only work, apply the coach quality rubric silently. For reviews, report the rubric findings instead of rewriting unless the user asks for changes.
 
-Do not deploy merely because a package is valid. If deployment is explicitly requested, use the current platform's native scheduling capability, preserve unrelated live settings, verify the resulting schedule, and retain a recoverable snapshot.
+Do not deploy merely because a package is valid. If deployment is explicitly requested, use the current platform's native scheduling capability, preserve unrelated live settings, and make its prompt a minimal launcher that names the package root and delegates to `runner.md`. Verify the resulting schedule, runner path, and enabled state, and retain a recoverable snapshot.
 
 ## Output contract
 

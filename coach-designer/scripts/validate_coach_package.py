@@ -85,9 +85,9 @@ def safe_relative_file(package: Path, value: Any, label: str, errors: list[str])
     return path
 
 
-def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) -> tuple[Path | None, Path | None]:
-    if data.get("schema_version") != 1:
-        errors.append("schema_version must be 1.")
+def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) -> tuple[Path | None, Path | None, Path | None]:
+    if data.get("schema_version") != 2:
+        errors.append("schema_version must be 2.")
 
     coach_id = require(data, "id", str, errors)
     if coach_id is not None:
@@ -103,6 +103,7 @@ def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) ->
     if version is not None and version < 1:
         errors.append("version must be at least 1.")
 
+    runner_path = safe_relative_file(package, data.get("runner_file"), "runner_file", errors)
     prompt_path = safe_relative_file(package, data.get("prompt_file"), "prompt_file", errors)
     state_path = safe_relative_file(package, data.get("state_file"), "state_file", errors)
 
@@ -155,16 +156,34 @@ def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) ->
 
     continuity = require(data, "continuity", dict, errors)
     if continuity is not None:
+        if continuity.get("state_authority") != "package":
+            errors.append("continuity.state_authority must be package.")
         require(continuity, "read_before_session", bool, errors, "continuity.")
-        require(continuity, "update_after_session", bool, errors, "continuity.")
+        require(continuity, "update_after_turn", bool, errors, "continuity.")
+        require(continuity, "handoff_when_read_only", bool, errors, "continuity.")
 
     if data.get("privacy") not in {"private", "internal", "public"}:
         errors.append("privacy must be private, internal, or public.")
 
-    return prompt_path, state_path
+    return runner_path, prompt_path, state_path
 
 
-def validate_text_files(prompt_path: Path | None, state_path: Path | None, warnings: list[str], errors: list[str]) -> None:
+def validate_text_files(
+    runner_path: Path | None,
+    prompt_path: Path | None,
+    state_path: Path | None,
+    warnings: list[str],
+    errors: list[str],
+) -> None:
+    if runner_path is not None:
+        runner = runner_path.read_text(encoding="utf-8")
+        if not runner.strip():
+            errors.append("runner.md must not be empty.")
+        if "{{" in runner or "}}" in runner:
+            errors.append("runner.md contains an unresolved template marker.")
+        for required in ("manifest.json", "prompt_file", "state_file", "State handoff"):
+            if required not in runner:
+                errors.append(f"runner.md must reference {required}.")
     if prompt_path is not None:
         prompt = prompt_path.read_text(encoding="utf-8")
         if not prompt.strip():
@@ -193,6 +212,7 @@ def validate_migration(
     package: Path,
     prompt_path: Path | None,
     state_path: Path | None,
+    warnings: list[str],
     errors: list[str],
 ) -> None:
     path = package / "migration.json"
@@ -247,7 +267,7 @@ def validate_migration(
             errors.append("prompt.md checksum does not match the selected source while behavior_changed is false.")
     if state_path is not None and data.get("state_changed") is False and len(selected_state_sources) == 1:
         if sha256(state_path) != selected_state_sources[0].get("state_sha256"):
-            errors.append("state.md checksum does not match the selected source while state_changed is false.")
+            warnings.append("state.md has changed since the imported migration baseline, as expected after live coaching updates.")
 
 
 def validate(package: Path) -> int:
@@ -258,12 +278,13 @@ def validate(package: Path) -> int:
         return 1
 
     manifest = read_json(package / "manifest.json", errors)
+    runner_path: Path | None = None
     prompt_path: Path | None = None
     state_path: Path | None = None
     if manifest is not None:
-        prompt_path, state_path = validate_manifest(package, manifest, errors)
-    validate_text_files(prompt_path, state_path, warnings, errors)
-    validate_migration(package, prompt_path, state_path, errors)
+        runner_path, prompt_path, state_path = validate_manifest(package, manifest, errors)
+    validate_text_files(runner_path, prompt_path, state_path, warnings, errors)
+    validate_migration(package, prompt_path, state_path, warnings, errors)
 
     for warning in warnings:
         print(f"WARNING: {warning}")
