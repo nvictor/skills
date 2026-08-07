@@ -22,6 +22,8 @@ agent-specific skill directories for Codex, Copilot, Gemini, and Claude Code:
   systems diagrams from a semantic model and layout intent.
 - `macos-icon-creator`: creates macOS-style app icon SVG concepts from an app
   or product brief.
+- `recipe-formatter`: formats new and existing recipes in Victor's lowercase
+  house style, with grouped ingredients, phased methods, and target results.
 - `recurring-task-designer`: designs portable recurring AI tasks for monitoring,
   reporting, maintenance, reminders, audits, and other repeated workflows.
 - `succinct-writer`: compresses source material into clear, brief Markdown
