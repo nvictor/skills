@@ -1,0 +1,4 @@
+interface:
+  display_name: "Recipe Formatter"
+  short_description: "Format recipes in Victor’s lowercase house style"
+  default_prompt: "Use $recipe-formatter to format this pasted recipe in my house style."
