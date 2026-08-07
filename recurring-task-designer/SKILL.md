@@ -49,6 +49,12 @@ Run an existing package:
 Run the portable recurring task at design/agents/recurring-tasks/task-log-maintenance once. Follow runner.md, including its resource, effect, verification, and state rules. Do not alter its schedule.
 ```
 
+Run a portable package across agents:
+
+```text
+Run the portable recurring-task package at design/agents/recurring-tasks/weekly-tasklog-recategorize. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
+```
+
 ## Workflow
 
 ### 1. Inspect the complete source

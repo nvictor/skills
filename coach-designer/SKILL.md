@@ -43,6 +43,12 @@ Review a package without editing it:
 Use the coach-designer skill to review design/agents/coaches/communication-coach for deliberate practice, useful progression, portability, and overlap with other coaches. Report findings only.
 ```
 
+Run an existing package:
+
+```text
+Run the portable coach package at design/agents/coaches/communication-coach. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
+```
+
 Deploy an already validated package:
 
 ```text
