@@ -12,16 +12,18 @@ agent-specific skill directories for Codex, Copilot, Gemini, and Claude Code:
 
 ## Current Skills
 
+- `career-narrative-writer`: turns experience notes and technical systems work
+  into behavioral, technical, leadership, resume, and promotion narratives.
 - `clear-language`: writes documentation, error messages, API responses,
   commit messages, comments, and README files using plain language principles.
 - `coach-designer`: designs long-running AI coaches built around deliberate
   practice, feedback, reflection, adaptation, and progress tracking.
-- `career-narrative-writer`: turns experience notes and technical systems work
-  into behavioral, technical, leadership, resume, and promotion narratives.
 - `diagram-creator`: creates deterministic SVG architecture, workflow, and
   systems diagrams from a semantic model and layout intent.
 - `macos-icon-creator`: creates macOS-style app icon SVG concepts from an app
   or product brief.
+- `recurring-task-designer`: designs portable recurring AI tasks for monitoring,
+  reporting, maintenance, reminders, audits, and other repeated workflows.
 - `succinct-writer`: compresses source material into clear, brief Markdown
   documents without inventing facts.
 
