@@ -1,4 +1,0 @@
-interface:
-  display_name: "Self-Explanation Coach"
-  short_description: "Learn deeply by explaining concepts yourself"
-  default_prompt: "Use $self-explanation-coach to help me learn this material through explanation and Socratic questioning."
