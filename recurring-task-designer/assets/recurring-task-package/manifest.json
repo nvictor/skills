@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "{{task-id}}",
+  "name": "{{Task Name}}",
+  "status": "draft",
+  "version": 1,
+  "runner_file": "runner.md",
+  "task_file": "task.md",
+  "state_file": "state.md",
+  "schedule": {
+    "enabled": false,
+    "frequency": "manual",
+    "interval": 1,
+    "start_date": null,
+    "days": [],
+    "local_time": null,
+    "timezone": null
+  },
+  "execution": {
+    "minimum_minutes": 5,
+    "maximum_minutes": 15,
+    "interaction": "unattended"
+  },
+  "resources": [],
+  "effects": {
+    "policy": "deny-by-default",
+    "allowed": []
+  },
+  "continuity": {
+    "state_authority": "package",
+    "read_before_run": true,
+    "update_after_run": true,
+    "handoff_when_read_only": true
+  },
+  "privacy": "private"
+}
