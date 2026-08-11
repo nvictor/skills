@@ -1,6 +1,6 @@
 ---
 name: coach-designer
-description: Design, review, refine, and package portable long-running AI coaches that build durable skills through deliberate practice, feedback, adaptive difficulty, and progress tracking. Use when creating a coach, auditing or improving an existing coach, converting prompts or scheduled coaches into agent-neutral coach packages, or producing a standalone coach prompt.
+description: Design, review, refine, package, run, and deploy portable long-running AI coaches that build durable skills through deliberate practice, feedback, adaptive difficulty, and progress tracking. Use for coach packages, including creating or improving a coach, converting prompts or scheduled coaches into agent-neutral packages, producing a standalone coach prompt, or adding an automation whose target package manifest contains `prompt_file`. Coach-package automations remain owned by this skill; do not route them through a generic recurring-task skill.
 ---
 
 # Coach Designer
@@ -8,6 +8,15 @@ description: Design, review, refine, and package portable long-running AI coache
 ## Purpose
 
 Design learning systems that produce durable changes in what a learner can do. Author portable coach packages whose behavior, schedule, and canonical state can survive a change of AI agent or scheduler. Do not teach the requested subject or deploy a scheduled task unless the user explicitly asks.
+
+## Package ownership
+
+Own a package when its manifest contains `prompt_file`. This includes later requests to run, schedule, automate, pause, resume, or otherwise deploy that coach package. Do not invoke a recurring-task designer for a coach-package automation.
+
+When the target package type is unknown, inspect its manifest before selecting a workflow:
+
+- `prompt_file` identifies a coach package; continue with this skill.
+- `task_file` identifies a recurring-task package; use the recurring-task designer instead.
 
 ## Select the operation
 
@@ -18,6 +27,8 @@ Choose the operation that matches the request:
 - **Refine:** Improve an existing prompt or package while preserving unrelated content and recorded state.
 - **Migrate:** Convert legacy prompts, scheduled coaches, or combined documents into packages without changing behavior or live deployments.
 - **Prompt only:** Return one self-contained, provider-neutral coach prompt ready to paste into an AI agent.
+- **Run:** Run a validated coach package only when explicitly requested.
+- **Deploy:** Add or change an automation for a coach package only when explicitly requested.
 
 Treat deployment as a separate operation. Package creation or migration never authorizes creating, updating, pausing, or deleting a live scheduled task.
 
@@ -53,6 +64,12 @@ Deploy an already validated package:
 
 ```text
 Use the coach-designer skill to deploy design/agents/coaches/confidence-coach as a scheduled task. Preserve the package schedule and runtime settings, and make the task prompt delegate to runner.md.
+```
+
+Recommend this AI-agnostic scheduler prompt, substituting the actual package root:
+
+```text
+Run the portable coach package at `<package-root>`. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
 ```
 
 ## Workflow
@@ -199,15 +216,27 @@ Run the package validator after every create, refine, or migrate operation. Fix 
 
 For prompt-only work, apply the coach quality rubric silently. For reviews, report the rubric findings instead of rewriting unless the user asks for changes.
 
-Do not deploy merely because a package is valid. If deployment is explicitly requested, use the current platform's native scheduling capability, preserve unrelated live settings, and make its prompt a minimal launcher that names the package root and delegates to `runner.md`. Verify the resulting schedule, runner path, and enabled state, and retain a recoverable snapshot.
+Do not deploy merely because a package is valid. After successfully creating and validating a package, recommend the exact AI-agnostic launcher prompt with the real package root and ask whether the user wants to add an automation using the current AI agent. This question does not authorize deployment.
+
+When the user explicitly authorizes deployment:
+
+1. Read the package manifest and `runner.md`; confirm `prompt_file` identifies a coach package.
+2. Inspect the current AI agent's available native scheduler tools and authoritative agent documentation. Use that native mechanism directly; do not invoke another package-design skill and do not invent scheduler commands.
+3. Check existing automations for the same package before creating one. Update a matching deployment instead of duplicating it.
+4. Map the manifest schedule, timezone, and intended enabled state without changing their meaning. Ask only when the native scheduler cannot represent them safely.
+5. Use a standalone scheduled job that can access and update the canonical package state. Do not use a thread-bound reminder or heartbeat unless the user explicitly requests that behavior.
+6. Use the recommended minimal launcher prompt. Keep model, project, working directory, notifications, and native schedule syntax in live deployment settings or an adapter, not in canonical package files.
+7. Verify the saved schedule, timezone behavior, enabled state, package root, runner path, state write access, and launcher. Retain a recoverable snapshot and report package changes separately from live deployment changes.
 
 ## Output contract
 
 Match the result to the operation:
 
-- **Create, refine, or migrate with an authorized destination:** Write and validate the package, then summarize the files, validation, preserved behavior, and unresolved warnings.
+- **Create with an authorized destination:** Write and validate the package, summarize the files, validation, behavior, and unresolved warnings, then recommend the exact launcher prompt and ask whether to add an automation using the current AI agent.
+- **Refine or migrate with an authorized destination:** Write and validate the package, then summarize the files, validation, preserved behavior, and unresolved warnings.
 - **Review:** Return prioritized, evidence-backed findings. Do not modify files.
 - **Prompt only:** Return only the completed coach prompt, without a preface, design notes, a Markdown fence, placeholders, or TODOs.
+- **Run:** Report the session outcome and whether canonical state was written or handed off.
 - **Deployment:** Report package changes and live deployment changes separately.
 
 Never claim behavior preservation unless the prompt and state provenance have been verified.

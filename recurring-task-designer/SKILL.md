@@ -1,6 +1,6 @@
 ---
 name: recurring-task-designer
-description: Design, review, refine, migrate, package, run, and explicitly deploy portable recurring AI tasks for monitoring, reporting, maintenance, synchronization, content generation, reminders, audits, interactive routines, and other repeated workflows. Use when creating or improving a scheduled task, automation, routine, monitor, recurring workflow, agent-neutral task package, or standalone recurring-task prompt.
+description: Design, review, refine, migrate, package, run, and deploy portable recurring AI tasks for monitoring, reporting, maintenance, synchronization, content generation, reminders, audits, and other repeated workflows. Use for standalone recurring workflows and recurring-task packages whose manifest contains `task_file`. Do not use for scheduling or automating coach packages whose manifest contains `prompt_file`; those remain owned by the coach designer.
 ---
 
 # Recurring Task Designer
@@ -8,6 +8,15 @@ description: Design, review, refine, migrate, package, run, and explicitly deplo
 ## Purpose
 
 Design provider-neutral recurring tasks whose behavior, schedule, effects, resource requirements, and durable state can survive a change of AI agent, machine, or scheduler. Support unattended, interactive, and mixed tasks across domains. Do not execute or deploy a task unless the user explicitly asks.
+
+## Package ownership
+
+Own a package when its manifest contains `task_file`. This includes later requests to run, schedule, automate, pause, resume, or otherwise deploy that recurring-task package.
+
+When the target package type is unknown, inspect its manifest before selecting a workflow:
+
+- `task_file` identifies a recurring-task package; continue with this skill.
+- `prompt_file` identifies a coach package; use the coach designer instead and do not continue with this skill.
 
 ## Select the operation
 
@@ -53,6 +62,24 @@ Run a portable package across agents:
 
 ```text
 Run the portable recurring-task package at design/agents/recurring-tasks/weekly-tasklog-recategorize. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
+```
+
+Deploy an already validated recurring-task package:
+
+```text
+Use the recurring-task-designer skill to deploy design/agents/recurring-tasks/weekly-tasklog-recategorize. Preserve the package schedule, resource bindings, and effect boundaries.
+```
+
+Recommend this AI-agnostic scheduler prompt when no deployment adapter is required, substituting the actual package root:
+
+```text
+Run the portable recurring-task package at `<package-root>`. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
+```
+
+When the package requires a deployment adapter, recommend this form and substitute both values:
+
+```text
+Run the portable recurring-task package at `<package-root>` using `<deployment-adapter>`. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
 ```
 
 ## Workflow
@@ -162,11 +189,22 @@ If any check fails, stop before the effect, record a blocked outcome, and state 
 
 For a run, follow `runner.md` from the package root. Do not compute or alter future schedules. Report task effects and state changes separately.
 
-For deployment, use the current platform's native scheduling capability, preserve unrelated live settings, and use a minimal launcher that supplies the package root, names any deployment adapter, and delegates to `runner.md`. Verify the resulting schedule, timezone, enabled state, resource bindings, effect permissions, and launcher. Retain a recoverable snapshot.
+After successfully creating and validating a package, recommend the exact AI-agnostic launcher prompt with the real package root and required deployment adapter, if any, and ask whether the user wants to add an automation using the current AI agent. This question does not authorize deployment.
+
+When the user explicitly authorizes deployment:
+
+1. Read the package manifest and `runner.md`; confirm `task_file` identifies a recurring-task package and resolve any required deployment adapter.
+2. Inspect the current AI agent's available native scheduler tools and authoritative agent documentation. Use that native mechanism directly; do not invoke another package-design skill and do not invent scheduler commands.
+3. Check existing automations for the same package before creating one. Update a matching deployment instead of duplicating it.
+4. Map the manifest schedule, timezone, intended enabled state, and adapter bindings without changing their meaning. Ask only when the native scheduler cannot represent them safely.
+5. Use a standalone scheduled job with the declared resources and only the package-authorized effects. Do not use a thread-bound reminder or heartbeat unless the user explicitly requests that behavior.
+6. Use the appropriate minimal launcher prompt above. Keep model, project, working directory, notifications, credentials references, and native schedule syntax in live deployment settings or an adapter, not in canonical package files.
+7. Verify the saved schedule, timezone behavior, enabled state, package root, runner path, state write access, resource bindings, effect permissions, and launcher. Retain a recoverable snapshot and report package changes separately from live deployment changes.
 
 ## Output contract
 
-- **Create, refine, or migrate with an authorized destination:** Write and validate the package, then summarize artifacts, validation, behavior changes, state handling, and unresolved warnings.
+- **Create with an authorized destination:** Write and validate the package, summarize artifacts, validation, behavior, state handling, and unresolved warnings, then recommend the exact launcher prompt and ask whether to add an automation using the current AI agent.
+- **Refine or migrate with an authorized destination:** Write and validate the package, then summarize artifacts, validation, behavior changes, state handling, and unresolved warnings.
 - **Review:** Return prioritized, evidence-backed findings without editing.
 - **Prompt only:** Return only the completed task definition, without a preface, fence, placeholders, or TODOs.
 - **Run:** Report outcome, verified effects, outputs, and whether state was written or handed off.

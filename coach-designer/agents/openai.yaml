@@ -1,4 +1,4 @@
 interface:
   display_name: "Coach Designer"
-  short_description: "Design portable long-running AI coaches"
-  default_prompt: "Use $coach-designer to create or update a portable long-running coach package."
+  short_description: "Design and deploy portable AI coaches"
+  default_prompt: "Use $coach-designer to create, update, or deploy a portable long-running coach package."

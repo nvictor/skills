@@ -1,4 +1,4 @@
 interface:
   display_name: "Recurring Task Designer"
-  short_description: "Design portable recurring AI tasks"
-  default_prompt: "Use $recurring-task-designer to create or update a portable recurring task package."
+  short_description: "Design and deploy portable recurring tasks"
+  default_prompt: "Use $recurring-task-designer to create, update, or deploy a portable recurring-task package."
