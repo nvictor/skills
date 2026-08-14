@@ -34,6 +34,8 @@ Supported sources:
 Rules:
 
 - Preserve technical accuracy.
+- For every retained claim, preserve its certainty, conditions, exceptions,
+  scope, causality, and time.
 - Never invent missing facts.
 - Mark important missing facts as `Unknown`.
 - Omit unimportant unknowns.
@@ -60,8 +62,21 @@ Ignore unless explicitly requested:
 - Use active voice and direct sentences.
 - Use short paragraphs and one idea per sentence.
 - Use numbered lists for steps and bullets for facts or options.
+- Use one term for one concept. Change terms only when the source distinguishes
+  between them.
+- Make the actor explicit when the reader must know who performs an action.
+- Put one primary action in each instruction.
+- Prefer direct verbs over noun phrases that hide the action.
+- Replace an ambiguous phrasal verb with a precise verb when one exists.
+- Rewrite long noun clusters when the relationship between the nouns is
+  unclear.
+- Use a list when prose hides a sequence, condition, or complex enumeration.
 - Define technical terms when the reader may not know them.
 - Cut filler, buzzwords, marketing language, and unsupported claims.
+
+Treat sentence length, passive voice, phrasal verbs, and noun clusters as
+signals to inspect, not automatic violations. Do not force a shorter or simpler
+rewrite when it would reduce precision.
 
 ## Output structure
 
@@ -165,6 +180,14 @@ Run this checklist before finalizing:
 - [ ] Reader can understand the topic in under 2 minutes.
 - [ ] First paragraph says what the thing is.
 - [ ] Every section helps the reader act or decide.
+- [ ] Every retained claim is traceable to a source.
+- [ ] Numbers, conditions, exceptions, and scope qualifiers are unchanged.
+- [ ] The output preserves the source's level of certainty and causal claims.
+- [ ] Each concept has one consistent name.
+- [ ] Each instruction has one primary action, with clear order and conditions.
+- [ ] Actors and pronoun references are unambiguous.
+- [ ] Long sentences and noun clusters do not permit multiple interpretations.
+- [ ] Compression keeps the information the reader needs to act correctly.
 - [ ] No buzzwords, filler, or duplicated points.
 - [ ] No unsupported claims.
 - [ ] Source links are omitted unless the user asked for sources.
