@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "node $HOME/.copilot/hooks/task-logger/session-start.js",
+        "timeoutSec": 10
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": "node $HOME/.copilot/hooks/task-logger/session-end.js",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}

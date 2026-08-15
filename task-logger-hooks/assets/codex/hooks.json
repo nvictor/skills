@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env node $HOME/.codex/hooks/task-logger/user-prompt-submit.js",
+            "timeout": 10,
+            "statusMessage": "Recording task start"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env node $HOME/.codex/hooks/task-logger/stop.js",
+            "timeout": 10,
+            "statusMessage": "Writing task log entry"
+          }
+        ]
+      }
+    ]
+  }
+}

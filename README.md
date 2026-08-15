@@ -28,6 +28,8 @@ agent-specific skill directories for Codex, Copilot, Gemini, and Claude Code:
   on a schedule, or both.
 - `succinct-writer`: compresses source material into clear, brief Markdown
   documents without inventing facts.
+- `task-logger-hooks`: installs and repairs the task-start/task-end logging
+  hooks shared across Gemini CLI, Copilot CLI, Codex, and Claude Code.
 - `workflow-designer`: designs, selects, and runs portable finite workflows
   whose procedure, state, and memory survive changes of agent or context.
 

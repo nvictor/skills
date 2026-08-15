@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "BeforeAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "task-logger-start",
+            "type": "command",
+            "command": "node $HOME/.gemini/hooks/task-logger/before-agent.js"
+          }
+        ]
+      }
+    ],
+    "AfterAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "task-logger-end",
+            "type": "command",
+            "command": "node $HOME/.gemini/hooks/task-logger/after-agent.js"
+          }
+        ]
+      }
+    ]
+  }
+}
