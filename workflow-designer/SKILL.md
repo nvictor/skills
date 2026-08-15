@@ -9,7 +9,7 @@ description: Design, review, refine, package, discover, select, inspect, resume,
 
 Design provider-neutral workflow packages for finite objectives that require multiple dependent steps, durable continuity, or handoff between agents. Keep the procedure, current position, and learned context in canonical files rather than conversation history. Do not perform workflow work unless the user explicitly requests `workflow:run` or otherwise clearly asks to execute or resume it.
 
-Keep workflow discovery equally durable. Store the selected workflow in a root-level `state.json` beneath a workflow root chosen by the user. Never hardcode a root location or infer canonical selection from chat history, Git branches, modification times, or machine-specific conventions.
+Keep workflow discovery equally durable. Store the selected workflow in a root-level `state.json` beneath a workflow root chosen by the user. Bind a workspace to that root with `.workflow-root.json` when operations should work without repeating the root path. Never hardcode a root location or infer canonical selection from chat history, directory searches, Git branches, or modification times.
 
 ## Package ownership
 
@@ -56,10 +56,27 @@ Use `null` when no workflow is selected. Store a safe relative package path from
 Resolve the workflow root in this order:
 
 1. Use a root explicitly supplied by the user.
-2. Otherwise use a root already bound by the current launcher or workspace configuration.
-3. Otherwise ask the user to choose a root.
+2. Otherwise use the path in the launcher environment variable `WORKFLOW_ROOT`.
+3. Otherwise find the nearest `.workflow-root.json` from the current directory upward and resolve its `workflow_root` value relative to the binding file.
+4. Otherwise ask the user to choose a root.
 
-Do not search arbitrary directories or assume `.workflows`, `design/agents`, or any other location.
+Use `scripts/manage_workflow_root.py locate [start]` for deterministic binding discovery and `bind <workspace> <root>` to create or update a user-authorized workspace binding. Do not search arbitrary directories or assume `.workflows`, `design/agents`, or any other location.
+
+Use this workspace-binding shape:
+
+```json
+{
+  "workflow_root": "relative/or/absolute/path"
+}
+```
+
+Prefer a relative value when the root is inside the workspace. Keep this environment binding outside workflow packages.
+
+## Invocation
+
+Treat `workflow:<operation>` as a provider-neutral operation label, not proof that a host registered a slash command with that spelling. Natural-language requests and host-specific commands must map to the same operation contract.
+
+For a standalone Claude Code skill, invoke `/workflow-designer <operation> [target]`. The optional adapter under `adapters/claude/commands/workflow/` exposes namespaced aliases such as `/workflow:status`; it still delegates behavior to this skill. Do not tell a user that `/workflow:status` exists unless that adapter or an equivalent plugin is installed.
 
 ## Select the operation
 
@@ -78,7 +95,7 @@ Do not search arbitrary directories or assume `.workflows`, `design/agents`, or 
 
 Treat package design, workflow execution, and external effects as separate authorities. Authorization for one never implies another.
 
-For create, convert, refine, or review, read `references/quality-rubric.md` completely. For every root or package operation, read `references/package-format.md` completely. Copy `assets/workflow-root/state.json` when initializing a user-selected root. Copy `assets/workflow-package/` when a new package needs a starting structure, replace every template marker, and run `scripts/validate_workflow_package.py` before delivery. Use `scripts/manage_workflow_root.py` to initialize, list, resolve, activate, clear, and validate root selection state.
+For create, convert, refine, or review, read `references/quality-rubric.md` completely. For every root or package operation, read `references/package-format.md` completely. Copy `assets/workflow-root/state.json` when initializing a user-selected root. Copy `assets/workflow-package/` when a new package needs a starting structure, replace every template marker, and run `scripts/validate_workflow_package.py` before delivery. Use `scripts/manage_workflow_root.py` to bind or locate a workspace root and to initialize, list, resolve, activate, clear, and validate root selection state.
 
 ## Examples
 
@@ -94,11 +111,24 @@ Choose and initialize a root:
 Use design/agents/workflows as my workflow root and initialize its state.json.
 ```
 
-List and activate workflows:
+Bind a workspace so future operations can discover that root:
+
+```text
+Bind this workspace to design/agents/workflows as its workflow root.
+```
+
+List and activate workflows through the portable operation labels:
 
 ```text
 workflow:list in design/agents/workflows
 workflow:activate publish-conference-talk in design/agents/workflows
+```
+
+Invoke the same operations through the standalone Claude Code skill:
+
+```text
+/workflow-designer list
+/workflow-designer status
 ```
 
 Convert a plan without changing its source:

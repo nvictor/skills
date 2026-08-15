@@ -5,6 +5,7 @@ Read this file completely for every operation involving a workflow package.
 ## Contents
 
 - Workflow root
+- Workspace binding
 - Root `state.json`
 - Workflow resolution
 - Package contents
@@ -33,6 +34,27 @@ Allow workflow packages as direct children or in user-organized subdirectories:
 ```
 
 Resolve the root from an explicit user-supplied path or an existing launcher/workspace binding. Ask the user when neither is available. Do not search arbitrary filesystem locations or infer the root from chat history.
+
+## Workspace binding
+
+Use a workspace binding when the user wants workflow operations to resolve a chosen root without repeating its path. Resolve bindings in this order:
+
+1. An explicit root supplied for the operation.
+2. The launcher environment variable `WORKFLOW_ROOT`.
+3. The nearest `.workflow-root.json` found from the current directory upward.
+4. User clarification.
+
+Use this binding shape:
+
+```json
+{
+  "workflow_root": "design/agents/workflows"
+}
+```
+
+Resolve a relative `workflow_root` value from the directory containing `.workflow-root.json`. Allow an absolute value when the selected root is outside the workspace. The binding is environment configuration, so keep it outside workflow packages and do not copy it into package manifests, state, memory, or runners.
+
+Use `scripts/manage_workflow_root.py bind <workspace> <root>` to write a binding and `locate [start]` to resolve one. Preserve unknown binding fields during updates. Never replace binding discovery with a broad filename search or a guessed conventional directory.
 
 ## Root `state.json`
 

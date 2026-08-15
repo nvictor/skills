@@ -49,6 +49,7 @@ Read this file completely for create, convert, refine, or review operations. App
 ## Control-plane integrity
 
 - Keep the workflow root user-selected and outside portable package configuration.
+- Make root discovery deterministic through an explicit path, launcher binding, or nearest workspace binding; never through a broad directory search.
 - Keep root `state.json` limited to workspace selection.
 - Make `workflow:list` read only and `workflow:activate` selection only.
 - Resolve explicit target, active pointer, then sole nonterminal candidate without silently persisting fallback selection.

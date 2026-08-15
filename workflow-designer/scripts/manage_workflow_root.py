@@ -17,6 +17,9 @@ STATUS_PATTERN = re.compile(r"^Status:\s*([a-z_]+)\s*$", re.MULTILINE)
 ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 STATUSES = {"draft", "in_progress", "paused", "blocked", "completed", "abandoned"}
 TERMINAL_STATUSES = {"completed", "abandoned"}
+BINDING_FILENAME = ".workflow-root.json"
+BINDING_FIELD = "workflow_root"
+ENVIRONMENT_BINDING = "WORKFLOW_ROOT"
 
 
 class RegistryError(Exception):
@@ -39,8 +42,66 @@ def workflow_root(value: str) -> Path:
     return Path(value).expanduser().resolve()
 
 
+def workspace_path(value: str) -> Path:
+    path = Path(value).expanduser().resolve()
+    if path.is_file():
+        return path.parent
+    return path
+
+
 def root_state_path(root: Path) -> Path:
     return root / "state.json"
+
+
+def binding_path(workspace: Path) -> Path:
+    return workspace / BINDING_FILENAME
+
+
+def validate_workflow_root(root: Path) -> Path:
+    load_root_state(root)
+    return root
+
+
+def resolve_binding_value(value: Any, base: Path, label: str) -> Path:
+    if not isinstance(value, str) or not value.strip():
+        raise RegistryError(f"{label} must be a non-empty path string.")
+    candidate = Path(value).expanduser()
+    if not candidate.is_absolute():
+        candidate = base / candidate
+    return validate_workflow_root(candidate.resolve())
+
+
+def locate_workflow_root(start: Path) -> tuple[Path, str, Path | None]:
+    environment_value = os.environ.get(ENVIRONMENT_BINDING)
+    if environment_value:
+        root = resolve_binding_value(
+            environment_value, Path.cwd(), f"{ENVIRONMENT_BINDING}"
+        )
+        return root, "environment", None
+
+    current = workspace_path(str(start))
+    for directory in (current, *current.parents):
+        candidate = binding_path(directory)
+        if not candidate.exists():
+            continue
+        binding = read_json(candidate, BINDING_FILENAME)
+        root = resolve_binding_value(
+            binding.get(BINDING_FIELD), directory, f"{candidate} {BINDING_FIELD}"
+        )
+        return root, "workspace", candidate
+
+    raise RegistryError(
+        f"No workflow-root binding was found from {current}. "
+        f"Set {ENVIRONMENT_BINDING} or create {BINDING_FILENAME} in the workspace."
+    )
+
+
+def portable_binding_value(workspace: Path, root: Path) -> str:
+    try:
+        relative = root.relative_to(workspace)
+    except ValueError:
+        return str(root)
+    return relative.as_posix()
 
 
 def validate_relative_path(value: Any, label: str) -> Path:
@@ -86,6 +147,34 @@ def write_root_state(root: Path, state: dict[str, Any]) -> None:
             delete=False,
         ) as temporary:
             json.dump(state, temporary, indent=2, sort_keys=True)
+            temporary.write("\n")
+            temporary.flush()
+            os.fsync(temporary.fileno())
+            temporary_name = temporary.name
+        os.chmod(temporary_name, mode)
+        os.replace(temporary_name, destination)
+    finally:
+        if temporary_name is not None:
+            temporary_path = Path(temporary_name)
+            if temporary_path.exists():
+                temporary_path.unlink()
+
+
+def write_binding(workspace: Path, binding: dict[str, Any]) -> None:
+    workspace.mkdir(parents=True, exist_ok=True)
+    destination = binding_path(workspace)
+    mode = destination.stat().st_mode & 0o777 if destination.exists() else 0o644
+    temporary_name: str | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=workspace,
+            prefix=".workflow-root-",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary:
+            json.dump(binding, temporary, indent=2, sort_keys=True)
             temporary.write("\n")
             temporary.flush()
             os.fsync(temporary.fileno())
@@ -312,6 +401,42 @@ def command_validate(root: Path) -> None:
     print_json({"root": str(root), "valid": True, "active": active, "workflow": record})
 
 
+def command_bind(workspace: Path, root: Path) -> None:
+    if not workspace.is_dir():
+        raise RegistryError(f"Workspace does not exist: {workspace}")
+    validate_workflow_root(root)
+    path = binding_path(workspace)
+    binding = read_json(path, BINDING_FILENAME) if path.exists() else {}
+    binding[BINDING_FIELD] = portable_binding_value(workspace, root)
+    write_binding(workspace, binding)
+    written = read_json(path, BINDING_FILENAME)
+    located_root = resolve_binding_value(
+        written.get(BINDING_FIELD), workspace, f"{path} {BINDING_FIELD}"
+    )
+    if located_root != root:
+        raise RegistryError(f"Workflow-root binding verification failed: {path}")
+    print_json(
+        {
+            "workspace": str(workspace),
+            "binding_file": str(path),
+            "workflow_root": str(root),
+            "stored_value": binding[BINDING_FIELD],
+        }
+    )
+
+
+def command_locate(start: Path) -> None:
+    root, source, path = locate_workflow_root(start)
+    print_json(
+        {
+            "start": str(workspace_path(str(start))),
+            "source": source,
+            "binding_file": str(path) if path is not None else None,
+            "workflow_root": str(root),
+        }
+    )
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -335,25 +460,40 @@ def parse_args() -> argparse.Namespace:
         dest="target",
         help="Clear only when this workflow id or path is active",
     )
+
+    bind = subparsers.add_parser("bind")
+    bind.add_argument("workspace", help="Workspace directory that should own the binding")
+    bind.add_argument("root", help="User-selected workflow root")
+
+    locate = subparsers.add_parser("locate")
+    locate.add_argument(
+        "start",
+        nargs="?",
+        default=".",
+        help="Directory from which to resolve the nearest workspace binding",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    root = workflow_root(args.root)
     try:
         if args.command == "init":
-            command_init(root)
+            command_init(workflow_root(args.root))
         elif args.command == "list":
-            command_list(root)
+            command_list(workflow_root(args.root))
         elif args.command == "resolve":
-            command_resolve(root, args.target)
+            command_resolve(workflow_root(args.root), args.target)
         elif args.command == "activate":
-            command_activate(root, args.target)
+            command_activate(workflow_root(args.root), args.target)
         elif args.command == "clear":
-            command_clear(root, args.target)
+            command_clear(workflow_root(args.root), args.target)
         elif args.command == "validate":
-            command_validate(root)
+            command_validate(workflow_root(args.root))
+        elif args.command == "bind":
+            command_bind(workspace_path(args.workspace), workflow_root(args.root))
+        elif args.command == "locate":
+            command_locate(workspace_path(args.start))
         else:
             raise RegistryError(f"Unsupported command: {args.command}")
     except RegistryError as exc:
