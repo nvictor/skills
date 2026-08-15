@@ -1,6 +1,6 @@
 ---
 name: coach-designer
-description: Design, review, refine, package, run, and deploy portable long-running AI coaches that build durable skills through deliberate practice, feedback, adaptive difficulty, and progress tracking. Use for coach packages, including creating or improving a coach, converting prompts or scheduled coaches into agent-neutral packages, producing a standalone coach prompt, or adding an automation whose target package manifest contains `prompt_file`. Coach-package automations remain owned by this skill; do not route them through a generic recurring-task skill.
+description: Design, review, refine, package, run, and deploy portable long-running AI coaches that build durable skills through deliberate practice, feedback, adaptive difficulty, and progress tracking. Use for coach packages, including creating or improving a coach, converting prompts or scheduled coaches into agent-neutral packages, producing a standalone coach prompt, or adding an automation whose target package manifest contains `prompt_file`. Coach-package automations remain owned by this skill; do not route them through the generic task designer.
 ---
 
 # Coach Designer
@@ -11,12 +11,12 @@ Design learning systems that produce durable changes in what a learner can do. A
 
 ## Package ownership
 
-Own a package when its manifest contains `prompt_file`. This includes later requests to run, schedule, automate, pause, resume, or otherwise deploy that coach package. Do not invoke a recurring-task designer for a coach-package automation.
+Own a package when its manifest contains `prompt_file`. This includes later requests to run, schedule, automate, pause, resume, or otherwise deploy that coach package. Do not invoke the task designer for a coach-package automation.
 
 When the target package type is unknown, inspect its manifest before selecting a workflow:
 
 - `prompt_file` identifies a coach package; continue with this skill.
-- `task_file` identifies a recurring-task package; use the recurring-task designer instead.
+- `task_file` identifies a task package; use the task designer instead.
 
 ## Select the operation
 

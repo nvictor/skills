@@ -1,4 +1,4 @@
-# Portable recurring-task runner
+# Portable task runner
 
 Use the package root supplied by the launcher or the directory containing this file. Use only the deployment adapter explicitly selected by the launcher; do not guess one.
 
@@ -26,7 +26,7 @@ If a required resource is unavailable or an intended effect is undeclared, ambig
 6. Classify the outcome as `success`, `no-op`, `blocked`, `partial`, or `failed`.
 7. Report verified effects, outputs, unresolved work, and the state persistence result. Never claim an unverified effect or delivery.
 
-Do not modify `manifest.json`, `task.md`, `runner.md`, `migration.json`, or deployment adapters. Do not compute, create, or alter future schedules.
+Do not modify `manifest.json`, `task.md`, `runner.md`, `migration.json`, or deployment adapters. A missing `schedule` means the package is manual-only. A present `schedule` does not prevent manual execution. Do not compute, create, alter, postpone, or advance future schedules.
 
 ## Preserve continuity
 

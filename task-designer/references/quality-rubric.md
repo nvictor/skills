@@ -1,14 +1,22 @@
-# Recurring-task quality rubric
+# Task quality rubric
 
-Read this file completely when creating, reviewing, or refining a recurring task. During preservation migration, use it to produce warnings only; do not rewrite behavior.
+Read this file completely when creating, reviewing, or refining a task. During preservation migration, use it to produce warnings only; do not rewrite behavior.
 
-## Recurring value
+## Operational value
 
 - State the observable outcome of each run.
-- Explain through behavior why repetition is useful.
-- Make the cadence fit the rate at which inputs or decisions change.
+- Explain when an invocation is useful.
 - Define a useful no-op outcome when nothing needs attention.
-- Avoid repeated work whose output cannot influence a person, artifact, or system.
+- Avoid work whose output cannot influence a person, artifact, or system.
+
+## Scheduling quality
+
+Apply these checks only when `schedule` is present:
+
+- Make the cadence fit the rate at which inputs or decisions change.
+- Use an explicit timezone for enabled schedules.
+- Keep portable scheduling intent in the manifest and native scheduler syntax in an adapter.
+- Allow manual execution without changing the next scheduled run.
 
 ## Inputs and prerequisites
 
@@ -33,7 +41,7 @@ Read this file completely when creating, reviewing, or refining a recurring task
 - Distinguish success, no-op, blocked, partial, and failure outcomes.
 - Produce a concise result that states what changed and what remains.
 
-## Idempotency and recurrence safety
+## Idempotency and rerun safety
 
 - Define how duplicate or delayed invocations are detected.
 - Make repeated execution safe against unchanged inputs.
@@ -71,7 +79,7 @@ Read this file completely when creating, reviewing, or refining a recurring task
 
 - Keep canonical behavior independent of provider, model, scheduler, and machine.
 - Use logical resource names in task instructions.
-- Keep schedules in the manifest and environment bindings in adapters.
+- Keep optional schedules in the manifest and environment bindings in adapters.
 - Keep credential values out of every package file.
 - Make the package understandable and runnable by another capable agent with equivalent resources.
 
@@ -87,10 +95,11 @@ Read this file completely when creating, reviewing, or refining a recurring task
 
 Confirm that:
 
-- the task provides recurring value across many runs
+- the task provides operational value whenever invoked
 - one run is bounded and executable
 - inputs, effects, outputs, and success are explicit
 - no-op and duplicate invocations are safe
+- cadence is appropriate when scheduling is present
 - failure and partial-success behavior is recoverable
 - state remains truthful, compact, and portable
 - another capable agent can run the package

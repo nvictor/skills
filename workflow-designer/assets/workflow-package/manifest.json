@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "id": "{{workflow-id}}",
+  "workflow_file": "workflow.md",
+  "state_file": "state.md",
+  "memory_file": "memory.md",
+  "runner_file": "runner.md"
+}

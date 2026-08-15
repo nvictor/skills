@@ -1,6 +1,6 @@
 # Purpose
 
-{{State the recurring outcome and why repetition is useful.}}
+{{State the bounded outcome and when an invocation is useful.}}
 
 ## Inputs and prerequisites
 

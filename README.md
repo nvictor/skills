@@ -24,10 +24,12 @@ agent-specific skill directories for Codex, Copilot, Gemini, and Claude Code:
   or product brief.
 - `recipe-formatter`: formats new and existing recipes in Victor's lowercase
   house style, with grouped ingredients, phased methods, and target results.
-- `recurring-task-designer`: designs portable recurring AI tasks for monitoring,
-  reporting, maintenance, reminders, audits, and other repeated workflows.
+- `task-designer`: designs portable bounded AI tasks that can run manually,
+  on a schedule, or both.
 - `succinct-writer`: compresses source material into clear, brief Markdown
   documents without inventing facts.
+- `workflow-designer`: designs, selects, and runs portable finite workflows
+  whose procedure, state, and memory survive changes of agent or context.
 
 ## Notes
 

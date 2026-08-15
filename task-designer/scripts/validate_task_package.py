@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a portable recurring-task package without third-party dependencies."""
+"""Validate a portable task package without third-party dependencies."""
 
 from __future__ import annotations
 
@@ -114,11 +114,22 @@ def safe_relative_file(
     return path
 
 
-def validate_schedule(schedule: dict[str, Any], errors: list[str]) -> None:
+def validate_schedule(
+    schedule: dict[str, Any],
+    errors: list[str],
+    *,
+    allow_manual: bool,
+) -> None:
     enabled = require(schedule, "enabled", bool, errors, "schedule.")
     frequency = schedule.get("frequency")
-    if frequency not in {"daily", "weekly", "monthly", "manual"}:
-        errors.append("schedule.frequency must be daily, weekly, monthly, or manual.")
+    frequencies = {"daily", "weekly", "monthly", "manual"} if allow_manual else {
+        "daily",
+        "weekly",
+        "monthly",
+    }
+    if frequency not in frequencies:
+        allowed = "daily, weekly, monthly, or manual" if allow_manual else "daily, weekly, or monthly"
+        errors.append(f"schedule.frequency must be {allowed}.")
     interval = require(schedule, "interval", int, errors, "schedule.")
     if interval is not None and interval < 1:
         errors.append("schedule.interval must be at least 1.")
@@ -243,10 +254,16 @@ def validate_resources(
 def validate_manifest(
     package: Path,
     data: dict[str, Any],
+    warnings: list[str],
     errors: list[str],
 ) -> tuple[Path | None, Path | None, Path | None]:
-    if data.get("schema_version") != 1:
-        errors.append("schema_version must be 1.")
+    schema_version = data.get("schema_version")
+    if schema_version == 1:
+        warnings.append(
+            "schema_version 1 is deprecated; migrate the package to schema version 2 when refining it."
+        )
+    elif schema_version != 2:
+        errors.append("schema_version must be 1 or 2.")
 
     task_id = require(data, "id", str, errors)
     if task_id is not None:
@@ -268,9 +285,14 @@ def validate_manifest(
     task_path = safe_relative_file(package, data.get("task_file"), "task_file", errors)
     state_path = safe_relative_file(package, data.get("state_file"), "state_file", errors)
 
-    schedule = require(data, "schedule", dict, errors)
-    if schedule is not None:
-        validate_schedule(schedule, errors)
+    if schema_version == 1:
+        schedule = require(data, "schedule", dict, errors)
+        if schedule is not None:
+            validate_schedule(schedule, errors, allow_manual=True)
+    elif schema_version == 2 and "schedule" in data:
+        schedule = require(data, "schedule", dict, errors)
+        if schedule is not None:
+            validate_schedule(schedule, errors, allow_manual=False)
 
     execution = require(data, "execution", dict, errors)
     if execution is not None:
@@ -497,7 +519,9 @@ def validate(package: Path) -> int:
     task_path: Path | None = None
     state_path: Path | None = None
     if manifest is not None:
-        runner_path, task_path, state_path = validate_manifest(package, manifest, errors)
+        runner_path, task_path, state_path = validate_manifest(
+            package, manifest, warnings, errors
+        )
     validate_text_files(package, runner_path, task_path, state_path, warnings, errors)
     validate_migration(package, task_path, state_path, warnings, errors)
     validate_adapters(package, errors)
@@ -517,7 +541,7 @@ def validate(package: Path) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("package", type=Path, help="Path to one recurring-task package directory")
+    parser.add_argument("package", type=Path, help="Path to one task package directory")
     args = parser.parse_args()
     return validate(args.package.resolve())
 

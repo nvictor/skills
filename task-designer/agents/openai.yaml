@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Designer"
+  short_description: "Design portable manual or scheduled tasks"
+  default_prompt: "Use $task-designer to create, update, run, or deploy a portable task package."

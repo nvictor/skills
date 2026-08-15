@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "{{task-id}}",
   "name": "{{Task Name}}",
   "status": "draft",
@@ -7,15 +7,6 @@
   "runner_file": "runner.md",
   "task_file": "task.md",
   "state_file": "state.md",
-  "schedule": {
-    "enabled": false,
-    "frequency": "manual",
-    "interval": 1,
-    "start_date": null,
-    "days": [],
-    "local_time": null,
-    "timezone": null
-  },
   "execution": {
     "minimum_minutes": 5,
     "maximum_minutes": 15,

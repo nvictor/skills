@@ -1,0 +1,4 @@
+interface:
+  display_name: "Workflow Designer"
+  short_description: "Design, select, and run portable workflows"
+  default_prompt: "Use $workflow-designer to create, select, inspect, or run a portable finite workflow."
