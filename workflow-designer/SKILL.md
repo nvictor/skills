@@ -1,15 +1,15 @@
 ---
 name: workflow-designer
-description: Design, review, refine, package, discover, select, inspect, resume, complete, and run portable finite AI workflows whose canonical procedure, execution state, durable memory, and workspace selection survive changes of agent or context. Use when creating or managing a resumable workflow package, choosing a user-owned workflow root, handling root `state.json`, invoking `workflow:list`, `workflow:activate`, `workflow:status`, `workflow:next`, `workflow:run`, `workflow:summary`, or `workflow:complete`, or handling a manifest containing `workflow_file`. Do not use for indefinitely scheduled operations or capability-building coaches.
+description: Design, review, refine, package, discover, inspect, checkpoint, resume, complete, and run portable finite AI workflows whose canonical procedure, execution state, and durable memory survive changes of agent or context. Use when creating or managing a resumable workflow package, choosing or binding a user-owned workflow root, invoking `workflow:list`, `workflow:status`, `workflow:next`, `workflow:checkpoint`, `workflow:run`, `workflow:summary`, or `workflow:complete`, or handling a manifest containing `workflow_file`. Do not use for indefinitely scheduled operations or capability-building coaches.
 ---
 
 # Workflow Designer
 
 ## Purpose
 
-Design provider-neutral workflow packages for finite objectives that require multiple dependent steps, durable continuity, or handoff between agents. Keep the procedure, current position, and learned context in canonical files rather than conversation history. Do not perform workflow work unless the user explicitly requests `workflow:run` or otherwise clearly asks to execute or resume it.
+Design provider-neutral workflow packages for finite objectives that require dependent steps, durable continuity, or handoff between agents. Keep the procedure, current position, and learned context in canonical files rather than conversation history. Do not perform workflow work unless the user explicitly requests `workflow:run` or otherwise clearly asks to execute or resume it.
 
-Keep workflow discovery equally durable. Store the selected workflow in a root-level `state.json` beneath a workflow root chosen by the user. Bind a workspace to that root with `.workflow-root.json` when operations should work without repeating the root path. Never hardcode a root location or infer canonical selection from chat history, directory searches, Git branches, or modification times.
+Use a user-chosen workflow root only as a deterministic discovery boundary. Do not maintain an active-workflow pointer. Target a package explicitly whenever more than one nonterminal workflow exists.
 
 ## Package ownership
 
@@ -21,7 +21,7 @@ Own a package when its manifest contains `workflow_file`. Use the manifest as th
 
 Report conflicting discriminators instead of choosing silently.
 
-Distinguish the package types by why continuity exists:
+Distinguish package types by why continuity exists:
 
 - Use a workflow when one finite objective requires dependent steps and a terminal condition.
 - Use a task when one bounded operation should be safely rerunnable manually, on a schedule, or both.
@@ -33,25 +33,14 @@ Allow loops inside a workflow when they lead toward its terminal condition. Do n
 
 Treat the workflow root as an environment binding chosen by the user. It may live inside a project, under a shared agents directory, or in a standalone directory. Do not store its absolute path in workflow packages.
 
-Use this root layout, allowing the user to organize packages in direct children or nested directories:
+Allow direct children and user-organized subdirectories:
 
 ```text
 <workflow-root>/
-├── state.json
 ├── workflow-a/
 └── group/
     └── workflow-b/
 ```
-
-Store only selection state in root `state.json`:
-
-```json
-{
-  "active": "workflow-a"
-}
-```
-
-Use `null` when no workflow is selected. Store a safe relative package path from the chosen root, never an absolute path. Keep this workspace selection separate from each package's lifecycle in `state.md`.
 
 Resolve the workflow root in this order:
 
@@ -70,7 +59,7 @@ Use this workspace-binding shape:
 }
 ```
 
-Prefer a relative value when the root is inside the workspace. Keep this environment binding outside workflow packages.
+Prefer a relative value when the root is inside the workspace. Keep this environment binding outside workflow packages. A legacy root-level `state.json` has no canonical meaning under this contract; ignore it and do not delete it without explicit authorization.
 
 ## Invocation
 
@@ -84,18 +73,17 @@ For a standalone Claude Code skill, invoke `/workflow-designer <operation> [targ
 - **Convert:** Turn an existing plan, checklist, procedure, or project brief into a package while preserving its intent and source artifacts.
 - **Review:** Inspect a package and report evidence-backed findings without editing or running it.
 - **Refine:** Improve a package while preserving unrelated procedure, state, memory, and artifacts.
-- **`workflow:list`:** Read only. List workflow packages beneath the chosen root, their lifecycle status, and which one is selected.
-- **`workflow:activate`:** Select one nonterminal workflow by writing its safe relative path to root `state.json`. Do not change package state or execute work.
+- **`workflow:list`:** Read only. List workflow packages beneath the chosen root and their lifecycle statuses.
 - **`workflow:status`:** Read only. Report the current position, verified progress, blockers, pending decisions, and remaining work.
 - **`workflow:next`:** Read only. Identify the next valid action, its prerequisites, and why it follows. Do not execute it.
-- **`workflow:summary`:** Read only. Derive a compact human or agent handoff from canonical files. Do not store the summary as another source of truth.
-- **`workflow:run`:** Execute or resume the permitted amount of work, then persist truthful state and durable memory.
-- **`workflow:complete`:** Verify the terminal criteria, mark the package completed, and clear the root pointer only when it selects that package. Do not use completion to bypass unfinished work.
-- **`workflow:deactivate`:** Use only as an escape hatch. Clear the root pointer without changing package lifecycle state.
+- **`workflow:summary`:** Read only. Derive a compact human or agent handoff from canonical files. Do not store it as another source of truth.
+- **`workflow:checkpoint`:** Reconcile externally or manually completed work into state and memory without performing domain work.
+- **`workflow:run`:** Execute or resume the permitted amount of domain work, then persist truthful state and durable memory.
+- **`workflow:complete`:** Verify the terminal criteria and mark the package completed without performing missing domain work.
 
-Treat package design, workflow execution, and external effects as separate authorities. Authorization for one never implies another.
+Treat package design, bookkeeping, workflow execution, and external effects as separate authorities. Authorization for one never implies another.
 
-For create, convert, refine, or review, read `references/quality-rubric.md` completely. For every root or package operation, read `references/package-format.md` completely. Copy `assets/workflow-root/state.json` when initializing a user-selected root. Copy `assets/workflow-package/` when a new package needs a starting structure, replace every template marker, and run `scripts/validate_workflow_package.py` before delivery. Use `scripts/manage_workflow_root.py` to bind or locate a workspace root and to initialize, list, resolve, activate, clear, and validate root selection state.
+For create, convert, refine, or review, read `references/quality-rubric.md` completely. For every root or package operation, read `references/package-format.md` completely. Copy `assets/workflow-package/` when a new package needs a starting structure, replace every template marker, and run `scripts/validate_workflow_package.py` before delivery. Use `scripts/manage_workflow_root.py` to bind, locate, list, resolve, or validate a workflow root.
 
 ## Examples
 
@@ -105,48 +93,29 @@ Create without running:
 Use workflow-designer to create a resumable workflow for publishing my conference talk in design/agents/workflows/publish-conference-talk. Do not run it.
 ```
 
-Choose and initialize a root:
-
-```text
-Use design/agents/workflows as my workflow root and initialize its state.json.
-```
-
-Bind a workspace so future operations can discover that root:
+Bind a workspace so future operations can discover its workflow root:
 
 ```text
 Bind this workspace to design/agents/workflows as its workflow root.
 ```
 
-List and activate workflows through the portable operation labels:
+List workflows:
 
 ```text
 workflow:list in design/agents/workflows
-workflow:activate publish-conference-talk in design/agents/workflows
 ```
 
-Invoke the same operations through the standalone Claude Code skill:
-
-```text
-/workflow-designer list
-/workflow-designer status
-```
-
-Convert a plan without changing its source:
-
-```text
-Convert this migration checklist into a portable workflow package. Preserve the original file and do not perform the migration.
-```
-
-Inspect the current position:
+Inspect an explicit workflow:
 
 ```text
 workflow:status for design/agents/workflows/build-notation-parser
+workflow:next for design/agents/workflows/build-notation-parser
 ```
 
-Determine the next action without performing it:
+Record progress performed outside the agent:
 
 ```text
-workflow:next for design/agents/workflows/build-notation-parser
+workflow:checkpoint design/agents/workflows/iss-sprites: I curated the down direction. Verify the artifact and update bookkeeping only.
 ```
 
 Resume execution:
@@ -161,30 +130,27 @@ Produce a handoff:
 workflow:summary for design/agents/workflows/build-notation-parser
 ```
 
-Use this provider-neutral launcher form, substituting the actual package root and operation:
+Use this provider-neutral launcher form:
 
 ```text
 Perform `workflow:<operation>` on the portable workflow package at `<package-root>`. Read and follow `runner.md`. Treat `state.md` and `memory.md` as canonical cross-agent continuity.
 ```
 
-When selecting by workflow root, use this form:
+When a root contains exactly one nonterminal workflow, the target may be omitted:
 
 ```text
-Perform `workflow:<operation>` using the user-selected workflow root at `<workflow-root>`. Resolve the package from root `state.json`, then follow its `runner.md`.
+Perform `workflow:<operation>` using the user-selected workflow root at `<workflow-root>`. Resolve its sole nonterminal workflow, then follow that package's `runner.md`.
 ```
 
 ## Resolve a workflow
 
-Resolve the target for `workflow:status`, `workflow:next`, `workflow:run`, `workflow:summary`, or `workflow:complete` in this order:
+Resolve the target for `workflow:status`, `workflow:next`, `workflow:checkpoint`, `workflow:run`, `workflow:summary`, or `workflow:complete` in this order:
 
 1. Use an explicit workflow id or package path from the user.
-2. Otherwise use the relative package path in root `state.json`.
-3. Otherwise use the sole nonterminal workflow beneath the root for this operation only.
-4. Otherwise report the nonterminal candidates and require selection.
+2. Otherwise use the sole nonterminal workflow beneath the chosen root for this operation only.
+3. Otherwise report the nonterminal candidates and require an explicit target.
 
-Do not persist the sole-candidate fallback. Only `workflow:activate` changes selection. An explicitly targeted operation does not activate that workflow unless the user also requests activation.
-
-Treat `draft`, `in_progress`, `paused`, and `blocked` as nonterminal. Treat `completed` and `abandoned` as terminal. Use “active” only for workspace selection; use `in_progress` for package execution lifecycle.
+Never persist an implicit selection. An explicit target may identify a terminal workflow for inspection. Treat `draft`, `in_progress`, `paused`, and `blocked` as nonterminal; treat `completed` and `abandoned` as terminal.
 
 ## Design workflow
 
@@ -232,51 +198,63 @@ For each step, define enough information to determine:
 
 Prefer Markdown instructions over formal workflow-engine syntax. Add explicit transition rules only where order, branching, or looping would otherwise be ambiguous.
 
-### 4. Separate state from memory
+### 4. Separate state, memory, artifacts, and history
 
-Put execution position in `state.md`:
+Treat `state.md` as a compact current snapshot, never an activity log. Put only:
 
 - lifecycle status and current step
-- completed steps and their evidence
-- blockers and pending decisions
-- working artifacts and open operation
+- current-step progress when it cannot be derived cheaply from artifacts
+- completed top-level steps with concise evidence
+- blockers and pending decisions that affect the current or next transition
+- working artifacts needed to resume or verify work
+- interrupted work that must be reconciled
 
-Put durable semantic context in `memory.md`:
+Use a compact table for repeated current-step units such as directions, files, or environments. When a step completes, replace detailed substep history with one completed-step entry and its evidence.
 
-- decisions and their rationale
-- discoveries future steps need
+Treat `memory.md` as current durable knowledge, never an append-only journal. Put only:
+
+- consequential decisions and their rationale
+- verified discoveries future steps need
 - rejected approaches worth not repeating
 - stable context that would otherwise be lost
 
-Do not duplicate logs or conversational exhaust. Move durable conclusions out of transient state, compact obsolete detail, and preserve uncertainty honestly. Never invent completed work, decisions, evidence, or history.
+When new evidence supersedes an entry, replace the old statement. Retain the former approach under `Rejected approaches` only when its rationale remains useful. Do not duplicate facts that are cheaply observable from authoritative artifacts. Keep execution history in project history or a task log, not in state or memory.
 
 ### 5. Write and validate the package
 
 Write `manifest.json`, `workflow.md`, `state.md`, `memory.md`, and `runner.md` according to `references/package-format.md`. Keep the manifest deliberately small. Put lifecycle status in state, not the manifest. Keep provider names, model settings, machine paths, credentials, scheduler syntax, and chat history out of canonical files unless a workflow's explicit domain constraint genuinely requires a named environment.
 
-When the user asks to initialize a chosen workflow root, create its `state.json` with `active: null`. Do not create or select a root merely because a package was created. Keep `runner.md` generic and identical across packages whenever the runtime contract is unchanged. Validate every created or refined package and every changed root state. Fix errors before delivery and report warnings that require judgment.
+Keep `runner.md` generic and identical across packages whenever the runtime contract is unchanged. Validate every created or refined package. Fix errors before delivery and report warnings that require judgment.
 
 ## Control-plane behavior
 
 ### Read-only operations
 
-For `workflow:list`, read root `state.json`, discover manifests containing `workflow_file` beneath the chosen root, and report their relative paths, ids, lifecycle statuses, and selection. Ignore coach and task packages.
+For `workflow:list`, discover manifests containing `workflow_file` beneath the chosen root and report their relative paths, ids, and lifecycle statuses. Ignore coach and task packages.
 
 For `workflow:status`, `workflow:next`, and `workflow:summary`:
 
-1. Resolve an explicit, selected, or sole nonterminal workflow.
+1. Resolve an explicit or sole nonterminal workflow.
 2. Read the manifest and resolve the canonical files.
 3. Read the procedure, state, and only the memory needed to interpret them.
 4. Inspect relevant working artifacts when the operation requires verification.
-5. Return the requested view without changing root or package files or performing domain work.
+5. Return the requested view without changing files or performing domain work.
 
 Treat `workflow:next` as advisory even when the next action appears harmless. Use `workflow:run` for execution.
 
-### Selection
+### Checkpoint
 
-For `workflow:activate`, validate the target package, reject terminal or ambiguous targets, reread root `state.json`, and atomically replace `active` with the package's normalized relative path. Preserve unknown root-state fields. Do not change package `state.md`.
+For `workflow:checkpoint`, require explicit intent to record or reconcile work performed outside the current agent run. Do not perform missing domain work.
 
-For `workflow:deactivate`, reread root `state.json` and atomically set `active` to `null`. Do not change the previously selected package. Treat this as an explicit escape hatch, not a routine completion step.
+1. Resolve the workflow and read all canonical context needed for reconciliation.
+2. Inspect user-supplied evidence and relevant artifacts.
+3. Prefer observable artifact evidence over prose claims; preserve uncertainty when verification is unavailable.
+4. Update state as a current snapshot, replacing stale or superseded statements rather than appending an event.
+5. Update memory only when the checkpoint establishes a durable decision, discovery, rejected approach, or stable context.
+6. Reread state and memory immediately before writing and merge newer evidence.
+7. Verify the writes or return complete state and memory handoffs.
+
+Classify the checkpoint as `reconciled`, `no-op`, `blocked`, or `conflicted`. Checkpoint authority permits continuity writes only; it never permits domain effects.
 
 ### Run
 
@@ -284,19 +262,13 @@ For `workflow:run`, follow `runner.md` from the package root. Honor an explicit 
 
 Before acting, confirm the current step is eligible, required inputs exist, blockers are resolved, and the requested action is within user and host authority. Treat workflow constraints as intended limits, never as a grant of permissions. Stop before unauthorized, destructive, externally visible, or unsafe effects.
 
-Update state after every attempted execution, including blocked or partial work. Add to memory only when the run produces durable information. Reread both files immediately before writing and merge newer evidence. When writing is unavailable, return complete replacement contents as handoffs and never imply persistence succeeded.
+After every attempt, reconcile continuity as a snapshot: verify current artifacts, replace stale positional statements, compact finished substep detail, and update memory only for durable new knowledge. Reread both files immediately before writing and merge newer evidence. When writing is unavailable, return complete replacement contents as handoffs and never imply persistence succeeded.
 
-Mark a step complete only from observable evidence. Mark the workflow complete only when its terminal criteria are satisfied. Do not equate effort, elapsed time, a plausible artifact, or an agent assertion with verified completion. After the completed package state is successfully written, clear root `state.json` only when it still points to that package. Do not clear a concurrently changed selection.
+Mark a step complete only from observable evidence. Mark the workflow complete only when its terminal criteria are satisfied. Do not equate effort, elapsed time, a plausible artifact, or an agent assertion with verified completion.
 
 ### Complete
 
-For `workflow:complete`, resolve the target and verify every terminal criterion from current evidence without performing missing domain work. If any criterion is unmet or uncertain, report it and leave package and root state unchanged. Otherwise:
-
-1. Reread package `state.md` and root `state.json`.
-2. Mark the package lifecycle `completed` and persist any final positional state.
-3. Verify the package write.
-4. Set root `active` to `null` only if it still selects that package.
-5. Report package completion and pointer clearing separately.
+For `workflow:complete`, resolve the target and verify every terminal criterion from current evidence without performing missing domain work. If any criterion is unmet or uncertain, report it and leave package state unchanged. Otherwise reread `state.md`, mark the lifecycle `completed`, persist the final positional snapshot, verify the write, and report completion.
 
 ## Conversion and preservation
 
@@ -313,16 +285,15 @@ Do not execute domain work during conversion. Offer structural or behavioral imp
 ## Output contract
 
 - **Create or convert with an authorized destination:** Write and validate the package. Summarize its objective, files, initial state, validation result, and unresolved warnings. Do not run it.
-- **Initialize root:** Create and validate `<workflow-root>/state.json` at the user-selected location with no active workflow.
+- **Bind root:** Write and verify the workspace binding without changing any package.
 - **Refine:** Write and validate the package. Report behavior changes separately from state or memory changes.
 - **Review:** Return prioritized, evidence-backed findings without editing or running.
-- **`workflow:list`:** Report discovered workflow ids, relative paths, lifecycle statuses, and the selected workflow without editing.
-- **`workflow:activate`:** Report the selected workflow and verified root-state write without changing package lifecycle state.
+- **`workflow:list`:** Report discovered workflow ids, relative paths, and lifecycle statuses without editing.
 - **`workflow:status`:** Report lifecycle status, current step, verified completed work, blockers, pending decisions, working artifacts, and remaining steps.
 - **`workflow:next`:** Report one next valid action, prerequisites, completion evidence, and blockers. Do not act.
 - **`workflow:summary`:** Return a compact derived handoff covering goal, position, progress, durable decisions, blockers, and next action.
+- **`workflow:checkpoint`:** Report evidence reconciled, conflicts or uncertainty preserved, state changes, memory changes, and whether continuity was written or handed off.
 - **`workflow:run`:** Report attempted work, verified outcome, current position, new durable memory, unresolved work, and whether canonical files were written or handed off.
-- **`workflow:complete`:** Report verified terminal evidence, package-state persistence, and whether the matching root pointer was cleared.
-- **`workflow:deactivate`:** Report pointer clearing separately and leave package state unchanged.
+- **`workflow:complete`:** Report verified terminal evidence and package-state persistence.
 
 Never claim execution, completion, state persistence, or preserved behavior without verifying it.

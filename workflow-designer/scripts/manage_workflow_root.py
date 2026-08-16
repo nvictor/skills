@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize, inspect, resolve, and update a portable workflow root."""
+"""Discover, inspect, resolve, and bind a portable workflow root."""
 
 from __future__ import annotations
 
@@ -49,16 +49,13 @@ def workspace_path(value: str) -> Path:
     return path
 
 
-def root_state_path(root: Path) -> Path:
-    return root / "state.json"
-
-
 def binding_path(workspace: Path) -> Path:
     return workspace / BINDING_FILENAME
 
 
 def validate_workflow_root(root: Path) -> Path:
-    load_root_state(root)
+    if not root.is_dir():
+        raise RegistryError(f"Workflow root does not exist: {root}")
     return root
 
 
@@ -104,60 +101,14 @@ def portable_binding_value(workspace: Path, root: Path) -> str:
     return relative.as_posix()
 
 
-def validate_relative_path(value: Any, label: str) -> Path:
-    if not isinstance(value, str) or not value:
-        raise RegistryError(f"{label} must be a non-empty relative path.")
-    relative = Path(value)
-    if relative.is_absolute() or ".." in relative.parts or relative == Path("."):
-        raise RegistryError(f"{label} must stay inside the workflow root.")
-    return relative
-
-
 def ensure_inside(root: Path, path: Path, label: str) -> Path:
+    root = root.resolve()
     resolved = path.resolve()
     try:
         resolved.relative_to(root)
     except ValueError as exc:
         raise RegistryError(f"{label} resolves outside the workflow root.") from exc
     return resolved
-
-
-def load_root_state(root: Path) -> dict[str, Any]:
-    state = read_json(root_state_path(root), "workflow-root state.json")
-    if "active" not in state:
-        raise RegistryError("workflow-root state.json must contain an 'active' field.")
-    active = state["active"]
-    if active is not None:
-        validate_relative_path(active, "state.json active")
-    return state
-
-
-def write_root_state(root: Path, state: dict[str, Any]) -> None:
-    root.mkdir(parents=True, exist_ok=True)
-    destination = root_state_path(root)
-    mode = destination.stat().st_mode & 0o777 if destination.exists() else 0o644
-    temporary_name: str | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            dir=root,
-            prefix=".workflow-state-",
-            suffix=".tmp",
-            delete=False,
-        ) as temporary:
-            json.dump(state, temporary, indent=2, sort_keys=True)
-            temporary.write("\n")
-            temporary.flush()
-            os.fsync(temporary.fileno())
-            temporary_name = temporary.name
-        os.chmod(temporary_name, mode)
-        os.replace(temporary_name, destination)
-    finally:
-        if temporary_name is not None:
-            temporary_path = Path(temporary_name)
-            if temporary_path.exists():
-                temporary_path.unlink()
 
 
 def write_binding(workspace: Path, binding: dict[str, Any]) -> None:
@@ -205,6 +156,7 @@ def safe_package_file(package: Path, value: Any, label: str) -> Path:
 
 
 def read_package(root: Path, package: Path) -> dict[str, str]:
+    root = root.resolve()
     package = ensure_inside(root, package, "Workflow package")
     if package == root:
         raise RegistryError("A workflow package must be below the workflow root.")
@@ -241,6 +193,7 @@ def read_package(root: Path, package: Path) -> dict[str, str]:
 
 
 def discover(root: Path) -> list[dict[str, str]]:
+    root = root.resolve()
     if not root.is_dir():
         raise RegistryError(f"Workflow root does not exist: {root}")
     records: list[dict[str, str]] = []
@@ -266,13 +219,8 @@ def discover(root: Path) -> list[dict[str, str]]:
     return sorted(records, key=lambda record: record["path"])
 
 
-def package_from_relative(root: Path, relative_value: str) -> dict[str, str]:
-    relative = validate_relative_path(relative_value, "Workflow package")
-    package = ensure_inside(root, root / relative, "Workflow package")
-    return read_package(root, package)
-
-
 def resolve_target(root: Path, target: str) -> dict[str, str]:
+    root = root.resolve()
     candidate = Path(target).expanduser()
     if candidate.is_absolute():
         package = ensure_inside(root, candidate, "Explicit workflow package")
@@ -298,16 +246,6 @@ def resolve_workflow(root: Path, target: str | None) -> tuple[dict[str, str], st
     if target is not None:
         return resolve_target(root, target), "explicit"
 
-    state = load_root_state(root)
-    active = state["active"]
-    if active is not None:
-        record = package_from_relative(root, active)
-        if record["status"] in TERMINAL_STATUSES:
-            raise RegistryError(
-                f"Active pointer references a terminal workflow: {record['path']}"
-            )
-        return record, "active"
-
     incomplete = [
         record
         for record in discover(root)
@@ -316,38 +254,24 @@ def resolve_workflow(root: Path, target: str | None) -> tuple[dict[str, str], st
     if len(incomplete) == 1:
         return incomplete[0], "sole-incomplete"
     if not incomplete:
-        raise RegistryError("No active or incomplete workflow was found.")
+        raise RegistryError(
+            "No nonterminal workflow was found. "
+            "Supply an explicit target to inspect a terminal workflow."
+        )
     candidates = ", ".join(record["path"] for record in incomplete)
-    raise RegistryError(f"No workflow is active. Incomplete workflows: {candidates}")
+    raise RegistryError(
+        "Multiple nonterminal workflows were found; "
+        f"supply an explicit target: {candidates}"
+    )
 
 
 def print_json(value: Any) -> None:
     print(json.dumps(value, indent=2, sort_keys=True))
 
 
-def command_init(root: Path) -> None:
-    path = root_state_path(root)
-    if path.exists():
-        state = load_root_state(root)
-        print_json({"root": str(root), "state": state, "created": False})
-        return
-    state = {"active": None}
-    write_root_state(root, state)
-    print_json({"root": str(root), "state": state, "created": True})
-
-
 def command_list(root: Path) -> None:
-    state = load_root_state(root)
-    if state["active"] is not None:
-        active_record = package_from_relative(root, state["active"])
-        if active_record["status"] in TERMINAL_STATUSES:
-            raise RegistryError(
-                f"Active pointer references a terminal workflow: {active_record['path']}"
-            )
-    records = discover(root)
-    for record in records:
-        record["selected"] = record["path"] == state["active"]
-    print_json({"root": str(root), "active": state["active"], "workflows": records})
+    validate_workflow_root(root)
+    print_json({"root": str(root), "workflows": discover(root)})
 
 
 def command_resolve(root: Path, target: str | None) -> None:
@@ -355,50 +279,16 @@ def command_resolve(root: Path, target: str | None) -> None:
     print_json({"root": str(root), "source": source, "workflow": record})
 
 
-def command_activate(root: Path, target: str) -> None:
-    record = resolve_target(root, target)
-    if record["status"] in TERMINAL_STATUSES:
-        raise RegistryError(
-            f"Cannot activate a workflow with status {record['status']}: {record['path']}"
-        )
-    state = load_root_state(root)
-    state["active"] = record["path"]
-    write_root_state(root, state)
-    print_json({"root": str(root), "active": record["path"], "workflow": record})
-
-
-def command_clear(root: Path, target: str | None) -> None:
-    record = resolve_target(root, target) if target is not None else None
-    state = load_root_state(root)
-    previous = state["active"]
-    if target is not None:
-        assert record is not None
-        if previous != record["path"]:
-            print_json(
-                {
-                    "root": str(root),
-                    "active": previous,
-                    "cleared": False,
-                    "reason": "target-is-not-active",
-                }
-            )
-            return
-    state["active"] = None
-    write_root_state(root, state)
-    print_json({"root": str(root), "active": None, "cleared": previous is not None})
-
-
 def command_validate(root: Path) -> None:
-    state = load_root_state(root)
-    active = state["active"]
-    record = None
-    if active is not None:
-        record = package_from_relative(root, active)
-        if record["status"] in TERMINAL_STATUSES:
-            raise RegistryError(
-                f"Active pointer references a terminal workflow: {record['path']}"
-            )
-    print_json({"root": str(root), "valid": True, "active": active, "workflow": record})
+    validate_workflow_root(root)
+    records = discover(root)
+    invalid = [record for record in records if record["status"] == "invalid"]
+    if invalid:
+        details = "; ".join(
+            f"{record['path']}: {record['error']}" for record in invalid
+        )
+        raise RegistryError(f"Invalid workflow packages: {details}")
+    print_json({"root": str(root), "valid": True, "workflow_count": len(records)})
 
 
 def command_bind(workspace: Path, root: Path) -> None:
@@ -441,25 +331,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for command in ("init", "list", "validate"):
+    for command in ("list", "validate"):
         subparser = subparsers.add_parser(command)
         subparser.add_argument("root", help="User-selected workflow root")
 
     resolve = subparsers.add_parser("resolve")
     resolve.add_argument("root", help="User-selected workflow root")
     resolve.add_argument("target", nargs="?", help="Workflow id, relative path, or path")
-
-    activate = subparsers.add_parser("activate")
-    activate.add_argument("root", help="User-selected workflow root")
-    activate.add_argument("target", help="Workflow id, relative path, or path")
-
-    clear = subparsers.add_parser("clear")
-    clear.add_argument("root", help="User-selected workflow root")
-    clear.add_argument(
-        "--if-active",
-        dest="target",
-        help="Clear only when this workflow id or path is active",
-    )
 
     bind = subparsers.add_parser("bind")
     bind.add_argument("workspace", help="Workspace directory that should own the binding")
@@ -478,16 +356,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     try:
-        if args.command == "init":
-            command_init(workflow_root(args.root))
-        elif args.command == "list":
+        if args.command == "list":
             command_list(workflow_root(args.root))
         elif args.command == "resolve":
             command_resolve(workflow_root(args.root), args.target)
-        elif args.command == "activate":
-            command_activate(workflow_root(args.root), args.target)
-        elif args.command == "clear":
-            command_clear(workflow_root(args.root), args.target)
         elif args.command == "validate":
             command_validate(workflow_root(args.root))
         elif args.command == "bind":

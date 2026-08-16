@@ -27,7 +27,11 @@ Read this file completely for create, convert, refine, or review operations. App
 ## State quality
 
 - Make state answer where execution is now.
-- Record current position, verified completed work, blockers, pending decisions, working artifacts, and interrupted work.
+- Treat state as a current snapshot rather than an activity log.
+- Record current position, verified top-level completion, current blockers, pending decisions that affect the current or next transition, working artifacts, and interrupted work.
+- Use a compact table for repeated current-step units when their progress is not cheap to derive from artifacts.
+- Replace detailed substep history with one evidence-backed entry when a top-level step completes.
+- Replace stale or superseded statements instead of appending another event.
 - Keep state compact enough for a new agent to orient quickly.
 - Avoid storing rationale, transcripts, or accumulated semantic context in state.
 
@@ -35,6 +39,9 @@ Read this file completely for create, convert, refine, or review operations. App
 
 - Make memory preserve decisions, discoveries, rejected approaches, and durable context.
 - Include concise rationale or provenance when future agents need it.
+- Treat memory as a current knowledge base rather than an append-only journal.
+- Replace superseded statements; retain an old approach only when its rejection remains useful.
+- Prefer pointers to authoritative artifacts over copied inventories or file lists.
 - Avoid event logs, scratch notes, duplicate state, and conversational exhaust.
 - Compact obsolete detail without losing current conclusions.
 
@@ -50,16 +57,17 @@ Read this file completely for create, convert, refine, or review operations. App
 
 - Keep the workflow root user-selected and outside portable package configuration.
 - Make root discovery deterministic through an explicit path, launcher binding, or nearest workspace binding; never through a broad directory search.
-- Keep root `state.json` limited to workspace selection.
-- Make `workflow:list` read only and `workflow:activate` selection only.
-- Resolve explicit target, active pointer, then sole nonterminal candidate without silently persisting fallback selection.
+- Keep the workflow root free of canonical mutable selection state.
+- Make `workflow:list` read only.
+- Resolve an explicit target, then the sole nonterminal candidate; never persist implicit selection.
+- Require an explicit target when multiple nonterminal workflows exist.
 - Keep `workflow:status`, `workflow:next`, and `workflow:summary` read-only.
+- Make `workflow:checkpoint` continuity-only and require explicit reconciliation intent.
 - Require explicit execution intent for `workflow:run`.
 - Default an unscoped run to one coherent unit through the next safe checkpoint.
 - Require verified terminal evidence for `workflow:complete`.
-- Clear the active pointer after completion only when it still selects that package.
 - Keep summaries derived rather than authoritative.
-- Keep design, execution, and external-effect authority separate.
+- Keep design, bookkeeping, execution, and external-effect authority separate.
 
 ## Safety and authority
 
@@ -72,7 +80,7 @@ Read this file completely for create, convert, refine, or review operations. App
 
 - Keep canonical behavior independent of provider, model, chat, and machine.
 - Use the minimal manifest and safe relative file references.
-- Keep absolute workflow-root paths out of packages and root `state.json`.
+- Keep absolute workflow-root paths out of packages.
 - Keep domain procedure in `workflow.md` and the generic protocol in `runner.md`.
 - Make the package understandable and resumable by another capable agent with equivalent authority and resources.
 
@@ -83,9 +91,9 @@ Confirm that:
 - the objective is finite and the terminal condition is verifiable
 - every step can complete, transition, block, or request a decision
 - state and memory have distinct, useful roles
-- root selection and package lifecycle remain distinct
+- the workflow root contains no mutable selection state
 - read-only operations cannot accidentally execute work
-- activation cannot alter package progress
+- checkpointing cannot perform domain work
 - a run has a safe default boundary
 - continuity updates remain truthful under partial work and concurrent changes
 - another agent can resume from package files alone

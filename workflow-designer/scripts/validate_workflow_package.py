@@ -52,6 +52,7 @@ RUNNER_MARKERS = (
     "memory_file",
     "workflow:status",
     "workflow:next",
+    "workflow:checkpoint",
     "workflow:run",
     "workflow:summary",
     "workflow:complete",
