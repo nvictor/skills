@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workflow Next"
+  short_description: "Show the next valid workflow action"
+  default_prompt: "Use $workflow-next to identify the next valid workflow action without performing it."
+
+policy:
+  allow_implicit_invocation: false

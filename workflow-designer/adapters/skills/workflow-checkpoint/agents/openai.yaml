@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workflow Checkpoint"
+  short_description: "Reconcile external workflow progress"
+  default_prompt: "Use $workflow-checkpoint to reconcile externally completed work into workflow continuity."
+
+policy:
+  allow_implicit_invocation: false

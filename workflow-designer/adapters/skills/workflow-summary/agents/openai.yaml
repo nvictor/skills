@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workflow Summary"
+  short_description: "Create a compact workflow handoff"
+  default_prompt: "Use $workflow-summary to derive a compact handoff from canonical workflow files."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workflow Complete"
+  short_description: "Verify and complete a workflow"
+  default_prompt: "Use $workflow-complete to verify terminal criteria and mark the selected workflow complete."
+
+policy:
+  allow_implicit_invocation: false

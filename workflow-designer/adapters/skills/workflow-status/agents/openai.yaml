@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workflow Status"
+  short_description: "Show verified workflow status"
+  default_prompt: "Use $workflow-status to report the selected workflow current status."
+
+policy:
+  allow_implicit_invocation: false

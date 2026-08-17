@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workflow List"
+  short_description: "List workflows without changing them"
+  default_prompt: "Use $workflow-list to list portable workflow packages beneath the selected workflow root."
+
+policy:
+  allow_implicit_invocation: false

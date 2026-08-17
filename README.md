@@ -31,7 +31,8 @@ agent-specific skill directories for Codex, Copilot, Gemini, and Claude Code:
 - `task-logger-hooks`: installs and repairs the task-start/task-end logging
   hooks shared across Gemini CLI, Copilot CLI, Codex, and Claude Code.
 - `workflow-designer`: designs, selects, and runs portable finite workflows
-  whose procedure, state, and memory survive changes of agent or context.
+  whose procedure, state, and memory survive changes of agent or context; it
+  includes embedded autocomplete façade skills for Codex and Claude Code.
 
 ## Notes
 

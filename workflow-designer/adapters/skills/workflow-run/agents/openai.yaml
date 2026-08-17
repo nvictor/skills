@@ -1,0 +1,7 @@
+interface:
+  display_name: "Workflow Run"
+  short_description: "Run a workflow to a safe checkpoint"
+  default_prompt: "Use $workflow-run to execute or resume the selected workflow through the requested safe scope."
+
+policy:
+  allow_implicit_invocation: false

@@ -65,7 +65,43 @@ Prefer a relative value when the root is inside the workspace. Keep this environ
 
 Treat `workflow:<operation>` as a provider-neutral operation label, not proof that a host registered a slash command with that spelling. Natural-language requests and host-specific commands must map to the same operation contract.
 
-For a standalone Claude Code skill, invoke `/workflow-designer <operation> [target]`. The optional adapter under `adapters/claude/commands/workflow/` exposes namespaced aliases such as `/workflow:status`; it still delegates behavior to this skill. Do not tell a user that `/workflow:status` exists unless that adapter or an equivalent plugin is installed.
+When installed, prefer the embedded façade skills under `adapters/skills/` for autocomplete:
+
+| Operation | Codex | Claude Code |
+| --- | --- | --- |
+| `workflow:list` | `$workflow-list` | `/workflow-list` |
+| `workflow:status` | `$workflow-status` | `/workflow-status` |
+| `workflow:next` | `$workflow-next` | `/workflow-next` |
+| `workflow:checkpoint` | `$workflow-checkpoint` | `/workflow-checkpoint` |
+| `workflow:run` | `$workflow-run` | `/workflow-run` |
+| `workflow:summary` | `$workflow-summary` | `/workflow-summary` |
+| `workflow:complete` | `$workflow-complete` | `/workflow-complete` |
+
+Each façade selects exactly one operation and delegates all behavior to this skill. Treat façade invocation as operation selection, not additional authority. Keep façade skills explicit-only in hosts that support that distinction.
+
+For a standalone Claude Code skill, invoke `/workflow-designer <operation> [target]`.
+
+### Install façade skills
+
+Treat façade installation as a host binding, not part of the canonical workflow contract. After installing `workflow-designer` on another computer, install the embedded façades as direct children of the host's personal skills directory so autocomplete can discover them.
+
+For Claude Code, run:
+
+```text
+python3 ~/.claude/skills/workflow-designer/scripts/manage_adapter_skills.py install --host claude
+```
+
+Then start a new Claude Code session and type `/workflow-` to verify the seven façade names appear. Verify the filesystem binding at any time with:
+
+```text
+python3 ~/.claude/skills/workflow-designer/scripts/manage_adapter_skills.py verify --host claude
+```
+
+The installer is idempotent and refuses to replace a file, directory, or symlink that does not already point to the matching embedded façade. Use `--skills-dir <path>` only for a nonstandard personal skills directory.
+
+When migrating from the former Claude command adapters, inspect `~/.claude/commands/workflow` first. Remove it only when it is a symlink to this package's removed `adapters/claude/commands/workflow` directory. Do not remove an unrelated command directory. The former `/workflow:<operation>` aliases are obsolete after the `/workflow-<operation>` façade skills are installed.
+
+The same manager supports Codex with `--host codex`. Do not tell a user that a façade command exists until its host binding verifies successfully.
 
 ## Select the operation
 
