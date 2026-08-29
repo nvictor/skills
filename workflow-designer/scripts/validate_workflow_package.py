@@ -12,7 +12,7 @@ from typing import Any
 
 
 ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-STATUS_PATTERN = re.compile(r"^Status:\s*([a-z_]+)\s*$", re.MULTILINE)
+STATUS_PATTERN = re.compile(r"^Status:\s*(.*?)\s*$", re.MULTILINE)
 STATUSES = {"draft", "in_progress", "paused", "blocked", "completed", "abandoned"}
 MANIFEST_KEYS = {
     "schema_version",

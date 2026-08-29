@@ -32,6 +32,7 @@ Read this file completely for create, convert, refine, or review operations. App
 - Use a compact table for repeated current-step units when their progress is not cheap to derive from artifacts.
 - Replace detailed substep history with one evidence-backed entry when a top-level step completes.
 - Replace stale or superseded statements instead of appending another event.
+- Use only the exact lifecycle tokens `draft`, `in_progress`, `paused`, `blocked`, `completed`, and `abandoned`.
 - Keep state compact enough for a new agent to orient quickly.
 - Avoid storing rationale, transcripts, or accumulated semantic context in state.
 
@@ -51,6 +52,7 @@ Read this file completely for create, convert, refine, or review operations. App
 - Let `workflow:next` identify one valid action without performing it.
 - Make safe checkpoints and interrupted operations recoverable.
 - Reread continuity files before writing and merge newer evidence.
+- Verify the exact lifecycle status token after every continuity write.
 - Provide complete state and memory handoffs when writing is unavailable.
 
 ## Control-plane integrity

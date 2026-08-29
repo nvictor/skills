@@ -288,7 +288,8 @@ For `workflow:checkpoint`, require explicit intent to record or reconcile work p
 4. Update state as a current snapshot, replacing stale or superseded statements rather than appending an event.
 5. Update memory only when the checkpoint establishes a durable decision, discovery, rejected approach, or stable context.
 6. Reread state and memory immediately before writing and merge newer evidence.
-7. Verify the writes or return complete state and memory handoffs.
+7. Preserve lifecycle status as exactly one of `draft`, `in_progress`, `paused`, `blocked`, `completed`, or `abandoned`; never humanize the token.
+8. Verify the writes with `scripts/validate_workflow_package.py` when filesystem execution is available, or at minimum reread and verify the exact status token. Otherwise return complete state and memory handoffs.
 
 Classify the checkpoint as `reconciled`, `no-op`, `blocked`, or `conflicted`. Checkpoint authority permits continuity writes only; it never permits domain effects.
 
@@ -298,13 +299,13 @@ For `workflow:run`, follow `runner.md` from the package root. Honor an explicit 
 
 Before acting, confirm the current step is eligible, required inputs exist, blockers are resolved, and the requested action is within user and host authority. Treat workflow constraints as intended limits, never as a grant of permissions. Stop before unauthorized, destructive, externally visible, or unsafe effects.
 
-After every attempt, reconcile continuity as a snapshot: verify current artifacts, replace stale positional statements, compact finished substep detail, and update memory only for durable new knowledge. Reread both files immediately before writing and merge newer evidence. When writing is unavailable, return complete replacement contents as handoffs and never imply persistence succeeded.
+After every attempt, reconcile continuity as a snapshot: verify current artifacts, replace stale positional statements, compact finished substep detail, and update memory only for durable new knowledge. Reread both files immediately before writing and merge newer evidence. Preserve lifecycle status as exactly one of `draft`, `in_progress`, `paused`, `blocked`, `completed`, or `abandoned`; never humanize the token. After writing, run `scripts/validate_workflow_package.py` when filesystem execution is available, or at minimum reread and verify the exact status token. When writing is unavailable, return complete replacement contents as handoffs and never imply persistence succeeded.
 
 Mark a step complete only from observable evidence. Mark the workflow complete only when its terminal criteria are satisfied. Do not equate effort, elapsed time, a plausible artifact, or an agent assertion with verified completion.
 
 ### Complete
 
-For `workflow:complete`, resolve the target and verify every terminal criterion from current evidence without performing missing domain work. If any criterion is unmet or uncertain, report it and leave package state unchanged. Otherwise reread `state.md`, mark the lifecycle `completed`, persist the final positional snapshot, verify the write, and report completion.
+For `workflow:complete`, resolve the target and verify every terminal criterion from current evidence without performing missing domain work. If any criterion is unmet or uncertain, report it and leave package state unchanged. Otherwise reread `state.md`, mark the lifecycle `completed`, persist the final positional snapshot, validate the package when filesystem execution is available or at minimum reread and verify the exact status token, and report completion.
 
 ## Conversion and preservation
 

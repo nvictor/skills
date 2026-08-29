@@ -245,7 +245,9 @@ Make `runner.md` the provider-neutral control protocol. It must:
 - verify completion evidence before advancing a step
 - apply branches, loops, pauses, and terminal rules from `workflow.md`
 - distinguish run outcomes and checkpoint outcomes accurately
+- store lifecycle status only as the exact tokens `draft`, `in_progress`, `paused`, `blocked`, `completed`, or `abandoned`, without humanizing them
 - reread and merge state and memory immediately before writing
+- reread written continuity and verify the exact lifecycle status token before reporting persistence
 - replace stale continuity statements and compact superseded detail
 - keep state positional and memory semantic
 - leave the manifest, procedure, and runner unchanged during runtime operations
@@ -288,7 +290,7 @@ Use this operation only when the user explicitly asks to record or reconcile wor
 3. Reconcile the current snapshot by replacing stale or superseded state.
 4. Add or revise memory only for durable knowledge.
 5. Reread continuity files before writing and merge newer evidence.
-6. Verify the writes or provide complete continuity handoffs.
+6. Verify the writes, including the exact lifecycle status token, or provide complete continuity handoffs.
 
 Classify the result as `reconciled`, `no-op`, `blocked`, or `conflicted`. A checkpoint authorizes writes only to the files named by `state_file` and `memory_file`.
 
@@ -303,7 +305,7 @@ After an attempt:
 3. Reconcile state as a current snapshot even for no-op, blocked, partial, or failed work.
 4. Update memory only for durable new knowledge, replacing superseded statements.
 5. Reread and merge continuity files before writing.
-6. Verify the final writes or provide full continuity handoffs.
+6. Verify the final writes, including the exact lifecycle status token, or provide full continuity handoffs.
 7. Report workflow outcomes separately from continuity persistence.
 
 Do not infer authorization for destructive, irreversible, costly, or externally visible actions from the package. Follow the user's request, workflow constraints, and host safety rules together.

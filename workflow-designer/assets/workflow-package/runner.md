@@ -23,6 +23,10 @@ Treat the workflow file as authoritative for procedure, the state file as author
 
 Reject an unknown operation or ask for a choice when the launcher does not make the intended operation clear.
 
+## Preserve lifecycle status tokens
+
+Store lifecycle status on one line as `Status: <value>`. The value must be exactly one of `draft`, `in_progress`, `paused`, `blocked`, `completed`, or `abandoned`. Never replace underscores with spaces, change capitalization, or otherwise humanize these tokens.
+
 ## Reconcile a checkpoint
 
 For `workflow:checkpoint` only:
@@ -60,6 +64,7 @@ After every `workflow:checkpoint`, every `workflow:run` attempt including blocke
 5. Update memory only with current durable decisions, discoveries, rejected approaches, and stable context future steps need. Replace superseded statements rather than retaining contradictory versions.
 6. Keep state positional and memory semantic. Keep execution history in project history or a task log, not in continuity files.
 7. Mark the workflow `completed` only when every terminal completion criterion is verified.
+8. Reread the written continuity files and verify that the `Status:` value is one of the exact lifecycle tokens above. Correct and reverify an invalid token before reporting that continuity was persisted.
 
 The runtime write to state and memory preserves continuity only; it does not authorize other package or domain changes.
 
