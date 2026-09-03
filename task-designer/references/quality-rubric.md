@@ -69,9 +69,11 @@ Apply these checks only when `schedule` is present:
 ## State and continuity
 
 - Treat package state as canonical across agents.
+- Treat state as a compact current snapshot, never an append-only diary.
 - Record only observable attempts, outcomes, checkpoints, pending work, failures, and open interactions.
 - Never invent run history, delivery, or successful effects.
 - Reread state before writing and merge newer evidence.
+- Replace stale or superseded checkpoints, pending work, failures, and interactions instead of appending another event.
 - Retain at most ten recent outcomes and compact older durable information.
 - Produce a complete state handoff when durable writing is unavailable.
 

@@ -35,8 +35,8 @@ After every attempted run, including blocked, no-op, partial, and failed runs:
 1. Reread the state file immediately before writing.
 2. Merge current evidence with any newer recorded evidence.
 3. Update the last attempt and, only after verified success, the last successful run.
-4. Update checkpoints, pending work, known failures, and open interaction from observable evidence.
-5. Add one concise recent outcome and retain at most ten, moving durable facts into the appropriate section.
+4. Treat state as a compact current snapshot, never an append-only diary. Replace or remove resolved and superseded checkpoints, pending work, known failures, and open interactions.
+5. Add one concise recent outcome, newest first, and retain at most ten. Move older durable facts into the appropriate section.
 6. Record uncertain or partial external effects precisely enough to prevent duplicate work.
 
 Write the merged state when the state file is writable. If it is read-only or unavailable, continue only when doing so is safe and end the response with a `State handoff` section containing the complete proposed replacement contents of `state.md`. Never imply that state was saved when it was not.

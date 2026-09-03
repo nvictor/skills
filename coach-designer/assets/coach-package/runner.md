@@ -23,7 +23,11 @@ After every coaching turn, including a turn that asks the learner to respond:
 2. Merge evidence from the current turn with any newer recorded evidence.
 3. Record only observable work, demonstrated strengths, recurring gaps, feedback given, current difficulty, recent practice, next targets, and any open interaction.
 4. Keep incomplete interactions separate from completed sessions.
-5. Keep the record compact while preserving information another coach needs.
+5. Keep state compact:
+   - Treat it as a current snapshot, never an append-only diary.
+   - Replace or compact stale and superseded entries instead of appending another event.
+   - Retain at most ten completed-session entries, newest first, and preserve those recent entries verbatim.
+   - Fold older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples.
 
 Do not modify `manifest.json`, `prompt.md`, `runner.md`, `migration.json`, or deployment adapters.
 

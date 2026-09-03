@@ -162,6 +162,8 @@ Make `runner.md` the provider-neutral entrypoint. It must:
 - verify the definition of done before claiming success
 - update state after every attempted run
 - reread state immediately before writing and merge newer evidence
+- treat state as a compact current snapshot, never an append-only diary
+- replace stale or superseded checkpoints, pending work, failures, and interactions instead of appending another event
 - retain no more than ten recent outcomes
 - preserve uncertain or partial external effects precisely
 - leave manifest, task, runner, migration record, and adapters unchanged
@@ -207,34 +209,54 @@ Use this baseline for new packages:
 
 ## Last attempted run
 
+<!-- Keep one entry. Replace it after each attempted run. -->
+
 - None recorded.
 
 ## Last successful run
+
+<!-- Keep one entry. Replace it only after a verified successful run. -->
 
 - None recorded.
 
 ## Current checkpoint
 
+<!-- Keep only the current checkpoint. Replace or clear it when it changes. -->
+
 - No checkpoint required.
 
 ## Recent outcomes
+
+<!-- Keep at most 10 concise outcomes, newest first. -->
 
 - None recorded.
 
 ## Pending work
 
+<!-- Keep only unresolved work. Remove or replace resolved and superseded items. -->
+
 - None.
 
 ## Known failures
+
+<!-- Keep only failures that still affect retries or diagnosis. Remove obsolete items. -->
 
 - None.
 
 ## Open interaction
 
+<!-- Keep only the current incomplete interaction. Clear it when completed. -->
+
 - None.
 ```
 
-Record only observable facts. Keep at most ten recent outcomes and fold durable information into other sections. Distinguish completed work from incomplete interaction. Record timestamps with explicit timezone offsets when available.
+Treat state as a compact current snapshot, never an append-only diary:
+
+- Record only observable facts.
+- Replace stale or superseded checkpoints, pending work, failures, and interactions instead of appending another event.
+- Keep at most ten recent outcomes, newest first, and fold older durable information into other sections.
+- Distinguish completed work from incomplete interaction.
+- Record timestamps with explicit timezone offsets when available.
 
 During migration, preserve complete existing state. If none exists, use the baseline and record that no state source was imported. Normal run updates do not change migration provenance.
 

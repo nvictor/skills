@@ -43,11 +43,15 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 
 ## Continuity
 
+- Treat state as a compact current snapshot, never an append-only diary.
 - Track only observable work, strengths, gaps, feedback, difficulty, recent practice, and next targets.
 - Never invent learner history, preferences, results, or mastery.
 - Keep incomplete interactions distinct from completed sessions.
 - Treat package state as canonical and update it after every coaching turn.
 - Reread state before writing so switching or concurrent agents do not overwrite newer evidence.
+- Retain at most ten completed-session entries, newest first, and preserve those recent entries verbatim.
+- Compact older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples.
+- Replace stale or superseded statements instead of appending another event.
 - Produce a complete replacement-state handoff when durable storage is unavailable.
 
 ## Safety and respect

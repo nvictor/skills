@@ -114,7 +114,11 @@ Make `runner.md` the portable entrypoint. It must:
 - treat `prompt.md` as behavior and `state.md` as the cross-agent continuity authority
 - update state after every coaching turn, recording an open interaction when the session is incomplete
 - reread state immediately before writing and merge newer evidence rather than overwrite it
-- preserve evidence, avoid invented history, and keep state compact
+- treat state as a compact current snapshot, never an append-only diary
+- retain at most ten completed-session entries, newest first, and preserve those recent entries verbatim
+- compact older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples
+- replace stale or superseded statements instead of appending another event
+- preserve evidence and avoid invented history
 - avoid modifying the manifest, prompt, runner, migration record, or deployment adapters
 - emit a complete replacement `state.md` in a clearly labeled handoff block when file writing is unavailable
 - avoid discussing file mechanics unless access fails or a conflict needs user judgment
@@ -143,38 +147,60 @@ Use this structure for new packages:
 
 ## Last completed session
 
+<!-- Keep at most 10 entries, newest first. Preserve each retained entry verbatim. -->
+
 - None recorded.
 
 ## Demonstrated strengths
+
+<!-- Use one line per strength: total observation count plus up to 3 recent dated examples. -->
 
 - None recorded.
 
 ## Recurring gaps
 
+<!-- Use one line per gap: total observation count plus up to 3 recent dated examples. -->
+
 - None recorded.
 
 ## Current difficulty
+
+<!-- Keep only the current level and its evidence. Replace superseded statements. -->
 
 - Baseline not established.
 
 ## Recent modes and scenarios
 
+<!-- Keep a compact recent rotation. Remove entries that no longer prevent repetition. -->
+
 - None recorded.
 
 ## Skills due for review
+
+<!-- Keep only skills currently due. Remove each item after review. -->
 
 - None recorded.
 
 ## Next useful target
 
+<!-- Keep one current target. Replace it when the target changes. -->
+
 - Establish a baseline with the first bounded exercise.
 
 ## Open interaction
 
+<!-- Keep only the current incomplete interaction. Clear it when completed. -->
+
 - None.
 ```
 
-Treat this file as mutable canonical state. Update it only from observable evidence and after every coaching turn. Keep incomplete interactions distinct from completed sessions. Preserve enough recent history to avoid mechanical repetition while keeping the record compact.
+Treat this file as mutable canonical state. Treat state as a compact current snapshot, never an append-only diary:
+
+- Update it only from observable evidence and after every coaching turn.
+- Keep incomplete interactions distinct from completed sessions.
+- Retain at most ten completed-session entries, newest first, and preserve those recent entries verbatim.
+- Compact older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples.
+- Replace stale or superseded statements instead of appending another event.
 
 During migration, preserve the entire existing state. If it does not match the standard headings, keep it intact and let the validator report a warning. Normalize it only in a separate refinement that demonstrably retains all useful evidence.
 
