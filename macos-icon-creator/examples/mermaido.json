@@ -1,9 +1,9 @@
 {
-  "app_concept": "A macOS app icon for Mermaido, a handy MermaidJS diagram visualizer.",
-  "primary_metaphor": "mermaid tail rising from waves",
+  "app_concept": "Mermaido is a MermaidJS diagram visualizer.",
+  "primary_metaphor": "An asymmetric seafoam mermaid tail curling up from teal waves",
   "supporting_motifs": [
-    "layered wave bands",
-    "clean split tail silhouette"
+    "A broad split fluke",
+    "One foreground wave hiding the tail base"
   ],
   "composition_family": "fused-with-base",
   "tone": [

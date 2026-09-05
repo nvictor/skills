@@ -1,9 +1,8 @@
 {
-  "app_concept": "A macOS app icon for a bookmark manager, using a single dominant saved card that fills the squircle height and aligns with an inset bookmark tab merged into the top-right edge.",
-  "primary_metaphor": "organized stack of saved references",
+  "app_concept": "Maruko is a bookmark manager.",
+  "primary_metaphor": "A white left side and blue right side joined by a red bookmark spanning both",
   "supporting_motifs": [
-    "large edge-fused bookmark ribbon",
-    "full-height saved card"
+    "A broad red notched bookmark over the white-blue boundary"
   ],
   "composition_family": "fused-with-base"
 }

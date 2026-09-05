@@ -1,29 +1,13 @@
-# Output Shape
+# Output Guidance
 
-Prefer this response shape unless the user asks for something else:
+For a new concept, save one SVG and a concise JSON brief using [the brief schema](../schema/icon-brief.schema.json). Keep the brief consistent with the final artwork. For a targeted edit, return the updated artifact without requiring a new concept plan or redundant restatement.
 
-1. Brief restatement
-   - One sentence naming the metaphor and overall visual direction.
-2. Icon concept summary
-   - One short paragraph or two compact bullets describing the dominant object and supporting cue.
-3. JSON brief
-   - Return a compact fenced `json` block using the schema fields: `app_concept`, `primary_metaphor`, `supporting_motifs`, and `composition_family`.
-4. SVG
-   - Return a single fenced `svg` block.
-5. Rationale
-   - One short paragraph or a few compact bullets covering:
-     - metaphor choice
-     - material / depth treatment
-     - palette logic
-     - silhouette and small-size readability
-6. Validation note
-   - Include a compact note covering small-size readability and the PARC pass.
-   - Mention any PARC issue that shaped the final design.
-7. Optional refinement notes
-   - Include only when the concept has a clear tradeoff or when the user requested alternates.
+Link to saved files and show a preview when the environment supports it. Use fenced source only when requested or when files cannot be delivered. Avoid dumping the full SVG alongside a file link.
 
-## Defaults
+Keep the response concise:
 
-- Return one JSON brief and one SVG by default.
-- Keep the JSON concise and artifact-oriented rather than verbose.
-- Only include alternates on explicit request or when the first concept is visibly underdetermined.
+- Identify the chosen direction or material change and its rationale.
+- Link the SVG and JSON brief, where applicable.
+- State the renderer and sizes actually inspected, plus any material limitation.
+
+Offer alternates when requested or when distinct directions would help resolve a real ambiguity. Do not expand a focused revision into a multi-concept exercise.

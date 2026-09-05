@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "macOS Icon Brief",
-  "description": "Optional internal structure for normalizing a macOS app icon brief before SVG generation.",
+  "description": "Concise design brief paired with a macOS app icon SVG.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -20,14 +20,14 @@
     },
     "supporting_motifs": {
       "type": "array",
-      "maxItems": 2,
       "items": {
         "type": "string"
-      }
+      },
+      "description": "Secondary cues that serve the primary metaphor; omit unnecessary motifs."
     },
     "composition_family": {
       "type": "string",
-      "enum": [
+      "examples": [
         "centered-object-with-base",
         "diagonal-object",
         "layered-plate",
@@ -37,7 +37,9 @@
         "breakout-corner",
         "perched-on-stage",
         "inset-object-with-overlap"
-      ]
+      ],
+      "description": "Short composition label; examples are illustrative, not an exhaustive set.",
+      "minLength": 1
     },
     "tone": {
       "type": "array",

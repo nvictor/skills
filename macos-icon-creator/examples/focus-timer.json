@@ -1,9 +1,9 @@
 {
-  "app_concept": "A macOS app icon for a focus timer, using a timer dial nested into the dock shape with a countdown wedge pressing into the edge rather than floating inside it.",
-  "primary_metaphor": "timer dial as focused lens",
+  "app_concept": "A macOS focus timer.",
+  "primary_metaphor": "An ivory clock face with violet hands and a subtle countdown sector",
   "supporting_motifs": [
-    "countdown wedge",
-    "pulse center"
+    "Four cardinal hour marks with eight secondary dots",
+    "Two bold clock hands"
   ],
-  "composition_family": "edge-pressure-object"
+  "composition_family": "inset-object"
 }

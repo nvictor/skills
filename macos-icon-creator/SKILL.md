@@ -1,103 +1,18 @@
 ---
 name: macos-icon-creator
-description: Create macOS-style app icon SVGs from a product brief or concept prompt. Use this skill when the user wants a dock-style icon, app-icon SVG, or Big Sur-inspired macOS icon concept rather than a flat logo in a rounded square.
+description: Create or refine macOS-style app icon SVGs from an app brief or existing artwork. Use for dock-style icons and Big Sur-inspired icon concepts, rather than logo systems or general illustration.
 ---
 
 # macOS Icon Creator
 
-Use this skill to design a single polished macOS app icon with paired JSON brief and SVG artifacts. The goal is not brand extraction. The goal is a native-feeling icon concept with a clear metaphor, readable silhouette, and material depth.
-
-## Decision rule
-
-Ask once: what single native-feeling metaphor should represent this app?
-
-## When to use this skill
-
-Use it when the user wants:
-
-- a macOS app icon
-- a dock-style icon
-- an SVG app icon concept for a Mac application
-- a Big Sur-inspired reinterpretation of an app or product idea
-
-Do not use it when the user explicitly wants:
-
-- a logo system or brand mark
-- a favicon
-- a generic flat badge
-- PNG, ICNS, or export automation
-- a broad multi-style illustration pass
+Design a native-feeling icon with a clear metaphor, readable silhouette, and purposeful material depth. This skill targets the dimensional Big Sur-inspired style; it is not a specification for every macOS icon style.
 
 ## Workflow
 
-Use this state sequence: brief -> metaphor/composition -> SVG -> preview/verification -> final.
+1. Establish the app purpose, primary metaphor, and any requested symbols, palette, or tone. Infer a reasonable direction from the available brief; ask only when missing information would materially change it. For revisions, inspect the existing artwork and preserve approved choices outside the requested change.
+2. Read [design principles](references/macos-icon-principles.md) when choosing or revising the composition. Resolve the dominant form before adding supporting detail. Examples in [examples/](examples/) illustrate possible solutions, not templates or mandatory treatments.
+3. Build or edit a self-contained SVG with an explicit `viewBox` and enough canvas margin for intended protrusions and shadows. Keep essential geometry editable and avoid external fonts, images, or other dependencies.
+4. Render and inspect the actual pixels using the [raster review checklist](references/style-checklist.md). Fix visual defects and repeat the affected checks. If rendering is unavailable, state that limitation instead of claiming visual validation.
+5. Deliver using [output guidance](references/output-shape.md). Default to a paired SVG and concise JSON brief for a new concept; respect narrower requests and update an existing brief when the design changes.
 
-1. Normalize the brief:
-   - app purpose
-   - primary noun or action
-   - optional symbols to include or avoid
-   - tone, palette hints, and native-vs-brand preference
-2. Choose the icon metaphor:
-   - one primary metaphor
-   - at most one or two supporting motifs
-   - one composition family with a strong silhouette
-3. Compose for macOS:
-   - treat the squircle as part of the composition, not a container
-   - use depth, layering, lighting, and material cues where they improve recognition
-   - add highlights only when they explain curvature, glass, enamel, or a turned plane
-   - let forms merge with, sit on, tuck behind, or selectively break past the squircle when that strengthens the icon
-   - when a motif should feel fused with the icon, prefer reusing the squircle's own corner or edge geometry instead of drawing separate strokes on top
-   - preserve the dominant silhouette when refining seams or overlaps; do not distort the primary mass just to satisfy a local junction
-   - keep shapes simple enough to survive at small sizes
-4. Produce the deliverable:
-   - one JSON brief artifact and one SVG artifact by default
-   - one concise rationale covering metaphor, material/depth, palette, and silhouette
-5. Render and inspect small sizes:
-   - rasterize the SVG and inspect at 16, 32, 64, and 128 px before finalizing
-   - on macOS, prefer Quick Look generation for a local raster preview, for example:
-     - `qlmanage -t -s 512 -o /tmp /path/to/icon.svg`
-   - verify that the primary silhouette survives and supporting cues do not collapse into noise
-6. Run a PARC verification:
-   - Proximity: related motifs are visibly grouped or fused; unrelated elements are separated.
-   - Alignment: major forms share intentional axes, curves, centers, or edge logic.
-   - Repetition: lighting, corner language, shadow softness, and material behavior are consistent.
-   - Contrast: the primary silhouette dominates, and supporting cues are clearly secondary.
-7. Self-check before finalizing:
-   - readable at 16, 32, 64, and 128 px
-   - no centered-logo-in-a-box fallback
-   - no text, UI screenshots, or fragile micro-detail
-   - any PARC issue that changed the design is mentioned briefly in the final rationale
-
-## Output contract
-
-- Default output:
-  - brief restatement of the icon direction
-  - one JSON brief artifact
-  - one SVG artifact
-  - short rationale
-- Optional output:
-  - alternates only when the user asks or when the first concept is clearly ambiguous
-  - a compact structured concept plan only when it helps refinement
-
-## Constraints
-
-- Prefer simple readable geometry over intricate decoration.
-- Use shadows, gradients, highlights, and layering with restraint and purpose.
-- Do not add a highlight by default; only use it when it clarifies form or material.
-- When possible, validate the icon from a rasterized preview rather than judging only from the full-size SVG.
-- If a supporting motif keeps reading like an applied mark, rebuild it as a filled form that inherits the icon's geometry.
-- When refining overlaps, prefer adjusting the secondary element first; only reshape the main object when the silhouette clearly improves.
-- Design the object and squircle together; do not default to a safely contained centered object.
-- Let the metaphor interact with the icon boundary when that improves energy or recognizability.
-- Allow controlled breakout beyond the squircle when the protruding element remains legible at small sizes.
-- Avoid literal UI panels unless they are abstracted into a bold icon form.
-- Avoid pasted logos on plain squircles, random gradient noise, tiny details, and text labels.
-- Common failure pattern: weak icons often fail through accumulated mild disorder across grouping, almost-aligned forms, drifting material logic, and weak hierarchy.
-
-## References
-
-- Principles and composition rules: [references/macos-icon-principles.md](references/macos-icon-principles.md)
-- Response shape: [references/output-shape.md](references/output-shape.md)
-- Final review checklist: [references/style-checklist.md](references/style-checklist.md)
-- Optional internal plan schema: [schema/icon-brief.schema.json](schema/icon-brief.schema.json)
-- Example JSON briefs and SVGs: [examples/](examples)
+The core deliverable is SVG. Requested raster or app-icon exports may extend the task, but export and application installation are separate operations. Validate the rendering path used for those exports and modify an app repository only when the user requests it.

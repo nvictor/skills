@@ -1,9 +1,8 @@
 {
-  "app_concept": "A macOS app icon for GrandReveal, a macOS application for opening and viewing Reveal.js presentations locally. A split red-over-blue macOS squircle evokes a shot-start board with a soft-cornered white play triangle and a faint contact seam at the red-blue boundary.",
-  "primary_metaphor": "playback trigger for local presentations",
+  "app_concept": "GrandReveal opens and views local Reveal.js presentations.",
+  "primary_metaphor": "A dimensional play key beneath a red angled presentation-board header",
   "supporting_motifs": [
-    "shot-board style split background",
-    "soft-cornered white play triangle"
+    "Red header seated over a midnight-blue body"
   ],
   "composition_family": "layered-plate"
 }

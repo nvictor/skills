@@ -1,9 +1,8 @@
 {
-  "app_concept": "A macOS app icon for Framed, a menu bar utility that resizes visible windows to common aspect ratios. The entire squircle becomes a warm orange framing plate with subtle surface modeling, carrying two opposing corner guides built from the same rounded corner geometry as the squircle itself.",
-  "primary_metaphor": "minimal framing plate",
+  "app_concept": "Framed is a menu bar utility that resizes visible windows to common aspect ratios.",
+  "primary_metaphor": "An orange framing plate with opposing corner guides around a landscape aperture",
   "supporting_motifs": [
-    "balanced upper-left light corner",
-    "balanced lower-right deep corner"
+    "Ivory upper-left guide and recessed lower-right guide"
   ],
   "composition_family": "fused-with-base"
 }
