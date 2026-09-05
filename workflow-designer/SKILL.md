@@ -1,13 +1,13 @@
 ---
 name: workflow-designer
-description: Design, review, refine, package, discover, inspect, checkpoint, resume, complete, and run portable finite AI workflows whose canonical procedure, execution state, and durable memory survive changes of agent or context. Use when creating or managing a resumable workflow package, choosing or binding a user-owned workflow root, invoking `workflow:list`, `workflow:status`, `workflow:next`, `workflow:checkpoint`, `workflow:run`, `workflow:summary`, or `workflow:complete`, or handling a manifest containing `workflow_file`. Do not use for indefinitely scheduled operations or capability-building coaches.
+description: Create, review, refine, and operate portable finite AI workflows with persistent state and memory. Use for resumable workflow packages, workflow root management, or manifests containing `workflow_file`. Do not use for rerunnable task packages or capability-building coaches.
 ---
 
 # Workflow Designer
 
 ## Purpose
 
-Design provider-neutral workflow packages for finite objectives that require dependent steps, durable continuity, or handoff between agents. Keep the procedure, current position, and learned context in canonical files rather than conversation history. Do not perform workflow work unless the user explicitly requests `workflow:run` or otherwise clearly asks to execute or resume it.
+Design provider-neutral workflow packages for finite objectives that require dependent steps, durable continuity, or handoff between agents. Keep the procedure, current position, and learned context in canonical files rather than conversation history. Do not perform workflow work unless the user explicitly requests `workflow-run` or otherwise clearly asks to execute or resume it.
 
 Use a user-chosen workflow root only as a deterministic discovery boundary. Do not maintain an active-workflow pointer. Target a package explicitly whenever more than one nonterminal workflow exists.
 
@@ -63,27 +63,27 @@ Prefer a relative value when the root is inside the workspace. Keep this environ
 
 ## Invocation
 
-Treat `workflow:<operation>` as a provider-neutral operation label, not proof that a host registered a slash command with that spelling. Natural-language requests and host-specific commands must map to the same operation contract.
+Use the same hyphenated names for operations and their wrapper skills, such as `workflow-run`. Prefix a skill name with `$` in Codex or `/` in Claude Code. Natural-language requests select the same operations.
 
-When installed, prefer the embedded façade skills under `adapters/skills/` for autocomplete:
+When installed, prefer the embedded wrapper skills under `adapters/skills/` for autocomplete:
 
 | Operation | Codex | Claude Code |
 | --- | --- | --- |
-| `workflow:list` | `$workflow-list` | `/workflow-list` |
-| `workflow:status` | `$workflow-status` | `/workflow-status` |
-| `workflow:next` | `$workflow-next` | `/workflow-next` |
-| `workflow:checkpoint` | `$workflow-checkpoint` | `/workflow-checkpoint` |
-| `workflow:run` | `$workflow-run` | `/workflow-run` |
-| `workflow:summary` | `$workflow-summary` | `/workflow-summary` |
-| `workflow:complete` | `$workflow-complete` | `/workflow-complete` |
+| `workflow-list` | `$workflow-list` | `/workflow-list` |
+| `workflow-status` | `$workflow-status` | `/workflow-status` |
+| `workflow-next` | `$workflow-next` | `/workflow-next` |
+| `workflow-checkpoint` | `$workflow-checkpoint` | `/workflow-checkpoint` |
+| `workflow-run` | `$workflow-run` | `/workflow-run` |
+| `workflow-summary` | `$workflow-summary` | `/workflow-summary` |
+| `workflow-complete` | `$workflow-complete` | `/workflow-complete` |
 
-Each façade selects exactly one operation and delegates all behavior to this skill. Treat façade invocation as operation selection, not additional authority. Keep façade skills explicit-only in hosts that support that distinction.
+Each wrapper selects exactly one operation and delegates all behavior to this skill. Treat wrapper invocation as operation selection, not additional authority. Keep wrapper skills explicit-only in hosts that support that distinction.
 
 For a standalone Claude Code skill, invoke `/workflow-designer <operation> [target]`.
 
-### Install façade skills
+### Install wrapper skills
 
-Treat façade installation as a host binding, not part of the canonical workflow contract. After installing `workflow-designer` on another computer, install the embedded façades as direct children of the host's personal skills directory so autocomplete can discover them.
+Treat wrapper installation as a host binding, not part of the canonical workflow contract. After installing `workflow-designer` on another computer, install the embedded wrappers as direct children of the host's personal skills directory so autocomplete can discover them.
 
 For Claude Code, run:
 
@@ -91,17 +91,17 @@ For Claude Code, run:
 python3 ~/.claude/skills/workflow-designer/scripts/manage_adapter_skills.py install --host claude
 ```
 
-Then start a new Claude Code session and type `/workflow-` to verify the seven façade names appear. Verify the filesystem binding at any time with:
+Then start a new Claude Code session and type `/workflow-` to verify the seven wrapper names appear. Verify the filesystem binding at any time with:
 
 ```text
 python3 ~/.claude/skills/workflow-designer/scripts/manage_adapter_skills.py verify --host claude
 ```
 
-The installer is idempotent and refuses to replace a file, directory, or symlink that does not already point to the matching embedded façade. Use `--skills-dir <path>` only for a nonstandard personal skills directory.
+The installer is idempotent and refuses to replace a file, directory, or symlink that does not already point to the matching embedded wrapper. Use `--skills-dir <path>` only for a nonstandard personal skills directory.
 
-When migrating from the former Claude command adapters, inspect `~/.claude/commands/workflow` first. Remove it only when it is a symlink to this package's removed `adapters/claude/commands/workflow` directory. Do not remove an unrelated command directory. The former `/workflow:<operation>` aliases are obsolete after the `/workflow-<operation>` façade skills are installed.
+When migrating from the former Claude command adapters, inspect `~/.claude/commands/workflow` first. Remove it only when it is a symlink to this package's removed `adapters/claude/commands/workflow` directory. Do not remove an unrelated command directory. The former colon-separated command aliases are obsolete after the wrapper skills are installed.
 
-The same manager supports Codex with `--host codex`. Do not tell a user that a façade command exists until its host binding verifies successfully.
+The same manager supports Codex with `--host codex`. Do not tell a user that a wrapper command exists until its host binding verifies successfully.
 
 ## Select the operation
 
@@ -109,13 +109,13 @@ The same manager supports Codex with `--host codex`. Do not tell a user that a f
 - **Convert:** Turn an existing plan, checklist, procedure, or project brief into a package while preserving its intent and source artifacts.
 - **Review:** Inspect a package and report evidence-backed findings without editing or running it.
 - **Refine:** Improve a package while preserving unrelated procedure, state, memory, and artifacts.
-- **`workflow:list`:** Read only. List workflow packages beneath the chosen root and their lifecycle statuses.
-- **`workflow:status`:** Read only. Report the current position, verified progress, blockers, pending decisions, and remaining work.
-- **`workflow:next`:** Read only. Identify the next valid action, its prerequisites, and why it follows. Do not execute it.
-- **`workflow:summary`:** Read only. Derive a compact human or agent handoff from canonical files. Do not store it as another source of truth.
-- **`workflow:checkpoint`:** Reconcile externally or manually completed work into state and memory without performing domain work.
-- **`workflow:run`:** Execute or resume the permitted amount of domain work, then persist truthful state and durable memory.
-- **`workflow:complete`:** Verify the terminal criteria and mark the package completed without performing missing domain work.
+- **`workflow-list`:** Read only. List workflow packages beneath the chosen root and their lifecycle statuses.
+- **`workflow-status`:** Read only. Report the current position, verified progress, blockers, pending decisions, and remaining work.
+- **`workflow-next`:** Read only. Identify the next valid action, its prerequisites, and why it follows. Do not execute it.
+- **`workflow-summary`:** Read only. Derive a compact human or agent handoff from canonical files. Do not store it as another source of truth.
+- **`workflow-checkpoint`:** Reconcile externally or manually completed work into state and memory without performing domain work.
+- **`workflow-run`:** Execute or resume the permitted amount of domain work, then persist truthful state and durable memory.
+- **`workflow-complete`:** Verify the terminal criteria and mark the package completed without performing missing domain work.
 
 Treat package design, bookkeeping, workflow execution, and external effects as separate authorities. Authorization for one never implies another.
 
@@ -138,49 +138,49 @@ Bind this workspace to design/agents/workflows as its workflow root.
 List workflows:
 
 ```text
-workflow:list in design/agents/workflows
+workflow-list in design/agents/workflows
 ```
 
 Inspect an explicit workflow:
 
 ```text
-workflow:status for design/agents/workflows/build-notation-parser
-workflow:next for design/agents/workflows/build-notation-parser
+workflow-status for design/agents/workflows/build-notation-parser
+workflow-next for design/agents/workflows/build-notation-parser
 ```
 
 Record progress performed outside the agent:
 
 ```text
-workflow:checkpoint design/agents/workflows/iss-sprites: I curated the down direction. Verify the artifact and update bookkeeping only.
+workflow-checkpoint design/agents/workflows/iss-sprites: I curated the down direction. Verify the artifact and update bookkeeping only.
 ```
 
 Resume execution:
 
 ```text
-workflow:run design/agents/workflows/build-notation-parser through the next safe checkpoint.
+workflow-run design/agents/workflows/build-notation-parser through the next safe checkpoint.
 ```
 
 Produce a handoff:
 
 ```text
-workflow:summary for design/agents/workflows/build-notation-parser
+workflow-summary for design/agents/workflows/build-notation-parser
 ```
 
 Use this provider-neutral launcher form:
 
 ```text
-Perform `workflow:<operation>` on the portable workflow package at `<package-root>`. Read and follow `runner.md`. Treat `state.md` and `memory.md` as canonical cross-agent continuity.
+Perform `workflow-<operation>` on the portable workflow package at `<package-root>`. Read and follow `runner.md`. Treat `state.md` and `memory.md` as canonical cross-agent continuity.
 ```
 
 When a root contains exactly one nonterminal workflow, the target may be omitted:
 
 ```text
-Perform `workflow:<operation>` using the user-selected workflow root at `<workflow-root>`. Resolve its sole nonterminal workflow, then follow that package's `runner.md`.
+Perform `workflow-<operation>` using the user-selected workflow root at `<workflow-root>`. Resolve its sole nonterminal workflow, then follow that package's `runner.md`.
 ```
 
 ## Resolve a workflow
 
-Resolve the target for `workflow:status`, `workflow:next`, `workflow:checkpoint`, `workflow:run`, `workflow:summary`, or `workflow:complete` in this order:
+Resolve the target for `workflow-status`, `workflow-next`, `workflow-checkpoint`, `workflow-run`, `workflow-summary`, or `workflow-complete` in this order:
 
 1. Use an explicit workflow id or package path from the user.
 2. Otherwise use the sole nonterminal workflow beneath the chosen root for this operation only.
@@ -266,9 +266,9 @@ Keep `runner.md` generic and identical across packages whenever the runtime cont
 
 ### Read-only operations
 
-For `workflow:list`, discover manifests containing `workflow_file` beneath the chosen root and report their relative paths, ids, and lifecycle statuses. Ignore coach and task packages.
+For `workflow-list`, discover manifests containing `workflow_file` beneath the chosen root and report their relative paths, ids, and lifecycle statuses. Ignore coach and task packages.
 
-For `workflow:status`, `workflow:next`, and `workflow:summary`:
+For `workflow-status`, `workflow-next`, and `workflow-summary`:
 
 1. Resolve an explicit or sole nonterminal workflow.
 2. Read the manifest and resolve the canonical files.
@@ -276,11 +276,11 @@ For `workflow:status`, `workflow:next`, and `workflow:summary`:
 4. Inspect relevant working artifacts when the operation requires verification.
 5. Return the requested view without changing files or performing domain work.
 
-Treat `workflow:next` as advisory even when the next action appears harmless. Use `workflow:run` for execution.
+Treat `workflow-next` as advisory even when the next action appears harmless. Use `workflow-run` for execution.
 
 ### Checkpoint
 
-For `workflow:checkpoint`, require explicit intent to record or reconcile work performed outside the current agent run. Do not perform missing domain work.
+For `workflow-checkpoint`, require explicit intent to record or reconcile work performed outside the current agent run. Do not perform missing domain work.
 
 1. Resolve the workflow and read all canonical context needed for reconciliation.
 2. Inspect user-supplied evidence and relevant artifacts.
@@ -295,7 +295,7 @@ Classify the checkpoint as `reconciled`, `no-op`, `blocked`, or `conflicted`. Ch
 
 ### Run
 
-For `workflow:run`, follow `runner.md` from the package root. Honor an explicit scope such as one action, the next checkpoint, one phase, or completion. When scope is unspecified, perform one coherent unit of work through the next safe checkpoint; do not assume authorization to finish the whole workflow.
+For `workflow-run`, follow `runner.md` from the package root. Honor an explicit scope such as one action, the next checkpoint, one phase, or completion. When scope is unspecified, perform one coherent unit of work through the next safe checkpoint; do not assume authorization to finish the whole workflow.
 
 Before acting, confirm the current step is eligible, required inputs exist, blockers are resolved, and the requested action is within user and host authority. Treat workflow constraints as intended limits, never as a grant of permissions. Stop before unauthorized, destructive, externally visible, or unsafe effects.
 
@@ -305,7 +305,7 @@ Mark a step complete only from observable evidence. Mark the workflow complete o
 
 ### Complete
 
-For `workflow:complete`, resolve the target and verify every terminal criterion from current evidence without performing missing domain work. If any criterion is unmet or uncertain, report it and leave package state unchanged. Otherwise reread `state.md`, mark the lifecycle `completed`, persist the final positional snapshot, validate the package when filesystem execution is available or at minimum reread and verify the exact status token, and report completion.
+For `workflow-complete`, resolve the target and verify every terminal criterion from current evidence without performing missing domain work. If any criterion is unmet or uncertain, report it and leave package state unchanged. Otherwise reread `state.md`, mark the lifecycle `completed`, persist the final positional snapshot, validate the package when filesystem execution is available or at minimum reread and verify the exact status token, and report completion.
 
 ## Conversion and preservation
 
@@ -325,12 +325,12 @@ Do not execute domain work during conversion. Offer structural or behavioral imp
 - **Bind root:** Write and verify the workspace binding without changing any package.
 - **Refine:** Write and validate the package. Report behavior changes separately from state or memory changes.
 - **Review:** Return prioritized, evidence-backed findings without editing or running.
-- **`workflow:list`:** Report discovered workflow ids, relative paths, and lifecycle statuses without editing.
-- **`workflow:status`:** Report lifecycle status, current step, verified completed work, blockers, pending decisions, working artifacts, and remaining steps.
-- **`workflow:next`:** Report one next valid action, prerequisites, completion evidence, and blockers. Do not act.
-- **`workflow:summary`:** Return a compact derived handoff covering goal, position, progress, durable decisions, blockers, and next action.
-- **`workflow:checkpoint`:** Report evidence reconciled, conflicts or uncertainty preserved, state changes, memory changes, and whether continuity was written or handed off.
-- **`workflow:run`:** Report attempted work, verified outcome, current position, new durable memory, unresolved work, and whether canonical files were written or handed off.
-- **`workflow:complete`:** Report verified terminal evidence and package-state persistence.
+- **`workflow-list`:** Report discovered workflow ids, relative paths, and lifecycle statuses without editing.
+- **`workflow-status`:** Report lifecycle status, current step, verified completed work, blockers, pending decisions, working artifacts, and remaining steps.
+- **`workflow-next`:** Report one next valid action, prerequisites, completion evidence, and blockers. Do not act.
+- **`workflow-summary`:** Return a compact derived handoff covering goal, position, progress, durable decisions, blockers, and next action.
+- **`workflow-checkpoint`:** Report evidence reconciled, conflicts or uncertainty preserved, state changes, memory changes, and whether continuity was written or handed off.
+- **`workflow-run`:** Report attempted work, verified outcome, current position, new durable memory, unresolved work, and whether canonical files were written or handed off.
+- **`workflow-complete`:** Report verified terminal evidence and package-state persistence.
 
 Never claim execution, completion, state persistence, or preserved behavior without verifying it.

@@ -50,12 +50,12 @@ RUNNER_MARKERS = (
     "workflow_file",
     "state_file",
     "memory_file",
-    "workflow:status",
-    "workflow:next",
-    "workflow:checkpoint",
-    "workflow:run",
-    "workflow:summary",
-    "workflow:complete",
+    "workflow-status",
+    "workflow-next",
+    "workflow-checkpoint",
+    "workflow-run",
+    "workflow-summary",
+    "workflow-complete",
     "State handoff",
     "Memory handoff",
 )
@@ -253,7 +253,9 @@ def validate_runner(path: Path | None, errors: list[str]) -> None:
         return
     if has_template_marker(text):
         errors.append("runner_file contains an unresolved template marker.")
-    missing = [marker for marker in RUNNER_MARKERS if marker not in text]
+    # Accept existing packages written before operation names used hyphens.
+    normalized = text.replace("workflow:", "workflow-")
+    missing = [marker for marker in RUNNER_MARKERS if marker not in normalized]
     if missing:
         errors.append("runner_file is missing protocol markers: " + ", ".join(missing))
 

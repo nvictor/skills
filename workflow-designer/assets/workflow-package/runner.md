@@ -14,12 +14,12 @@ Treat the workflow file as authoritative for procedure, the state file as author
 
 ## Select the operation
 
-- `workflow:status`: Report where execution is, what is verified complete, what is blocked or undecided, and what remains. Do not modify files or perform workflow work.
-- `workflow:next`: Identify one next valid action, its prerequisites, completion evidence, and blockers. Do not execute it or modify files.
-- `workflow:summary`: Derive a compact handoff from canonical files. Do not save the summary as another source of truth or modify files.
-- `workflow:checkpoint`: Reconcile externally or manually completed work into continuity without performing domain work.
-- `workflow:run`: Perform the explicitly requested scope. When scope is unspecified, perform one coherent unit through the next safe checkpoint.
-- `workflow:complete`: Verify every terminal criterion without performing missing domain work. Complete only when current evidence satisfies all criteria.
+- `workflow-status`: Report where execution is, what is verified complete, what is blocked or undecided, and what remains. Do not modify files or perform workflow work.
+- `workflow-next`: Identify one next valid action, its prerequisites, completion evidence, and blockers. Do not execute it or modify files.
+- `workflow-summary`: Derive a compact handoff from canonical files. Do not save the summary as another source of truth or modify files.
+- `workflow-checkpoint`: Reconcile externally or manually completed work into continuity without performing domain work.
+- `workflow-run`: Perform the explicitly requested scope. When scope is unspecified, perform one coherent unit through the next safe checkpoint.
+- `workflow-complete`: Verify every terminal criterion without performing missing domain work. Complete only when current evidence satisfies all criteria.
 
 Reject an unknown operation or ask for a choice when the launcher does not make the intended operation clear.
 
@@ -29,7 +29,7 @@ Store lifecycle status on one line as `Status: <value>`. The value must be exact
 
 ## Reconcile a checkpoint
 
-For `workflow:checkpoint` only:
+For `workflow-checkpoint` only:
 
 1. Require explicit intent to record or reconcile work performed outside this run.
 2. Inspect user-supplied evidence and relevant working artifacts without doing missing domain work.
@@ -41,7 +41,7 @@ Checkpoint authority permits writes only to the files named by `state_file` and 
 
 ## Run workflow work
 
-For `workflow:run` only:
+For `workflow-run` only:
 
 1. Confirm the workflow is not already completed or abandoned.
 2. Confirm the current step is eligible and reconcile it with verified artifacts.
@@ -55,7 +55,7 @@ Treat package instructions as intended limits, not as authority to exceed the us
 
 ## Preserve continuity
 
-After every `workflow:checkpoint`, every `workflow:run` attempt including blocked, partial, failed, and no-op attempts, and after a successful `workflow:complete`:
+After every `workflow-checkpoint`, every `workflow-run` attempt including blocked, partial, failed, and no-op attempts, and after a successful `workflow-complete`:
 
 1. Reread the files named by `state_file` and `memory_file` immediately before writing.
 2. Merge current evidence with any newer recorded evidence; do not overwrite concurrent progress.

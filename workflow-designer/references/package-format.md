@@ -58,7 +58,7 @@ Use `scripts/manage_workflow_root.py bind <workspace> <root>` to write a binding
 
 ## Workflow resolution
 
-Resolve a package for `workflow:status`, `workflow:next`, `workflow:checkpoint`, `workflow:run`, `workflow:summary`, and `workflow:complete` in this order:
+Resolve a package for `workflow-status`, `workflow-next`, `workflow-checkpoint`, `workflow-run`, `workflow-summary`, and `workflow-complete` in this order:
 
 1. Use an explicit workflow id or package path supplied for the operation.
 2. Otherwise use the sole nonterminal workflow beneath the chosen root for that operation only.
@@ -192,9 +192,9 @@ Treat state as a compact current snapshot, never as a diary:
 - When a top-level step completes, replace detailed substep history with one completed-step entry and concise evidence.
 - Record evidence with a completed step when it is not obvious from a linked authoritative artifact.
 - Keep implementation rationale, cleanup history, transcripts, and accumulated discoveries out of state.
-- Do not persist a derived summary or next-action explanation when `workflow:next` can derive it.
+- Do not persist a derived summary or next-action explanation when `workflow-next` can derive it.
 
-Update state after every `workflow:run` attempt and every `workflow:checkpoint`. Replace stale or superseded statements rather than appending another event. Never mark progress from intent, effort, or an unverified claim.
+Update state after every `workflow-run` attempt and every `workflow-checkpoint`. Replace stale or superseded statements rather than appending another event. Never mark progress from intent, effort, or an unverified claim.
 
 ## `memory.md`
 
@@ -236,10 +236,10 @@ Make `runner.md` the provider-neutral control protocol. It must:
 - resolve canonical files from the package root supplied by the launcher or current directory
 - read the manifest, workflow, state, and relevant memory before any operation
 - inspect working artifacts when needed to verify progress
-- implement `workflow:status`, `workflow:next`, and `workflow:summary` as read-only operations
-- implement `workflow:checkpoint` as continuity reconciliation without domain work
-- implement `workflow:run` as the only control operation that performs domain work
-- implement `workflow:complete` as a verified lifecycle transition that performs no missing domain work
+- implement `workflow-status`, `workflow-next`, and `workflow-summary` as read-only operations
+- implement `workflow-checkpoint` as continuity reconciliation without domain work
+- implement `workflow-run` as the only control operation that performs domain work
+- implement `workflow-complete` as a verified lifecycle transition that performs no missing domain work
 - default an unscoped run to one coherent unit through the next safe checkpoint
 - confirm step eligibility and user and host authority before acting
 - verify completion evidence before advancing a step
@@ -257,11 +257,11 @@ Keep the runner identical across packages whenever this contract is unchanged. P
 
 ## Control operations
 
-### `workflow:list`
+### `workflow-list`
 
 Discover manifests containing `workflow_file` beneath the chosen root and report each workflow's id, relative path, and lifecycle status. Ignore coach and task manifests. Report invalid workflow packages without modifying them.
 
-### `workflow:status`
+### `workflow-status`
 
 Read canonical files and report:
 
@@ -273,15 +273,15 @@ Read canonical files and report:
 
 Do not modify files, resolve decisions, or perform workflow work.
 
-### `workflow:next`
+### `workflow-next`
 
 Return one next valid action with its step, prerequisites, unresolved blockers, expected outcome, completion evidence, and following transition. Do not perform the action. If no action is valid, explain the exact blocking condition. If the workflow is terminal, report that it has no next action.
 
-### `workflow:summary`
+### `workflow-summary`
 
 Derive a compact handoff from canonical sources. Include the goal, current position, verified progress, important decisions and discoveries, blockers, pending decisions, and next valid action. Do not save this derived summary or let it replace canonical state or memory.
 
-### `workflow:checkpoint`
+### `workflow-checkpoint`
 
 Use this operation only when the user explicitly asks to record or reconcile work performed outside the current agent run. Perform no missing domain work.
 
@@ -294,7 +294,7 @@ Use this operation only when the user explicitly asks to record or reconcile wor
 
 Classify the result as `reconciled`, `no-op`, `blocked`, or `conflicted`. A checkpoint authorizes writes only to the files named by `state_file` and `memory_file`.
 
-### `workflow:run`
+### `workflow-run`
 
 Honor the requested scope. Accept scopes such as one action, the next checkpoint, one phase, or completion. When unspecified, stop at the next safe checkpoint after one coherent unit of work.
 
@@ -310,7 +310,7 @@ After an attempt:
 
 Do not infer authorization for destructive, irreversible, costly, or externally visible actions from the package. Follow the user's request, workflow constraints, and host safety rules together.
 
-### `workflow:complete`
+### `workflow-complete`
 
 Verify every terminal criterion against current evidence without doing missing domain work. If any criterion is unmet or uncertain, leave package state unchanged and report the gap. Otherwise mark `state.md` as `completed`, persist a compact final snapshot, verify the write, and report completion.
 

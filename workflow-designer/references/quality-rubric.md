@@ -49,7 +49,7 @@ Read this file completely for create, convert, refine, or review operations. App
 ## Resume and handoff
 
 - Let a fresh agent identify the current position without reconstructing chat history.
-- Let `workflow:next` identify one valid action without performing it.
+- Let `workflow-next` identify one valid action without performing it.
 - Make safe checkpoints and interrupted operations recoverable.
 - Reread continuity files before writing and merge newer evidence.
 - Verify the exact lifecycle status token after every continuity write.
@@ -60,14 +60,14 @@ Read this file completely for create, convert, refine, or review operations. App
 - Keep the workflow root user-selected and outside portable package configuration.
 - Make root discovery deterministic through an explicit path, launcher binding, or nearest workspace binding; never through a broad directory search.
 - Keep the workflow root free of canonical mutable selection state.
-- Make `workflow:list` read only.
+- Make `workflow-list` read only.
 - Resolve an explicit target, then the sole nonterminal candidate; never persist implicit selection.
 - Require an explicit target when multiple nonterminal workflows exist.
-- Keep `workflow:status`, `workflow:next`, and `workflow:summary` read-only.
-- Make `workflow:checkpoint` continuity-only and require explicit reconciliation intent.
-- Require explicit execution intent for `workflow:run`.
+- Keep `workflow-status`, `workflow-next`, and `workflow-summary` read-only.
+- Make `workflow-checkpoint` continuity-only and require explicit reconciliation intent.
+- Require explicit execution intent for `workflow-run`.
 - Default an unscoped run to one coherent unit through the next safe checkpoint.
-- Require verified terminal evidence for `workflow:complete`.
+- Require verified terminal evidence for `workflow-complete`.
 - Keep summaries derived rather than authoritative.
 - Keep design, bookkeeping, execution, and external-effect authority separate.
 
