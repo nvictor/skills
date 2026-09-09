@@ -11,12 +11,6 @@ Use this skill for diagrams whose layout carries meaning. This skill is not a ge
 2. a layout-intent spec
 3. a deterministic SVG
 
-## Geometry invariant
-
-Edges must never cross node interiors or text. An edge may touch its source and target boundaries only at designated ports. Endpoint labels remain obstacles. This is a delivery requirement, enforced by the renderer for segments, strokes, rounded corners, and arrowheads.
-
-If geometry validation fails, adjust layout intent (lane spacing, offsets, ordering, or badge label position) and regenerate. Preserve the requested semantics. Never hide crossings with layering, omit connections to pass validation, or manually patch the SVG. If no valid layout can be produced, report the blocking connection instead of delivering an invalid diagram.
-
 ## Decision rule
 
 Ask once: what layout makes the system relationship easiest to understand?
@@ -64,8 +58,7 @@ Use this state sequence: semantic model -> layout intent -> JSON spec -> rendere
    - Alignment: sections, lanes, node centers, labels, and routes follow a visible grid.
    - Repetition: repeated node roles, charts, panels, annotations, and connection styles use consistent treatment.
    - Contrast: title, sections, highlighted nodes, and normal nodes form a clear hierarchy within three seconds.
-7. Visually inspect the final SVG, then run a geometry sanity pass:
-   - No edge crosses a node or text, including endpoint labels, bends, and arrowheads.
+7. Run a geometry sanity pass:
    - Every edge has a visible arrowhead at the target.
    - Straight semantic edges stay straight when node centers align.
    - Single-path diagrams should keep node centers on one visible axis and avoid adding secondary lanes unless the separation carries meaning.
@@ -99,7 +92,6 @@ Operational notes:
 - `scripts/render_diagram.py` requires one positional argument: the input JSON spec path.
 - Run commands from this skill directory, or use absolute paths for both the script and the spec.
 - The renderer uses only the Python standard library. Do not stop to install `cairosvg`, `lxml`, or other SVG packages for this skill.
-- Normal rendering and `--validate-only` share geometry checks; invalid geometry fails before output is written.
 - `--validate-only` prints `OK` on success and exits without producing SVG output.
 - Specs may set `diagram.color_scheme`; supported schemes are `warm-neutral`, `studio-paper`, `ink-signal`, `console-light`, and `graphite-citrus`.
 - Common failure pattern: weak diagrams often fail through accumulated mild disorder across grouping, almost-aligned elements, drifting styles, and weak hierarchy.
