@@ -58,7 +58,7 @@
             "title": "Model Layer",
             "direction": "horizontal",
             "x_offset": 0,
-            "y_offset": 128,
+            "y_offset": 0,
             "groups": [
               {
                 "type": "sequential",

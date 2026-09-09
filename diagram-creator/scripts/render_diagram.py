@@ -1280,12 +1280,8 @@ def route_connection_points(
 ) -> list[tuple[float, float]]:
     source = nodes[connection["from"]]
     target = nodes[connection["to"]]
-    allowed = {
-        source.node_id,
-        target.node_id,
-        f"node_label:{source.node_id}",
-        f"node_label:{target.node_id}",
-    }
+    allowed: set[str] = set()
+    failures: list[str] = []
     candidates: list[tuple[float, list[tuple[float, float]]]] = []
 
     for preference_index, (source_side, target_side) in enumerate(candidate_port_sides(source, target, connection["route"])):
@@ -1293,6 +1289,31 @@ def route_connection_points(
         target_port = port_point(target, target_side)
         source_stub = stub_point(source_port, source_side)
         target_stub = stub_point(target_port, target_side)
+
+        # One straight segment is both terminal segments. It may traverse both
+        # endpoint clearance zones, but final validation still forbids interiors.
+        dx = target_port[0] - source_port[0]
+        dy = target_port[1] - source_port[1]
+        facing = (
+            (source_side, target_side) == ("right", "left") and dx > 0 and abs(dy) < .01
+            or (source_side, target_side) == ("left", "right") and dx < 0 and abs(dy) < .01
+            or (source_side, target_side) == ("bottom", "top") and dy > 0 and abs(dx) < .01
+            or (source_side, target_side) == ("top", "bottom") and dy < 0 and abs(dx) < .01
+        )
+        if facing:
+            direct = [source_port, target_port]
+            try:
+                checked_edge_path(direct, source, target, obstacles, nodes)
+                candidates.append((route_rank(direct, preference_index), direct))
+            except DiagramError as exc:
+                failures.append(str(exc))
+
+        if not segment_is_clear(source_port, source_stub, obstacles, {source.node_id}):
+            failures.append(collision_detail(source_port, source_stub, obstacles, {source.node_id}))
+            continue
+        if not segment_is_clear(target_stub, target_port, obstacles, {target.node_id}):
+            failures.append(collision_detail(target_stub, target_port, obstacles, {target.node_id}))
+            continue
 
         if not point_is_clear(source_stub, obstacles, allowed):
             continue
@@ -1405,11 +1426,95 @@ def route_connection_points(
 
     if candidates:
         candidates.sort(key=lambda item: item[0])
-        return candidates[0][1]
+        for _, candidate in candidates:
+            try:
+                checked_edge_path(candidate, source, target, obstacles, nodes)
+                return candidate
+            except DiagramError as exc:
+                failures.append(str(exc))
 
     raise DiagramError(
-        f"Could not route connection '{source.node_id}->{target.node_id}' without crossing nodes or text."
+        f"Could not route connection '{source.node_id}->{target.node_id}' without crossing nodes or text. "
+        + (failures[-1] if failures else "No clear routing corridor among obstacles: " + ", ".join(key for key, _ in obstacles))
     )
+
+
+def collision_detail(
+    start: tuple[float, float], end: tuple[float, float],
+    obstacles: list[tuple[str, Rect]], allowed: set[str],
+) -> str:
+    for key, rect in obstacles:
+        if key not in allowed and not segment_is_clear(start, end, [(key, rect)], set()):
+            return f"Segment {start}->{end} blocked by '{key}'."
+    return f"Invalid segment {start}->{end}."
+
+
+def overlaps(a: Rect, b: Rect) -> bool:
+    return a.left < b.right and a.right > b.left and a.top < b.bottom and a.bottom > b.top
+
+
+def checked_edge_path(
+    points: list[tuple[float, float]], source: NodeLayout, target: NodeLayout,
+    obstacles: list[tuple[str, Rect]], nodes: dict[str, NodeLayout],
+) -> str:
+    # Only the first/last port segments may traverse their own clearance zone.
+    for index, (start, end) in enumerate(zip(points, points[1:])):
+        allowed = set()
+        if index == 0:
+            allowed.add(source.node_id)
+        if index == len(points) - 2:
+            allowed.add(target.node_id)
+        if not segment_is_clear(start, end, obstacles, allowed):
+            raise DiagramError(collision_detail(start, end, obstacles, allowed))
+    return final_edge_path(points, source, obstacles, nodes)
+
+
+def final_edge_path(
+    points: list[tuple[float, float]], source: NodeLayout,
+    obstacles: list[tuple[str, Rect]], nodes: dict[str, NodeLayout],
+) -> str:
+    physical = [(key, rect.inflate(-EDGE_CLEARANCE if key in nodes else -EDGE_CLEARANCE / 2))
+                for key, rect in obstacles]
+    adjusted = simplify_points(marker_adjusted_points(points))
+    # Round exactly as serialized, so validation covers emitted coordinates.
+    adjusted = [(round(x, 1), round(y, 1)) for x, y in adjusted]
+    for index, (a, b) in enumerate(zip(adjusted, adjusted[1:])):
+        bounds = Rect(min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])).inflate(.85)
+        for key, rect in physical:
+            # Butt-capped source stroke touches its designated boundary.
+            if key == source.node_id and index == 0:
+                if not segment_is_clear(a, b, [(key, rect)], set()):
+                    raise DiagramError(f"Source terminal enters '{key}'.")
+                continue
+            if overlaps(bounds, rect):
+                raise DiagramError(f"Stroke segment {a}->{b} blocked by '{key}'.")
+    end, prev = adjusted[-1], adjusted[-2]
+    dx, dy = end[0] - prev[0], end[1] - prev[1]
+    length = abs(dx) + abs(dy)
+    if not length:
+        raise DiagramError("Zero-length arrowhead terminal.")
+    ux, uy = dx / length, dy / length
+    vertices = [end, (end[0]-8*ux-5*uy, end[1]-8*uy+5*ux),
+                (end[0]-8*ux+5*uy, end[1]-8*uy-5*ux)]
+    marker = Rect(min(x for x,y in vertices), min(y for x,y in vertices),
+                  max(x for x,y in vertices), max(y for x,y in vertices)).inflate(.85)
+    for key, rect in physical:
+        if overlaps(marker, rect):
+            raise DiagramError(f"Arrowhead blocked by '{key}'.")
+    # Quadratic curves lie inside their control-point bounds. A conservative
+    # corner box proves clearance without sampling a curve between samples.
+    radii: list[float] = []
+    for a, b, c in zip(adjusted, adjusted[1:], adjusted[2:]):
+        r = min(10.0, (abs(a[0]-b[0])+abs(a[1]-b[1]))/2,
+                (abs(c[0]-b[0])+abs(c[1]-b[1]))/2)
+        incoming = (b[0] + (r if a[0]>b[0] else -r if a[0]<b[0] else 0),
+                    b[1] + (r if a[1]>b[1] else -r if a[1]<b[1] else 0))
+        outgoing = (b[0] + (r if c[0]>b[0] else -r if c[0]<b[0] else 0),
+                    b[1] + (r if c[1]>b[1] else -r if c[1]<b[1] else 0))
+        box = Rect(min(incoming[0],b[0],outgoing[0]), min(incoming[1],b[1],outgoing[1]),
+                   max(incoming[0],b[0],outgoing[0]), max(incoming[1],b[1],outgoing[1])).inflate(.90)
+        radii.append(0.0 if any(overlaps(box, rect) for _, rect in physical) else 10.0)
+    return rounded_orthogonal_path(adjusted, radius=radii)
 
 
 def route_rank(points: list[tuple[float, float]], preference_index: int) -> float:
@@ -1425,19 +1530,20 @@ def simplify_points(points: list[tuple[float, float]]) -> list[tuple[float, floa
     if len(points) < 3:
         return points
     simplified = [points[0]]
-    for point in points[1:-1]:
+    for index, point in enumerate(points[1:-1], 1):
         prev = simplified[-1]
-        nxt = points[points.index(point) + 1]
+        nxt = points[index + 1]
         same_x = abs(prev[0] - point[0]) < 0.01 and abs(point[0] - nxt[0]) < 0.01
         same_y = abs(prev[1] - point[1]) < 0.01 and abs(point[1] - nxt[1]) < 0.01
-        if same_x or same_y:
+        forward = (point[0] - prev[0]) * (nxt[0] - point[0]) + (point[1] - prev[1]) * (nxt[1] - point[1]) >= 0
+        if (same_x or same_y) and forward:
             continue
         simplified.append(point)
     simplified.append(points[-1])
     return simplified
 
 
-def rounded_orthogonal_path(points: list[tuple[float, float]], radius: float = 10.0) -> str:
+def rounded_orthogonal_path(points: list[tuple[float, float]], radius: float | list[float] = 10.0) -> str:
     points = simplify_points(points)
     if len(points) < 2:
         return ""
@@ -1449,7 +1555,8 @@ def rounded_orthogonal_path(points: list[tuple[float, float]], radius: float = 1
 
         in_len = abs(curr_x - prev_x) + abs(curr_y - prev_y)
         out_len = abs(next_x - curr_x) + abs(next_y - curr_y)
-        corner = min(radius, in_len / 2, out_len / 2)
+        corner_radius = radius[idx - 1] if isinstance(radius, list) else radius
+        corner = min(corner_radius, in_len / 2, out_len / 2)
 
         start_x = curr_x
         start_y = curr_y
@@ -1947,25 +2054,9 @@ def render_node(node: NodeLayout, palette: dict[str, Any]) -> str:
     return "\n".join(parts)
 
 
-def render_connection(
-    connection: dict[str, str],
-    nodes: dict[str, NodeLayout],
-    obstacles: list[tuple[str, Rect]],
-    width: int,
-    height: int,
-    palette: dict[str, Any],
-    marker_id: str,
-) -> str:
-    points = route_connection_points(connection, nodes, obstacles, width, height)
-    points = marker_adjusted_points(points)
-    path = rounded_orthogonal_path(points, radius=10)
-    return f'<path d="{path}" fill="none" stroke="{palette["edge"]}" stroke-width="1.7" marker-end="url(#{marker_id})"/>'
-
-
 def render_svg(spec: dict[str, Any]) -> str:
+    sections, nodes, width, height, paths = prepare_geometry(spec)
     diagram = spec["diagram"]
-    sections, nodes, width, height = layout_diagram(diagram)
-    obstacles = build_edge_obstacles(diagram["title"], diagram.get("subtitle"), sections, nodes, width)
     diagram_palette = palette_for_scheme(diagram["color_scheme"])
     section_by_id = {section.section_id: section for section in sections}
     section_palettes = {
@@ -2005,17 +2096,17 @@ def render_svg(spec: dict[str, Any]) -> str:
     for node_id in sorted(nodes.keys(), key=lambda key: (nodes[key].y, nodes[key].x)):
         node = nodes[node_id]
         parts.append(render_node(node, section_palettes[node.section_id]))
-    for connection in diagram["connections"]:
+    for connection, path in zip(diagram["connections"], paths):
         source_section = section_by_id[nodes[connection["from"]].section_id]
         palette = section_palettes[source_section.section_id]
         marker_id = f"arrow-{source_section.color_scheme}"
-        parts.append(render_connection(connection, nodes, obstacles, width, height, palette, marker_id))
+        parts.append(f'<path d="{path}" fill="none" stroke="{palette["edge"]}" stroke-width="1.7" marker-end="url(#{marker_id})"/>')
 
     parts.append("</svg>")
     return "\n".join(parts)
 
 
-def validate_geometry(spec: dict[str, Any]) -> None:
+def prepare_geometry(spec: dict[str, Any]) -> tuple[list[SectionLayout], dict[str, NodeLayout], int, int, list[str]]:
     diagram = spec["diagram"]
     sections, nodes, width, height = layout_diagram(diagram)
     section_by_id = {section.section_id: section for section in sections}
@@ -2029,10 +2120,12 @@ def validate_geometry(spec: dict[str, Any]) -> None:
         if node.node_type in BADGE_NODE_TYPES and not section_rect.contains(badge_label_rect(node)):
             raise DiagramError(f"Badge label for node '{node.node_id}' crosses its section boundary.")
 
+    paths = []
     for connection in diagram["connections"]:
         points = route_connection_points(connection, nodes, obstacles, width, height)
         source = nodes[connection["from"]]
         target = nodes[connection["to"]]
+        paths.append(checked_edge_path(points, source, target, obstacles, nodes))
         if source.section_id == target.section_id:
             section = section_by_id[source.section_id]
             section_rect = Rect(section.x, section.y, section.x + section.width, section.y + section.height)
@@ -2041,6 +2134,12 @@ def validate_geometry(spec: dict[str, Any]) -> None:
                     raise DiagramError(
                         f"Connection '{source.node_id}->{target.node_id}' exits its section boundary."
                     )
+
+    return sections, nodes, width, height, paths
+
+
+def validate_geometry(spec: dict[str, Any]) -> None:
+    prepare_geometry(spec)
 
 
 def parse_args() -> argparse.Namespace:
@@ -2058,6 +2157,8 @@ def main() -> int:
         spec = validate_spec(load_spec(path))
         if args.validate_only:
             validate_geometry(spec)
+        else:
+            svg = render_svg(spec)
     except (OSError, json.JSONDecodeError, DiagramError) as exc:
         print(f"ERROR: {exc}")
         return 1
@@ -2066,7 +2167,6 @@ def main() -> int:
         print("OK")
         return 0
 
-    svg = render_svg(spec)
     if args.output:
         Path(args.output).write_text(svg)
     else:

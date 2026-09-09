@@ -67,14 +67,14 @@
 <text x="545.0" y="490.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#A33645">Server pushes</text>
 <text x="545.0" y="505.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#A33645">text/event-</text>
 <text x="545.0" y="520.8" text-anchor="middle" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#A33645">stream messages</text>
-<path d="M 148.0 306.8 L 148.0 323.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
-<path d="M 148.0 370.8 L 148.0 387.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
-<path d="M 148.0 434.8 L 148.0 451.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 182.0 272.8 L 221.0 272.8 Q 231.0 272.8 231.0 282.8 L 231.0 510.8 Q 231.0 520.8 221.0 520.8 L 74.0 520.8 Q 64.0 520.8 64.0 510.8 L 64.0 350.3 Q 64.0 347.8 61.5 347.8 L 61.5 347.8 Q 59.0 347.8 61.5 347.8 L 76.0 347.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 219.0 347.8 L 234.0 347.8 Q 237.0 347.8 234.0 347.8 L 234.0 347.8 Q 231.0 347.8 231.0 350.8 L 231.0 510.8 Q 231.0 520.8 221.0 520.8 L 80.4 520.8 Q 70.4 520.8 70.4 510.8 L 70.4 414.0 Q 70.4 411.8 68.2 411.8 L 68.2 411.8 Q 66.0 411.8 68.2 411.8 L 83.0 411.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 212.0 411.8 L 227.0 411.8 Q 230.0 411.8 227.0 411.8 L 227.0 411.8 Q 224.0 411.8 224.0 414.8 L 224.0 510.8 Q 224.0 520.8 214.0 520.8 L 90.0 520.8 Q 80.0 520.8 80.0 510.8 L 80.0 483.8 Q 80.0 480.8 77.0 480.8 L 77.0 480.8 Q 74.0 480.8 77.0 480.8 L 91.0 480.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
 <path d="M 204.0 480.8 L 230.0 480.8 Q 240.0 480.8 240.0 470.8 L 240.0 310.8 Q 240.0 301.0 249.8 301.0 L 259.5 301.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
 <path d="M 331.5 324.0 L 331.5 341.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
-<path d="M 545.0 320.8 L 545.0 337.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
-<path d="M 545.0 384.8 L 545.0 401.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
-<path d="M 545.0 448.8 L 545.0 465.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 579.0 286.8 L 596.0 286.8 Q 606.0 286.8 606.0 276.8 L 606.0 220.0 Q 606.0 220.0 606.0 220.0 L 468.0 220.0 Q 458.0 220.0 458.0 230.0 L 458.0 360.8 Q 458.0 361.8 457.0 361.8 L 457.0 361.8 Q 456.0 361.8 457.0 361.8 L 473.0 361.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 474.0 361.8 L 459.0 361.8 Q 456.0 361.8 459.0 361.8 L 459.0 361.8 Q 462.0 361.8 462.0 364.8 L 462.0 538.8 Q 462.0 548.8 472.0 548.8 L 613.5 548.8 Q 623.5 548.8 623.5 538.8 L 623.5 435.1 Q 623.5 425.8 614.2 425.8 L 605.0 425.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
+<path d="M 604.0 425.8 L 613.8 425.8 Q 623.5 425.8 623.5 435.6 L 623.5 538.8 Q 623.5 548.8 613.5 548.8 L 472.0 548.8 Q 462.0 548.8 462.0 538.8 L 462.0 502.6 Q 462.0 501.8 461.2 501.8 L 461.2 501.8 Q 460.5 501.8 461.2 501.8 L 477.5 501.8" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
 <path d="M 611.5 501.8 L 620.5 501.8 Q 629.5 501.8 629.5 492.8 L 629.5 325.0 Q 629.5 315.0 639.5 315.0 L 653.0 315.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
 <path d="M 725.0 338.0 L 725.0 355.0" fill="none" stroke="#777B80" stroke-width="1.7" marker-end="url(#arrow-graphite-citrus)"/>
 </svg>

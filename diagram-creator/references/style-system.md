@@ -114,7 +114,7 @@ sizing:
 - Sequential groups preserve source order.
 - Parallel groups place their member nodes orthogonally in a compact cluster.
 - Content blocks are centered within the section's available width when the section is wider than its lanes.
-- Connections route around nodes and terminate at node boundaries.
+- Connections must avoid all node interiors and text, including source and target labels. They touch endpoint boundaries only at designated ports. Stroke width, rounded corners, and arrowheads must also clear obstacles.
 - Keep all nodes, node labels, lane labels, and annotations within their owning section panel.
 - In dense sections, prefer two-row or two-column arrangements that preserve alignment before widening the section.
 - Sections may exceed the target max width when required to keep owned content inside the panel.
@@ -139,6 +139,8 @@ sizing:
 - `status` nodes render as compact pills for outcomes such as `Allow` or `Deny`.
 - Arrowheads are always visible and terminate outside target shapes.
 - Edge labels are forbidden.
+
+Inspect the final SVG visually after renderer validation. Fix collisions through layout intent and regeneration, never by hiding edges behind nodes or manually patching SVG paths.
 
 ## Diagram PARC Pass
 

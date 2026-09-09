@@ -190,6 +190,8 @@ V1 rules:
 - `to`: required node id
 - `route`: optional enum: `direct`, `elbow`, `vertical`
 
+Route values express preferences, never permission to cross obstacles. Only terminal segments may traverse their own endpoint clearance zones. External labels remain obstacles.
+
 Edge labels are not supported.
 
 ## Annotation
@@ -220,6 +222,10 @@ Edge labels are not supported.
 - chart series must have equal lengths
 - chart `y_range.min` must be less than `chart.y_range.max`
 - diagram and section color schemes must be supported scheme names
+
+## Geometry validation
+
+Both validation and rendering check complete routes and final stroke, rounded-corner, and arrowhead geometry. Unsafe rounded corners become square corners. Unroutable connections fail before an output file is created or overwritten, with blocking geometry details. Adjust layout intent and regenerate; do not edit the SVG to bypass validation. Inspect the final SVG visually because text bounds are estimated rather than measured by a browser.
 
 ## Reference examples
 
