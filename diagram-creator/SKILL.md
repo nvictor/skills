@@ -11,6 +11,12 @@ Use this skill for diagrams whose layout carries meaning. This skill is not a ge
 2. a layout-intent spec
 3. a deterministic SVG
 
+## No-crossing rule
+
+Edges must not cross node interiors, labels, or annotations, including the source and target labels. Edges must not cross, touch, or overlap other edges except at an intentional shared node port. Shared ports do not permit shared line segments. They may touch their endpoint boundaries only at connection ports. Check the entire visible edge, including short terminal segments, bends, stroke width, and arrowheads.
+
+Treat crossings as a failed diagram, not a cosmetic issue. Inspect the rendered SVG visually; renderer validation alone does not prove collision-free output. If a crossing appears, adjust the JSON layout intent and regenerate. Preserve the connections and meaning, and keep unobstructed aligned flows straight. Do not hide crossings behind nodes, manually patch the SVG, or change the renderer to make an individual diagram pass. If a valid layout cannot be produced, report the blocking connection instead of presenting the diagram as finished.
+
 ## Decision rule
 
 Ask once: what layout makes the system relationship easiest to understand?
@@ -58,7 +64,8 @@ Use this state sequence: semantic model -> layout intent -> JSON spec -> rendere
    - Alignment: sections, lanes, node centers, labels, and routes follow a visible grid.
    - Repetition: repeated node roles, charts, panels, annotations, and connection styles use consistent treatment.
    - Contrast: title, sections, highlighted nodes, and normal nodes form a clear hierarchy within three seconds.
-7. Run a geometry sanity pass:
+7. Visually inspect the final SVG and run a geometry sanity pass:
+   - Trace every edge from source to target. No part crosses a node, label, or annotation. Compare every pair of edges for crossings, touching, or overlapping segments; only intentional shared node ports may meet.
    - Every edge has a visible arrowhead at the target.
    - Straight semantic edges stay straight when node centers align.
    - Single-path diagrams should keep node centers on one visible axis and avoid adding secondary lanes unless the separation carries meaning.
@@ -82,7 +89,7 @@ Renderer contract:
 Final response contract:
 
 - Return or reference the JSON spec and deterministic SVG according to the user's requested delivery format.
-- Include a compact validation note covering renderer validation and PARC review.
+- Include a compact validation note covering renderer validation, visual collision inspection, and PARC review. Only claim checks that were performed.
 - If a PARC issue shaped the layout, mention it briefly.
 
 ## Renderer
@@ -107,6 +114,16 @@ Render:
 ```bash
 python3 scripts/render_diagram.py examples/ecommerce-checkout-flow.json --output /tmp/ecommerce-checkout-flow.svg
 ```
+
+## Renderer regression tests
+
+When maintaining the renderer, run:
+
+```bash
+python3 -m unittest discover -s scripts -p 'test_*.py'
+```
+
+The collision tests in [scripts/test_render_diagram.py](scripts/test_render_diagram.py) exercise the existing renderer and report violations. They do not replace visual inspection of the final SVG or authorize renderer changes during diagram creation.
 
 ## References
 
