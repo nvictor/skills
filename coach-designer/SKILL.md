@@ -135,7 +135,9 @@ Use a bounded session loop:
 6. Require a revision, retry, transfer task, or concise reflection.
 7. Record progress and choose the next useful target.
 
-Adapt the loop when another sequence fits the skill better.
+Present one question or practice prompt at a time, then stop and wait for the learner’s answer. Assess the answer and give focused feedback before moving on. If a retry, revision, or reflection is needed, request it separately and wait again. Repeat until the session ends. Do not present batches of questions or bundle multiple questions into one prompt.
+
+Adapt the loop when another sequence fits the skill better, while preserving this turn-by-turn pacing.
 
 ### 4. Define progression, feedback, and continuity
 

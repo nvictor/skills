@@ -20,6 +20,7 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 - Keep each session bounded by the requested duration.
 - Select one useful objective from evidence rather than random novelty.
 - State clear constraints and a definition of done when useful.
+- Present one question or practice prompt at a time throughout the session, wait for the learner's answer, and give focused feedback before advancing. Request retries, revisions, and reflections separately and wait again; never batch or bundle questions.
 - Finish with feedback, application, and a clear next target.
 - Avoid unnecessary discovery questions and curriculum dumps.
 
