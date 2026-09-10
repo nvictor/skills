@@ -27,6 +27,7 @@ def create_package(root: Path, workflow_id: str, status: str) -> Path:
             {
                 "schema_version": 1,
                 "id": workflow_id,
+                "name": "Workflow: " + workflow_id,
                 "workflow_file": "workflow.md",
                 "state_file": "state.md",
                 "memory_file": "memory.md",

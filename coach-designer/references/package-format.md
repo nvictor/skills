@@ -40,7 +40,7 @@ Required shape:
 {
   "schema_version": 2,
   "id": "judgment-coach",
-  "name": "Judgment Coach",
+  "name": "Coach: Judgment",
   "status": "active",
   "version": 1,
   "runner_file": "runner.md",
@@ -74,7 +74,7 @@ Required shape:
 
 - `schema_version`: Use `2`.
 - `id`: Use lowercase ASCII letters, digits, and hyphens. Match the directory name.
-- `name`: Use the human-facing coach name.
+- `name`: Use `Coach: <subject>` with the exact prefix and one space, a nonempty subject, and no leading or trailing whitespace. Preserve subject capitalization and acronyms; omit a redundant trailing "Coach". This is the canonical display name for the package document and supported launcher labels. Keep ids and directories unchanged.
 - `status`: Use `draft`, `active`, `paused`, or `archived`. This describes intended source state and does not itself deploy anything.
 - `version`: Start at `1`. Increment when coaching behavior changes. Do not increment for state-only updates.
 - `runner_file`: Use a safe relative path, normally `runner.md`.
@@ -126,6 +126,8 @@ Make `runner.md` the portable entrypoint. It must:
 Keep the runner provider-neutral and identical across packages whenever the continuity contract is the same.
 
 ## `prompt.md`
+
+Use the exact manifest `name` as the first heading in `prompt.md`. Keep required section headings below it. For standalone definitions, use the same naming format.
 
 Make `prompt.md` the canonical behavioral instruction. It must:
 

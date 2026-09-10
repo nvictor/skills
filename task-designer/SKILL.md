@@ -9,6 +9,10 @@ description: Design, review, refine, migrate, package, run, and deploy portable 
 
 Design provider-neutral tasks whose behavior, effects, resources, and durable state survive changes of agent, machine, or scheduler. A task is one bounded, safely rerunnable operation. It may be invoked manually, scheduled, or both. Do not execute a task or create or change a live schedule unless the user explicitly authorizes that action.
 
+## Canonical naming
+
+Use manifest `name` as the source of truth for human-facing package names, with the format `Task: <subject>`. See `references/package-format.md` for field rules. Match the main document title and supported launcher display labels to that name. Preserve directory names, ids, slash-command identifiers, and historical records. When deployment changes are authorized, use the manifest name for the native display label without changing other deployment settings.
+
 ## Package ownership
 
 Own a package when its manifest contains `task_file`. This includes later requests to run, schedule, automate, pause, resume, or otherwise deploy that task package.

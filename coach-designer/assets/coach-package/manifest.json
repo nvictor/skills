@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "id": "{{coach-id}}",
-  "name": "{{Coach Name}}",
+  "name": "Coach: {{Subject}}",
   "status": "draft",
   "version": 1,
   "runner_file": "runner.md",

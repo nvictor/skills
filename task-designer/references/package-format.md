@@ -38,7 +38,7 @@ Create and refine packages with schema version 2. This manual package has no `sc
 {
   "schema_version": 2,
   "id": "repository-health",
-  "name": "Repository Health",
+  "name": "Task: Repository Health",
   "status": "active",
   "version": 1,
   "runner_file": "runner.md",
@@ -68,7 +68,7 @@ Create and refine packages with schema version 2. This manual package has no `sc
 
 - `schema_version`: Use `2` for new or refined packages. Schema v1 remains readable only for compatibility.
 - `id`: Use lowercase ASCII letters, digits, and single hyphens. Match the package directory.
-- `name`: Use the human-facing task name.
+- `name`: Use `Task: <subject>` with the exact prefix and one space, a nonempty subject, and no leading or trailing whitespace. Preserve subject capitalization and acronyms; omit a redundant trailing "Task". This is the canonical display name for the package document and supported launcher labels. Keep ids and directories unchanged.
 - `status`: Use `draft`, `active`, `paused`, or `archived`. This records source intent and does not deploy anything.
 - `version`: Start at `1`. Increment for behavior or execution-contract changes, not state-only updates or a behavior-preserving schema migration.
 - `runner_file`, `task_file`, and `state_file`: Use safe relative paths inside the package.
@@ -174,9 +174,13 @@ Keep the runner generic and identical across packages whenever this contract is 
 
 ## `task.md`
 
+Use the exact manifest `name` as the first heading in `task.md`. Keep required section headings below it. For standalone definitions, use the same naming format.
+
 For a new task, use these headings:
 
 ```markdown
+# Task: {{Subject}}
+
 # Purpose
 
 ## Inputs and prerequisites
@@ -286,6 +290,8 @@ Create this file only for migrations. Its schema remains version 1:
   "warnings": []
 }
 ```
+
+Preserve migration checksums when adding a canonical display title later. Validation accepts an added `# <manifest name>` heading and blank line only when the remaining bytes exactly match the recorded packaged checksum.
 
 Use a timezone-aware ISO 8601 timestamp. Select exactly one task source and at most one state source. Compute and record checksums and byte-only normalizations. Set all change flags accurately.
 

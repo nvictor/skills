@@ -96,7 +96,15 @@ def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) ->
         if package.name != coach_id:
             errors.append(f"Package directory '{package.name}' must match id '{coach_id}'.")
 
-    require(data, "name", str, errors)
+    name = require(data, "name", str, errors)
+    if name is not None and (
+        not name.startswith("Coach: ")
+        or not name[len("Coach: "):].strip()
+        or name != name.strip()
+        or name[len("Coach: "):] != name[len("Coach: "):].strip()
+        or "\n" in name or "\r" in name
+    ):
+        errors.append("name must use 'Coach: <subject>' with a nonempty, trimmed subject.")
     if data.get("status") not in {"draft", "active", "paused", "archived"}:
         errors.append("status must be draft, active, paused, or archived.")
     version = require(data, "version", int, errors)

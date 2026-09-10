@@ -17,6 +17,7 @@ STATUSES = {"draft", "in_progress", "paused", "blocked", "completed", "abandoned
 MANIFEST_KEYS = {
     "schema_version",
     "id",
+    "name",
     "workflow_file",
     "state_file",
     "memory_file",
@@ -166,6 +167,16 @@ def validate_manifest(
             errors.append(
                 f"Package directory '{package.name}' must match id '{workflow_id}'."
             )
+
+    name = require(data, "name", str, errors)
+    if name is not None and (
+        not name.startswith("Workflow: ")
+        or not name[len("Workflow: "):].strip()
+        or name != name.strip()
+        or name[len("Workflow: "):] != name[len("Workflow: "):].strip()
+        or "\n" in name or "\r" in name
+    ):
+        errors.append("name must use 'Workflow: <subject>' with a nonempty, trimmed subject.")
 
     for conflicting in ("task_file", "prompt_file"):
         if conflicting in data:

@@ -273,8 +273,14 @@ def validate_manifest(
             errors.append(f"Package directory '{package.name}' must match id '{task_id}'.")
 
     name = require(data, "name", str, errors)
-    if name is not None and not name.strip():
-        errors.append("name must not be empty.")
+    if name is not None and (
+        not name.startswith("Task: ")
+        or not name[len("Task: "):].strip()
+        or name != name.strip()
+        or name[len("Task: "):] != name[len("Task: "):].strip()
+        or "\n" in name or "\r" in name
+    ):
+        errors.append("name must use 'Task: <subject>' with a nonempty, trimmed subject.")
     if data.get("status") not in {"draft", "active", "paused", "archived"}:
         errors.append("status must be draft, active, paused, or archived.")
     version = require(data, "version", int, errors)
@@ -483,8 +489,21 @@ def validate_migration(
         errors.append("migration.json warnings must be a list of strings.")
 
     if task_path is not None and len(selected_task_sources) == 1:
-        if sha256(task_path) != selected_task_sources[0].get("packaged_task_sha256"):
-            errors.append("task.md checksum does not match the recorded packaged task checksum.")
+        recorded_hash = selected_task_sources[0].get("packaged_task_sha256")
+        if sha256(task_path) != recorded_hash:
+            # A later canonical title may precede an otherwise byte-identical migration.
+            manifest = read_json(package / "manifest.json", errors) or {}
+            name = manifest.get("name")
+            title = f"# {name}\n\n".encode("utf-8")
+            content = task_path.read_bytes()
+            title_only_change = (
+                isinstance(name, str)
+                and re.fullmatch(r"Task: \S(?:[^\r\n]*\S)?", name) is not None
+                and content.startswith(title)
+                and hashlib.sha256(content[len(title):]).hexdigest() == recorded_hash
+            )
+            if not title_only_change:
+                errors.append("task.md checksum does not match the recorded packaged task checksum.")
     if state_path is not None and data.get("state_changed") is False and len(selected_state_sources) == 1:
         if sha256(state_path) != selected_state_sources[0].get("state_sha256"):
             warnings.append("state.md has changed since the imported migration baseline, as expected after task runs.")

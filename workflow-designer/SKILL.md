@@ -11,6 +11,10 @@ Design provider-neutral workflow packages for finite objectives that require dep
 
 Use a user-chosen workflow root only as a deterministic discovery boundary. Do not maintain an active-workflow pointer. Target a package explicitly whenever more than one nonterminal workflow exists.
 
+## Canonical naming
+
+Use manifest `name` as the source of truth for human-facing package names, with the format `Workflow: <subject>`. See `references/package-format.md` for field rules. Match the main document title and supported launcher display labels to that name. Preserve directory names, ids, slash-command identifiers, and historical records. When deployment changes are authorized, use the manifest name for the native display label without changing other deployment settings.
+
 ## Package ownership
 
 Own a package when its manifest contains `workflow_file`. Use the manifest as the type discriminator:
@@ -266,7 +270,7 @@ Keep `runner.md` generic and identical across packages whenever the runtime cont
 
 ### Read-only operations
 
-For `workflow-list`, discover manifests containing `workflow_file` beneath the chosen root and report their relative paths, ids, and lifecycle statuses. Ignore coach and task packages.
+For `workflow-list`, discover manifests containing `workflow_file` beneath the chosen root and report their canonical names, relative paths, ids, and lifecycle statuses. Ignore coach and task packages.
 
 For `workflow-status`, `workflow-next`, and `workflow-summary`:
 
@@ -325,7 +329,7 @@ Do not execute domain work during conversion. Offer structural or behavioral imp
 - **Bind root:** Write and verify the workspace binding without changing any package.
 - **Refine:** Write and validate the package. Report behavior changes separately from state or memory changes.
 - **Review:** Return prioritized, evidence-backed findings without editing or running.
-- **`workflow-list`:** Report discovered workflow ids, relative paths, and lifecycle statuses without editing.
+- **`workflow-list`:** Report discovered workflow names, ids, relative paths, and lifecycle statuses without editing.
 - **`workflow-status`:** Report lifecycle status, current step, verified completed work, blockers, pending decisions, working artifacts, and remaining steps.
 - **`workflow-next`:** Report one next valid action, prerequisites, completion evidence, and blockers. Do not act.
 - **`workflow-summary`:** Return a compact derived handoff covering goal, position, progress, durable decisions, blockers, and next action.

@@ -1,3 +1,5 @@
+# Workflow: {{Subject}}
+
 # Goal
 
 {{State the finite objective and why it matters.}}

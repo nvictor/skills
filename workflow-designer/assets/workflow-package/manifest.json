@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "id": "{{workflow-id}}",
+  "name": "Workflow: {{Subject}}",
   "workflow_file": "workflow.md",
   "state_file": "state.md",
   "memory_file": "memory.md",

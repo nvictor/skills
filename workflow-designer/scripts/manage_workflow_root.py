@@ -173,6 +173,9 @@ def read_package(root: Path, package: Path) -> dict[str, str]:
         raise RegistryError(
             f"Workflow directory '{package.name}' does not match id '{workflow_id}'."
         )
+    name = manifest.get("name")
+    if not isinstance(name, str) or not re.fullmatch(r"Workflow: \S(?:[^\r\n]*\S)?", name):
+        raise RegistryError(f"Workflow manifest name must use 'Workflow: <subject>': {package}")
     for field in ("workflow_file", "memory_file", "runner_file"):
         safe_package_file(package, manifest.get(field), field)
     state_path = safe_package_file(package, manifest.get("state_file"), "state_file")
@@ -187,6 +190,7 @@ def read_package(root: Path, package: Path) -> dict[str, str]:
 
     return {
         "id": workflow_id,
+        "name": name,
         "path": package.relative_to(root).as_posix(),
         "status": match.group(1),
     }

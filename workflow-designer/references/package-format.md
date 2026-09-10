@@ -89,6 +89,7 @@ Use this required shape:
 {
   "schema_version": 1,
   "id": "build-notation-parser",
+  "name": "Workflow: Build Notation Parser",
   "workflow_file": "workflow.md",
   "state_file": "state.md",
   "memory_file": "memory.md",
@@ -101,6 +102,7 @@ Apply these rules:
 - Use `schema_version: 1`.
 - Use lowercase ASCII letters, digits, and single hyphens for `id`.
 - Match `id` to the package directory name.
+- `name`: Use `Workflow: <subject>` with the exact prefix and one space, a nonempty subject, and no leading or trailing whitespace. Preserve subject capitalization and acronyms; omit a redundant trailing "Workflow". This is the canonical display name for the package document and supported launcher labels. Keep ids and directories unchanged.
 - Use safe relative paths inside the package for every file field.
 - Use `workflow_file` as the package type discriminator.
 - Keep lifecycle status in `state.md`.
@@ -112,9 +114,13 @@ Treat unknown manifest fields as noncanonical extensions. Preserve them during r
 
 ## `workflow.md`
 
+Use the exact manifest `name` as the first heading in `workflow.md`. Keep required section headings below it. For standalone definitions, use the same naming format.
+
 Make `workflow.md` the durable, provider-neutral procedure. For a new workflow, use these headings:
 
 ```markdown
+# Workflow: {{Subject}}
+
 # Goal
 
 ## Completion criteria
@@ -259,7 +265,7 @@ Keep the runner identical across packages whenever this contract is unchanged. P
 
 ### `workflow-list`
 
-Discover manifests containing `workflow_file` beneath the chosen root and report each workflow's id, relative path, and lifecycle status. Ignore coach and task manifests. Report invalid workflow packages without modifying them.
+Discover manifests containing `workflow_file` beneath the chosen root and report each workflow's name, id, relative path, and lifecycle status. Ignore coach and task manifests. Report invalid workflow packages without modifying them.
 
 ### `workflow-status`
 

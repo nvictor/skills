@@ -9,6 +9,10 @@ description: Design, review, refine, package, run, and deploy portable long-runn
 
 Design learning systems that produce durable changes in what a learner can do. Author portable coach packages whose behavior, schedule, and canonical state can survive a change of AI agent or scheduler. Do not teach the requested subject or deploy a scheduled task unless the user explicitly asks.
 
+## Canonical naming
+
+Use manifest `name` as the source of truth for human-facing package names, with the format `Coach: <subject>`. See `references/package-format.md` for field rules. Match the main document title and supported launcher display labels to that name. Preserve directory names, ids, slash-command identifiers, and historical records. When deployment changes are authorized, use the manifest name for the native display label without changing other deployment settings.
+
 ## Package ownership
 
 Own a package when its manifest contains `prompt_file`. This includes later requests to run, schedule, automate, pause, resume, or otherwise deploy that coach package. Do not invoke the task designer for a coach-package automation.
