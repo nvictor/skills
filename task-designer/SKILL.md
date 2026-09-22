@@ -19,9 +19,12 @@ Own a package when its manifest contains `task_file`. This includes later reques
 
 When the package type is unknown, inspect its manifest:
 
+- `conversation_file` identifies an ongoing inquiry; use the conversation designer.
 - `task_file` identifies a task package; continue with this skill.
 - `workflow_file` identifies a finite multi-stage workflow; use the workflow designer.
 - `prompt_file` identifies a coach package; use the coach designer.
+
+Report conflicting discriminators instead of choosing silently.
 
 ## Select the operation
 

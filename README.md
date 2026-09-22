@@ -16,6 +16,7 @@ agent-specific skill directories for Codex, Copilot, Gemini, and Claude Code:
   into behavioral, technical, leadership, resume, and promotion narratives.
 - `clear-language`: writes documentation, error messages, API responses,
   commit messages, comments, and README files using plain language principles.
+- `conversation-designer`: creates and resumes portable ongoing inquiries with durable state, attributed hypotheses, and unresolved threads.
 - `coach-designer`: designs long-running AI coaches built around deliberate
   practice, feedback, reflection, adaptation, and progress tracking.
 - `diagram-creator`: creates deterministic SVG architecture, workflow, and

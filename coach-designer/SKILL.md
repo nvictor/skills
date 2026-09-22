@@ -19,8 +19,11 @@ Own a package when its manifest contains `prompt_file`. This includes later requ
 
 When the target package type is unknown, inspect its manifest before selecting a workflow:
 
+- `conversation_file` identifies an ongoing inquiry; use the conversation designer.
 - `prompt_file` identifies a coach package; continue with this skill.
 - `task_file` identifies a task package; use the task designer instead.
+
+Report conflicting discriminators instead of choosing silently.
 
 ## Select the operation
 

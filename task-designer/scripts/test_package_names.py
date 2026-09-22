@@ -11,7 +11,7 @@ from validate_task_package import validate_manifest, validate_migration
 
 
 class PackageNameTests(unittest.TestCase):
-    def errors_for(self, name, missing=False):
+    def errors_for(self, name, missing=False, extra=None):
         with tempfile.TemporaryDirectory() as directory:
             package = Path(directory) / "example"
             template = Path(__file__).resolve().parents[1] / "assets/task-package"
@@ -22,6 +22,7 @@ class PackageNameTests(unittest.TestCase):
                 manifest.pop("name")
             else:
                 manifest["name"] = name
+            manifest.update(extra or {})
             errors = []
             validate_manifest(package, manifest, [], errors)
             return errors
@@ -39,6 +40,10 @@ class PackageNameTests(unittest.TestCase):
                 errors = self.errors_for(name)
                 self.assertTrue(errors)
                 self.assertTrue(all(error.startswith("name ") for error in errors), errors)
+
+    def test_rejects_conversation_discriminator(self):
+        errors = self.errors_for("Task: Example", extra={"conversation_file": "conversation.md"})
+        self.assertTrue(any("discriminator" in error for error in errors), errors)
 
     def test_requires_name(self):
         self.assertEqual(["name must be str."], self.errors_for(None, missing=True))

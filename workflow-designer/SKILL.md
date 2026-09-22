@@ -19,6 +19,7 @@ Use manifest `name` as the source of truth for human-facing package names, with 
 
 Own a package when its manifest contains `workflow_file`. Use the manifest as the type discriminator:
 
+- `conversation_file` identifies an ongoing inquiry; use the conversation designer.
 - `workflow_file` identifies a finite workflow package; continue with this skill.
 - `task_file` identifies a bounded, rerunnable task package; use the task designer.
 - `prompt_file` identifies a coach package; use the coach designer.

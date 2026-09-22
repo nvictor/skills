@@ -111,6 +111,10 @@ def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) ->
     if version is not None and version < 1:
         errors.append("version must be at least 1.")
 
+    for discriminator in ('task_file', 'workflow_file', 'conversation_file'):
+        if discriminator in data:
+            errors.append(f"Conflicting package discriminator: {discriminator}")
+
     runner_path = safe_relative_file(package, data.get("runner_file"), "runner_file", errors)
     prompt_path = safe_relative_file(package, data.get("prompt_file"), "prompt_file", errors)
     state_path = safe_relative_file(package, data.get("state_file"), "state_file", errors)

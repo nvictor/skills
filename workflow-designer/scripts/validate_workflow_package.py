@@ -178,7 +178,7 @@ def validate_manifest(
     ):
         errors.append("name must use 'Workflow: <subject>' with a nonempty, trimmed subject.")
 
-    for conflicting in ("task_file", "prompt_file"):
+    for conflicting in ("task_file", "prompt_file", "conversation_file"):
         if conflicting in data:
             errors.append(
                 f"manifest.json contains conflicting package discriminator: {conflicting}"
