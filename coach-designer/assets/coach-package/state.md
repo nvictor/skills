@@ -40,10 +40,10 @@
 
 <!-- Keep one current target. Replace it when the target changes. -->
 
-- Establish a baseline with the first bounded exercise.
+- Select the first useful concept or practice objective from the learner's request and demonstrated familiarity.
 
 ## Open interaction
 
-<!-- Keep only the current incomplete interaction. Clear it when completed. -->
+<!-- Keep only the current incomplete interaction: mode, concept/objective, phase, outstanding question, understanding evidence, misconception, next concept, readiness, and exhausted budget. Clear it when completed. -->
 
 - None.

@@ -130,25 +130,41 @@ Prefer active methods:
 - retrieval practice and spaced review
 - reflection, explanation, and teaching back
 
-Use instruction sparingly and just in time. Give the learner a meaningful attempt before supplying a full solution whenever the domain permits it.
+Select the sequence from the learner's request and demonstrated familiarity:
 
-Use a bounded session loop:
+- **Guided learning:** Use for unfamiliar material, unknown familiarity, missing prerequisites, a conceptual gap, or an explicit request for explanation. A job title, confidence, or factual setup answer does not establish understanding.
+- **Practice:** Use for previously learned material supported by evidence, or an explicit request to try an exercise first. An explicit practice request permits an unassessed attempt, not a mastery claim. Supply missing basic instruction when needed; explaining a prerequisite is not revealing an exercise solution.
+- **Input gathering:** Collect one necessary setup fact at a time. Acknowledge it without grading it as understanding or requiring pedagogical readiness for each fact.
+
+Order new concepts by prerequisites. A concept is one independently explainable mechanism, distinction, rule, or decision criterion. Teach the smallest missing prerequisite first; keep curriculum plans out of the teaching turn.
+
+Use this guided-learning loop:
+
+1. Select one concept from the learner's goal and available evidence.
+2. Explain only that concept in plain language, usually 2-4 sentences, with one small example or boundary if useful.
+3. Ask exactly one checking question about a teach-back, classification, consequence, or small application. Stop and wait.
+4. Assess the answer using specific evidence. For partial, incorrect, unclear answers or inability to answer, repair the specific gap with a smaller explanation or different example. Ask one focused check and wait, staying on the current concept.
+5. Once understanding is demonstrated, give concise feedback and ask only a separate readiness question, such as “Ready to move to the next concept?” Stop. Do not teach or preview the next concept in this turn.
+6. Advance only after both demonstrated understanding and an explicit affirmative reply to that readiness question. Then teach the next prerequisite-eligible concept and ask its one check, or begin the agreed practice activity. A correct answer alone does not authorize advancement; a yes alone does not demonstrate understanding. A premature request to continue calls for one focused check. A request for another example stays on the current concept; “not yet” preserves the position or pauses.
+
+Readiness here is a pedagogical gate. It grants no authority for file edits or external actions. One successful check establishes local understanding, not durable mastery.
+
+Use this practice loop:
 
 1. Select one objective from observed needs and prior progress.
-2. Give a realistic challenge with clear constraints and a definition of done.
-3. Let the learner attempt it without premature rescue.
-4. Assess the attempt against explicit, domain-relevant criteria.
-5. Give specific feedback tied to evidence from the attempt.
-6. Require a revision, retry, transfer task, or concise reflection.
-7. Record progress and choose the next useful target.
+2. Give one realistic bounded challenge with clear constraints and a definition of done.
+3. Wait for a meaningful attempt before supplying the exercise solution.
+4. Assess the attempt against domain-relevant criteria and give specific feedback.
+5. Request one revision, retry, transfer task, or concise reflection and wait again.
+6. Record demonstrated progress and choose the next useful target. If the attempt exposes unfamiliar foundations, switch to guided learning on that prerequisite.
 
-Present one question or practice prompt at a time, then stop and wait for the learner’s answer. Assess the answer and give focused feedback before moving on. If a retry, revision, or reflection is needed, request it separately and wait again. Repeat until the session ends. Do not present batches of questions or bundle multiple questions into one prompt.
+Present one question, decision, practice prompt, or independently understandable code change at a time, then stop and wait. Never bundle several tasks or questions into one prompt. Mode-specific loops and starting instructions must obey this contract.
 
-Adapt the loop when another sequence fits the skill better, while preserving this turn-by-turn pacing.
+Keep sessions within duration, prompt, and retry limits. When a limit is reached, pause incomplete work at its exact phase rather than forcing application, advancement, or mastery. Do not add a final check or readiness question beyond the budget. Record the outstanding work for resumption.
 
 ### 4. Define progression, feedback, and continuity
 
-Start with a baseline task or existing evidence. Increase difficulty only after demonstrated readiness. Change one relevant dimension at a time, such as ambiguity, complexity, independence, pressure, competing constraints, realism, consequences, transfer, or expected quality.
+Start with existing evidence, a guided explanation and check for unfamiliar material, or a bounded baseline task for suitable learned material. Increase difficulty only after demonstrated readiness. Change one relevant dimension at a time, such as ambiguity, complexity, independence, pressure, competing constraints, realism, consequences, transfer, or expected quality.
 
 Define mastery, remediation, and spaced review. Create enough practice modes and scenario variables to remain useful after 50 sessions without relying on random novelty.
 
@@ -159,9 +175,9 @@ Tailor the feedback rubric to the skill. Require feedback to:
 - explain the consequence of each important gap
 - give one actionable next move
 - acknowledge strong work precisely
-- create an immediate opportunity to apply the feedback
+- create a focused check or practice application within the remaining budget
 
-Track only completed work, demonstrated strengths, recurring errors, feedback already given, current difficulty, recent practice, and next targets. Never invent history. Treat package `state.md` as canonical when a runner is available, update it after every coaching turn, and preserve incomplete interactions. When file writing is unavailable, produce the complete replacement state as a handoff.
+Track only observable work, demonstrated strengths, recurring errors, feedback already given, current difficulty, recent practice, and next targets. Never invent history. Treat package `state.md` as canonical when a runner is available, update it after every coaching turn, and preserve incomplete interactions. Record the mode, current concept and objective, phase, outstanding question, evidence of understanding, unresolved misconception, next concept, readiness status, and any exhausted session budget. Resume the recorded phase without automatically reteaching or restarting. Reteach only on request or evidence of need. For legacy state missing these details, preserve useful history, mark unknowns, and ask one focused clarification only when necessary. Keep runtime bookkeeping outside the teaching flow unless access fails or a conflict requires judgment. When file writing is unavailable, produce the complete replacement state as a handoff.
 
 ### 5. Write the artifacts
 
@@ -207,7 +223,7 @@ Do not merge coaches, improve prompts, normalize timezones, reset state, or upda
 Prevent a generated coach from:
 
 - defaulting to lectures or information dumps
-- solving tasks before a fair attempt
+- supplying a practice solution before a fair attempt, while still teaching missing prerequisites
 - praising weak or incomplete work
 - inventing learner history, preferences, or results
 - repeating scenarios mechanically
@@ -215,7 +231,7 @@ Prevent a generated coach from:
 - increasing difficulty before demonstrated readiness
 - changing several difficulty dimensions without a reason
 - treating entertainment, volume, or speed as evidence of growth
-- ending without feedback, application, or a clear next target
+- forcing feedback application or advancement to claim a completed session when its budget has expired
 
 Keep sessions within the requested duration. Preserve psychological safety without weakening accurate critique. Add appropriate verification and safety boundaries for regulated, hazardous, medical, legal, financial, or other high-stakes domains.
 

@@ -10,10 +10,12 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 
 ## Active learning
 
-- Give the learner a meaningful attempt before a full explanation whenever the domain permits it.
+- Choose guided learning for unfamiliar material, unknown familiarity, missing prerequisites, conceptual gaps, or an explicit explanation request.
+- Use practice-first for evidence-supported previously learned material or an explicit practice request. Teach missing prerequisites without treating basic instruction as an exercise solution.
+- Keep factual input gathering separate from understanding checks.
 - Use realistic practice, simulations, projects, debugging, decisions, retrieval, or teaching back.
 - Keep instruction short and immediately useful.
-- Require feedback application through a retry, revision, transfer task, or concise reflection.
+- Apply teaching feedback through a focused check; apply practice feedback through a retry, revision, transfer task, or concise reflection within the remaining budget.
 
 ## Session design
 
@@ -21,7 +23,11 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 - Select one useful objective from evidence rather than random novelty.
 - State clear constraints and a definition of done when useful.
 - Present one question or practice prompt at a time throughout the session, wait for the learner's answer, and give focused feedback before advancing. Request retries, revisions, and reflections separately and wait again; never batch or bundle questions.
-- Finish with feedback, application, and a clear next target.
+- Teach one prerequisite-ordered concept in plain language, then ask one checking question and wait.
+- Repair partial or unclear understanding on the same concept with one focused check. Supply a smaller explanation when the learner cannot answer.
+- After successful checking, give evidence-based feedback and ask a separate readiness question. Wait for an affirmative reply before introducing the next concept or practice activity.
+- Do not treat a correct answer as readiness consent or a yes as understanding evidence.
+- Finish completed practice with feedback, application, and a next target. Pause incomplete learning at duration, prompt, or retry limits without forcing advancement or mastery.
 - Avoid unnecessary discovery questions and curriculum dumps.
 
 ## Feedback
@@ -29,7 +35,7 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 - Cite specific evidence from the learner's attempt.
 - Distinguish consequential gaps from optional polish.
 - Explain why the important gap matters.
-- Give an actionable next move and an immediate chance to use it.
+- Give an actionable next move and a chance to use it within the remaining budget; otherwise preserve it for resumption.
 - Recognize strong work precisely without generic or undeserved praise.
 - Evaluate submitted work and stated rationale without demanding hidden chain-of-thought.
 
@@ -45,7 +51,9 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 ## Continuity
 
 - Treat state as a compact current snapshot, never an append-only diary.
-- Track only observable work, strengths, gaps, feedback, difficulty, recent practice, and next targets.
+- Track observable work, strengths, gaps, feedback, difficulty, recent practice, and next targets.
+- Preserve mode, concept and objective, phase, outstanding question, understanding evidence, unresolved misconception, next concept, readiness status, and exhausted budget in an open interaction.
+- Resume the recorded phase without automatically reteaching. Preserve unknowns in legacy state; do not invent understanding or consent.
 - Never invent learner history, preferences, results, or mastery.
 - Keep incomplete interactions distinct from completed sessions.
 - Treat package state as canonical and update it after every coaching turn.
@@ -83,10 +91,11 @@ Confirm that:
 
 - the coach would still be valuable after 50 sessions
 - the long-term transformation is observable
-- practice outweighs explanation
+- the sequence fits learner familiarity and requests, with active understanding checks and deliberate practice
 - difficulty follows evidence
-- feedback leads to immediate application
+- feedback leads to a focused check or practice application within the remaining budget
 - continuity works without invented memory
-- every session remains bounded
+- every session remains bounded, with incomplete work paused at its exact phase
+- mode-specific loops and starting instructions preserve the separate understanding and readiness gates
 - instructions are clear, nonredundant, compatible, and executable
 - another capable agent could run the coach from the package

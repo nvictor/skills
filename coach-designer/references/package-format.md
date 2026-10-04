@@ -112,7 +112,8 @@ Make `runner.md` the portable entrypoint. It must:
 - resolve `manifest.json`, `prompt.md`, and `state.md` from the package root supplied by the launcher or current working directory
 - read the manifest, behavioral prompt, and canonical state before coaching
 - treat `prompt.md` as behavior and `state.md` as the cross-agent continuity authority
-- update state after every coaching turn, recording an open interaction when the session is incomplete
+- resume an open interaction from its recorded phase without automatically reteaching; use evidence or a focused clarification when legacy state lacks teaching details
+- update state after every coaching turn, recording mode, concept/objective, phase, outstanding question, understanding evidence, unresolved misconception, next concept, readiness, and exhausted budget when the interaction is incomplete
 - reread state immediately before writing and merge newer evidence rather than overwrite it
 - treat state as a compact current snapshot, never an append-only diary
 - retain at most ten completed-session entries, newest first, and preserve those recent entries verbatim
@@ -135,6 +136,11 @@ Make `prompt.md` the canonical behavioral instruction. It must:
 - be self-contained enough to paste into a capable AI agent
 - use “session” rather than scheduler-specific language
 - describe how to use available progress state without assuming proprietary memory
+- select guided learning, practice, or factual input gathering from learner requests and demonstrated familiarity
+- teach one prerequisite-ordered concept and ask one checking question; repair gaps on the same concept
+- after demonstrated understanding, ask a separate readiness question and wait for an explicit affirmative reply before new material or a new practice activity
+- preserve these gates in every mode and starting instruction; pedagogical readiness grants no authority for external actions
+- pause at session limits without forcing mastery or advancement, and resume the saved phase
 - contain only learner context that materially improves coaching
 - exclude schedule syntax, model selection, notifications, project IDs, and machine-specific paths
 
@@ -187,11 +193,11 @@ Use this structure for new packages:
 
 <!-- Keep one current target. Replace it when the target changes. -->
 
-- Establish a baseline with the first bounded exercise.
+- Select the first useful concept or practice objective from the learner's request and demonstrated familiarity.
 
 ## Open interaction
 
-<!-- Keep only the current incomplete interaction. Clear it when completed. -->
+<!-- Keep only the current incomplete interaction: mode, concept/objective, phase, outstanding question, understanding evidence, misconception, next concept, readiness, and exhausted budget. Clear it when completed. -->
 
 - None.
 ```
@@ -203,6 +209,10 @@ Treat this file as mutable canonical state. Treat state as a compact current sna
 - Retain at most ten completed-session entries, newest first, and preserve those recent entries verbatim.
 - Compact older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples.
 - Replace stale or superseded statements instead of appending another event.
+
+Keep teaching position inside `Open interaction`; no new manifest schema is required. Useful phases are `teaching`, `awaiting_check`, `remediation`, `awaiting_readiness`, and `practice`. Record unknown evidence or readiness as unknown, never as success or consent. Resume an outstanding check, repair, readiness question, or practice attempt without automatically restarting instruction. Reteach only when requested or justified by evidence. A budget pause is distinct from concept completion.
+
+Existing states without these details remain compatible. Preserve useful history and derive only what evidence supports; ask one focused clarification if needed. Do not reset learner progress to populate new fields.
 
 During migration, preserve the entire existing state. If it does not match the standard headings, keep it intact and let the validator report a warning. Normalize it only in a separate refinement that demonstrably retains all useful evidence.
 
