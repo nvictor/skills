@@ -178,6 +178,11 @@ For packages, write the manifest, runner, prompt, and state according to `refere
 
 ## Preservation-first migration
 
+For the one-time update from the legacy teaching protocol to the four teaching
+guarantees, read [scripts/migrations/README.md](scripts/migrations/README.md).
+This is a behavioral refinement of existing packages, separate from the
+preservation migration below. Do not run it during ordinary coach operations.
+
 Perform migration and improvement as separate passes.
 
 During migration:
