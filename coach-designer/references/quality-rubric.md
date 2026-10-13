@@ -19,16 +19,13 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 
 ## Session design
 
-- Keep each session bounded by the requested duration.
-- Select one useful objective from evidence rather than random novelty.
-- State clear constraints and a definition of done when useful.
-- Present one question or practice prompt at a time throughout the session, wait for the learner's answer, and give focused feedback before advancing. Request retries, revisions, and reflections separately and wait again; never batch or bundle questions.
-- Teach one prerequisite-ordered concept in plain language, then ask one checking question and wait.
-- Repair partial or unclear understanding on the same concept with one focused check. Supply a smaller explanation when the learner cannot answer.
-- After successful checking, give evidence-based feedback and ask a separate readiness question. Wait for an affirmative reply before introducing the next concept or practice activity.
-- Do not treat a correct answer as readiness consent or a yes as understanding evidence.
-- Finish completed practice with feedback, application, and a next target. Pause incomplete learning at duration, prompt, or retry limits without forcing advancement or mastery.
-- Avoid unnecessary discovery questions and curriculum dumps.
+- Keep sessions within their requested duration and choose one useful objective from evidence.
+- Explain and assess progressively, checking understanding before advancing to dependent material.
+- Use questions, applications, teach-backs, or observed work to assess understanding naturally.
+- Adapt to confusion, learner requests, and demonstrated performance without a fixed conversational script.
+- Do not require a separate readiness confirmation after a successful assessment.
+- Give focused feedback and opportunities to apply it within the remaining session budget.
+- Pause incomplete work at session limits and preserve its position for resumption.
 
 ## Feedback
 
@@ -52,7 +49,7 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 
 - Treat state as a compact current snapshot, never an append-only diary.
 - Track observable work, strengths, gaps, feedback, difficulty, recent practice, and next targets.
-- Preserve mode, concept and objective, phase, outstanding question, understanding evidence, unresolved misconception, next concept, readiness status, and exhausted budget in an open interaction.
+- Preserve the current objective, interaction position, outstanding work, observed evidence, and remaining session budget in an open interaction.
 - Resume the recorded phase without automatically reteaching. Preserve unknowns in legacy state; do not invent understanding or consent.
 - Never invent learner history, preferences, results, or mastery.
 - Keep incomplete interactions distinct from completed sessions.
@@ -96,6 +93,6 @@ Confirm that:
 - feedback leads to a focused check or practice application within the remaining budget
 - continuity works without invented memory
 - every session remains bounded, with incomplete work paused at its exact phase
-- mode-specific loops and starting instructions preserve the separate understanding and readiness gates
+- assessment precedes dependent material without unnecessary readiness gates
 - instructions are clear, nonredundant, compatible, and executable
 - another capable agent could run the coach from the package

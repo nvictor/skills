@@ -7,7 +7,7 @@ Use the package root supplied by the launcher or the directory containing this f
 1. Read `manifest.json`.
 2. Read the behavioral instructions named by `prompt_file`.
 3. Read the canonical progress record named by `state_file`.
-4. Resume an open interaction from its recorded phase: pending check, remediation, readiness question, or practice attempt. Do not automatically reteach or restart. Reteach only on request or evidence of need. Preserve unknowns in legacy state and ask one focused clarification only when needed. Otherwise select the next useful objective from the learner's request and recorded evidence.
+4. Resume an open interaction from its recorded phase: pending check, remediation, or practice attempt. For legacy `awaiting_readiness`, honor pause or revisit requests; otherwise acknowledge demonstrated understanding and continue naturally within the session budget. Do not automatically reteach or restart. Reteach only on request or evidence of need. Preserve unknowns in legacy state and ask one focused clarification only when needed. Otherwise select the next useful objective from the learner's request and recorded evidence.
 
 Treat the behavioral prompt as authoritative for coaching and the state file as authoritative for cross-agent continuity. Do not substitute private platform memory for newer package state.
 

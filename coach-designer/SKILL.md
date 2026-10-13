@@ -1,5 +1,7 @@
 ---
 name: coach-designer
+metadata:
+  version: "2.0.0"
 description: Design, review, refine, package, run, and deploy portable long-running AI coaches that build durable skills through deliberate practice, feedback, adaptive difficulty, and progress tracking. Use for coach packages, including creating or improving a coach, converting prompts or scheduled coaches into agent-neutral packages, producing a standalone coach prompt, or adding an automation whose target package manifest contains `prompt_file`. Coach-package automations remain owned by this skill; do not route them through the generic task designer.
 ---
 
@@ -114,53 +116,26 @@ Keep schedule and deployment metadata out of the behavioral prompt. Put them in 
 
 ### 3. Design the learning system
 
-Define an observable long-term outcome, using this horizon when appropriate:
+Define an observable long-term outcome, such as what the learner should be able to do after approximately 100 sessions, and the fewest competencies needed to reach it. Design meaningful practice, feedback, assessment, and progression around that outcome. Use deliberate practice, simulations, projects, critique and revision, retrieval, reflection, or teaching back as appropriate. Wait for a meaningful practice attempt before supplying its solution, while teaching missing prerequisites when needed.
 
-> After approximately 100 sessions, the learner should be able to...
+#### Teaching approach
 
-Decompose it into the fewest useful competencies, decisions, habits, and performance standards. Make later design choices support that transformation.
+Teach progressively, adapting to the learner's goals, prior knowledge, and demonstrated understanding.
 
-Prefer active methods:
+- Introduce concepts in a sensible prerequisite order.
+- Explain clearly, with examples when useful.
+- Check understanding before advancing to material that depends on it. Use questions, applications, teach-backs, or observed work as appropriate.
+- Adapt explanations and practice when the learner struggles. Do not mistake a correct guess for durable mastery.
+- Favor deliberate practice, evidence-based feedback, and opportunities to improve.
+- Increase difficulty when performance supports it.
+- Keep the conversation natural. Do not require fixed sentence counts, a checking question after every explanation, or a separate readiness confirmation after every successful assessment.
+- Respect requests to pause, slow down, practice more, or revisit a concept.
 
-- deliberate practice and focused drills
-- simulations, role play, and realistic scenarios
-- projects, experiments, debugging, or design work
-- critique, revision, and immediate retry
-- case analysis and decisions under constraints
-- retrieval practice and spaced review
-- reflection, explanation, and teaching back
+Use judgment to decide when to explain, assess, practice, or continue. Avoid unnecessary confirmation questions and artificial transitions. Keep each session within its limits; preserve unfinished work for resumption.
 
-Select the sequence from the learner's request and demonstrated familiarity:
+Choose guided explanation for unfamiliar material and practice for previously learned material or explicit practice requests. Collect necessary setup facts without treating them as tests. Let the agent adapt the teaching sequence instead of imposing a fixed conversational protocol.
 
-- **Guided learning:** Use for unfamiliar material, unknown familiarity, missing prerequisites, a conceptual gap, or an explicit request for explanation. A job title, confidence, or factual setup answer does not establish understanding.
-- **Practice:** Use for previously learned material supported by evidence, or an explicit request to try an exercise first. An explicit practice request permits an unassessed attempt, not a mastery claim. Supply missing basic instruction when needed; explaining a prerequisite is not revealing an exercise solution.
-- **Input gathering:** Collect one necessary setup fact at a time. Acknowledge it without grading it as understanding or requiring pedagogical readiness for each fact.
-
-Order new concepts by prerequisites. A concept is one independently explainable mechanism, distinction, rule, or decision criterion. Teach the smallest missing prerequisite first; keep curriculum plans out of the teaching turn.
-
-Use this guided-learning loop:
-
-1. Select one concept from the learner's goal and available evidence.
-2. Explain only that concept in plain language, usually 2-4 sentences, with one small example or boundary if useful.
-3. Ask exactly one checking question about a teach-back, classification, consequence, or small application. Stop and wait.
-4. Assess the answer using specific evidence. For partial, incorrect, unclear answers or inability to answer, repair the specific gap with a smaller explanation or different example. Ask one focused check and wait, staying on the current concept.
-5. Once understanding is demonstrated, give concise feedback and ask only a separate readiness question, such as “Ready to move to the next concept?” Stop. Do not teach or preview the next concept in this turn.
-6. Advance only after both demonstrated understanding and an explicit affirmative reply to that readiness question. Then teach the next prerequisite-eligible concept and ask its one check, or begin the agreed practice activity. A correct answer alone does not authorize advancement; a yes alone does not demonstrate understanding. A premature request to continue calls for one focused check. A request for another example stays on the current concept; “not yet” preserves the position or pauses.
-
-Readiness here is a pedagogical gate. It grants no authority for file edits or external actions. One successful check establishes local understanding, not durable mastery.
-
-Use this practice loop:
-
-1. Select one objective from observed needs and prior progress.
-2. Give one realistic bounded challenge with clear constraints and a definition of done.
-3. Wait for a meaningful attempt before supplying the exercise solution.
-4. Assess the attempt against domain-relevant criteria and give specific feedback.
-5. Request one revision, retry, transfer task, or concise reflection and wait again.
-6. Record demonstrated progress and choose the next useful target. If the attempt exposes unfamiliar foundations, switch to guided learning on that prerequisite.
-
-Present one question, decision, practice prompt, or independently understandable code change at a time, then stop and wait. Never bundle several tasks or questions into one prompt. Mode-specific loops and starting instructions must obey this contract.
-
-Keep sessions within duration, prompt, and retry limits. When a limit is reached, pause incomplete work at its exact phase rather than forcing application, advancement, or mastery. Do not add a final check or readiness question beyond the budget. Record the outstanding work for resumption.
+Legacy interaction phases remain valid. Resume pending checks, remediation, or practice from recorded evidence without restarting. For `awaiting_readiness`, honor a pause or revisit request; otherwise acknowledge demonstrated understanding and continue naturally within the session budget. Unknown understanding remains unknown and must be assessed before dependent material. Preserve existing state fields and useful history; no state conversion is required.
 
 ### 4. Define progression, feedback, and continuity
 
@@ -177,7 +152,7 @@ Tailor the feedback rubric to the skill. Require feedback to:
 - acknowledge strong work precisely
 - create a focused check or practice application within the remaining budget
 
-Track only observable work, demonstrated strengths, recurring errors, feedback already given, current difficulty, recent practice, and next targets. Never invent history. Treat package `state.md` as canonical when a runner is available, update it after every coaching turn, and preserve incomplete interactions. Record the mode, current concept and objective, phase, outstanding question, evidence of understanding, unresolved misconception, next concept, readiness status, and any exhausted session budget. Resume the recorded phase without automatically reteaching or restarting. Reteach only on request or evidence of need. For legacy state missing these details, preserve useful history, mark unknowns, and ask one focused clarification only when necessary. Keep runtime bookkeeping outside the teaching flow unless access fails or a conflict requires judgment. When file writing is unavailable, produce the complete replacement state as a handoff.
+Track only observable work, demonstrated strengths, recurring errors, feedback already given, current difficulty, recent practice, and next targets. Never invent history. Treat package `state.md` as canonical when a runner is available, update it after every coaching turn, and preserve incomplete interactions. Record the current objective, interaction position, outstanding work, observed evidence, and any exhausted session budget. Resume unfinished work naturally without automatically reteaching or restarting. Reteach only on request or evidence of need. For legacy state missing these details, preserve useful history, mark unknowns, and ask one focused clarification only when necessary. Keep runtime bookkeeping outside the teaching flow unless access fails or a conflict requires judgment. When file writing is unavailable, produce the complete replacement state as a handoff.
 
 ### 5. Write the artifacts
 

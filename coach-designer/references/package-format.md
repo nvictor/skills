@@ -113,7 +113,7 @@ Make `runner.md` the portable entrypoint. It must:
 - read the manifest, behavioral prompt, and canonical state before coaching
 - treat `prompt.md` as behavior and `state.md` as the cross-agent continuity authority
 - resume an open interaction from its recorded phase without automatically reteaching; use evidence or a focused clarification when legacy state lacks teaching details
-- update state after every coaching turn, recording mode, concept/objective, phase, outstanding question, understanding evidence, unresolved misconception, next concept, readiness, and exhausted budget when the interaction is incomplete
+- update state after every coaching turn, recording the current objective, interaction position, outstanding work, observed evidence, and remaining budget when an interaction is incomplete
 - reread state immediately before writing and merge newer evidence rather than overwrite it
 - treat state as a compact current snapshot, never an append-only diary
 - retain at most ten completed-session entries, newest first, and preserve those recent entries verbatim
@@ -137,14 +137,16 @@ Make `prompt.md` the canonical behavioral instruction. It must:
 - use “session” rather than scheduler-specific language
 - describe how to use available progress state without assuming proprietary memory
 - select guided learning, practice, or factual input gathering from learner requests and demonstrated familiarity
-- teach one prerequisite-ordered concept and ask one checking question; repair gaps on the same concept
-- after demonstrated understanding, ask a separate readiness question and wait for an explicit affirmative reply before new material or a new practice activity
-- preserve these gates in every mode and starting instruction; pedagogical readiness grants no authority for external actions
+- introduce concepts in prerequisite order and assess understanding before dependent material
+- adapt teaching and practice to observed performance without fixed question counts or mandatory readiness confirmations
+- respect learner requests to pause or revisit material; pedagogical progress grants no authority for external actions
 - pause at session limits without forcing mastery or advancement, and resume the saved phase
 - contain only learner context that materially improves coaching
 - exclude schedule syntax, model selection, notifications, project IDs, and machine-specific paths
 
 During a preservation migration, copy the selected source prompt without behavioral rewriting even when it violates these portability preferences. Record the violations as warnings and address them only in a later refinement.
+
+Legacy interaction phases remain valid. Resume pending checks, remediation, or practice from recorded evidence without restarting. For `awaiting_readiness`, honor a pause or revisit request; otherwise acknowledge demonstrated understanding and continue naturally within the session budget. Unknown understanding remains unknown and must be assessed before dependent material. Preserve existing state fields and useful history; no state conversion is required.
 
 ## `state.md`
 
@@ -197,7 +199,7 @@ Use this structure for new packages:
 
 ## Open interaction
 
-<!-- Keep only the current incomplete interaction: mode, concept/objective, phase, outstanding question, understanding evidence, misconception, next concept, readiness, and exhausted budget. Clear it when completed. -->
+<!-- Keep only the current incomplete interaction: objective, interaction position, outstanding work, observed evidence, and remaining budget. Clear it when completed. -->
 
 - None.
 ```
@@ -210,7 +212,7 @@ Treat this file as mutable canonical state. Treat state as a compact current sna
 - Compact older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples.
 - Replace stale or superseded statements instead of appending another event.
 
-Keep teaching position inside `Open interaction`; no new manifest schema is required. Useful phases are `teaching`, `awaiting_check`, `remediation`, `awaiting_readiness`, and `practice`. Record unknown evidence or readiness as unknown, never as success or consent. Resume an outstanding check, repair, readiness question, or practice attempt without automatically restarting instruction. Reteach only when requested or justified by evidence. A budget pause is distinct from concept completion.
+Keep teaching position inside `Open interaction`; no new manifest schema is required. Legacy phases such as `awaiting_readiness` remain valid; resume them naturally without imposing that gate on future concepts. Record unknown evidence or readiness as unknown, never as success or consent. Resume outstanding checks, repairs, or practice attempts without automatically restarting instruction. If legacy state records `awaiting_readiness`, honor any learner request to pause, otherwise continue naturally after acknowledging demonstrated understanding. Reteach only when requested or justified by evidence. A budget pause is distinct from concept completion.
 
 Existing states without these details remain compatible. Preserve useful history and derive only what evidence supports; ask one focused clarification if needed. Do not reset learner progress to populate new fields.
 
