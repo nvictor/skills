@@ -1,0 +1,29 @@
+{
+  "app_concept": "Grooves is a pad grid for sketching rhythms and exporting them as GUS.",
+  "primary_metaphor": "Four large dark drum pads in a charcoal shell, one lit orange",
+  "supporting_motifs": [
+    "raised rounded pads",
+    "single warm lit pad"
+  ],
+  "composition_family": "centered-object",
+  "tone": [
+    "playful",
+    "tactile",
+    "rhythmic"
+  ],
+  "palette_hints": [
+    "charcoal shell",
+    "dark gray pads",
+    "orange accent"
+  ],
+  "include_symbols": [
+    "2x2 pad grid",
+    "one lit pad"
+  ],
+  "avoid_symbols": [
+    "text",
+    "drum sticks",
+    "music notes",
+    "dense grids"
+  ]
+}
