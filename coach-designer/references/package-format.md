@@ -8,9 +8,10 @@ Read this file completely for create, refine, or migrate operations involving a 
 - `manifest.json`
 - `runner.md`
 - `prompt.md`
+- `curriculum.md`
 - `state.md`
+- Target cadence
 - `migration.json`
-- `deployments/`
 - Source conflicts
 
 ## Package contents
@@ -22,17 +23,18 @@ Use this layout:
 ├── manifest.json
 ├── runner.md
 ├── prompt.md
+├── curriculum.md
 ├── state.md
-├── migration.json    # migrations only
-└── deployments/      # optional platform adapters
-    └── <platform>.json
+└── migration.json    # migrations only
 ```
+
+Coaches run manually: the learner starts a session and supplies the package root. A package has no deployments, scheduler adapters, or automations.
 
 Use UTF-8 text and Unix line endings. Use a lowercase hyphenated directory name that exactly matches the manifest `id`.
 
 ## `manifest.json`
 
-Use JSON because it is dependency-free, machine-validatable, and broadly understood by AI agents and schedulers. Keep platform-specific settings outside the canonical core files.
+Use JSON because it is dependency-free, machine-validatable, and broadly understood by AI agents and apps. Keep platform-specific settings out of the package.
 
 Required shape:
 
@@ -45,15 +47,16 @@ Required shape:
   "version": 1,
   "runner_file": "runner.md",
   "prompt_file": "prompt.md",
+  "curriculum_file": "curriculum.md",
   "state_file": "state.md",
   "schedule": {
-    "enabled": true,
+    "enabled": false,
     "frequency": "weekly",
     "interval": 1,
-    "start_date": "2026-07-20",
-    "days": ["monday", "thursday"],
-    "local_time": "07:20",
-    "timezone": "America/New_York"
+    "start_date": null,
+    "days": [],
+    "local_time": null,
+    "timezone": null
   },
   "session": {
     "minimum_minutes": 3,
@@ -74,19 +77,18 @@ Required shape:
 
 - `schema_version`: Use `2`.
 - `id`: Use lowercase ASCII letters, digits, and hyphens. Match the directory name.
-- `name`: Use `Coach: <subject>` with the exact prefix and one space, a nonempty subject, and no leading or trailing whitespace. Preserve subject capitalization and acronyms; omit a redundant trailing "Coach". This is the canonical display name for the package document and supported launcher labels. Keep ids and directories unchanged.
-- `status`: Use `draft`, `active`, `paused`, or `archived`. This describes intended source state and does not itself deploy anything.
+- `name`: Use `Coach: <subject>` with the exact prefix and one space, a nonempty subject, and no leading or trailing whitespace. Preserve subject capitalization and acronyms; omit a redundant trailing "Coach". This is the canonical display name for the package document and app labels. Keep ids and directories unchanged.
+- `status`: Use `draft`, `active`, `paused`, or `archived`. This describes intended source state.
 - `version`: Start at `1`. Increment when coaching behavior changes. Do not increment for state-only updates.
 - `runner_file`: Use a safe relative path, normally `runner.md`.
 - `prompt_file`: Use a safe relative path, normally `prompt.md`.
+- `curriculum_file`: Use a safe relative path, normally `curriculum.md`. Required.
 - `state_file`: Use a safe relative path, normally `state.md`.
-- `schedule.enabled`: Set whether the intended recurring schedule is enabled.
-- `schedule.frequency`: Use `daily`, `weekly`, `monthly`, or `manual`.
-- `schedule.interval`: Use a positive integer.
-- `schedule.start_date`: Use local calendar date `YYYY-MM-DD` when the source has an explicit start date. It is required when `interval` is greater than `1` so another scheduler can reproduce the recurrence phase. Use `null` when the source has no explicit anchor.
-- `schedule.days`: Use full lowercase weekday names. Use an empty list when not applicable.
-- `schedule.local_time`: Use 24-hour `HH:MM`, or `null` when the schedule is manual or disabled.
-- `schedule.timezone`: Use an explicit IANA timezone, or `null` only when the schedule is manual or disabled. Preserve the source timezone during migration even when it appears incorrect; add a warning instead.
+- `schedule`: Describes the target cadence, meaning how often the learner intends to run the coach. It never triggers a run. See Target cadence.
+- `schedule.enabled`: Use `false`. Nothing runs automatically.
+- `schedule.frequency`: Use `daily`, `weekly`, `monthly`, or `manual`. `manual` means no target cadence.
+- `schedule.interval`: Use a positive integer. The target gap is `interval` periods of `frequency`.
+- `schedule.start_date`, `schedule.days`, `schedule.local_time`, `schedule.timezone`: Optional and unused by apps. Use `null` or an empty list unless preserving a migrated source.
 - `session.minimum_minutes` and `maximum_minutes`: Use positive integers with minimum no greater than maximum.
 - `session.interaction`: Use `conversational`, `self-contained`, or `mixed`.
 - `continuity.state_authority`: Use `package`; `state.md` is authoritative across agents.
@@ -95,23 +97,23 @@ Required shape:
 - `continuity.handoff_when_read_only`: Require a complete state-file replacement block when the agent cannot write files.
 - `privacy`: Use `private`, `internal`, or `public`. Prefer `private` for personal coaching.
 
-Do not put model names, provider IDs, project IDs, working directories, notification settings, or native scheduler expressions in the manifest. Store those in an optional platform adapter under `deployments/` or in live deployment configuration.
+Do not put model names, provider IDs, project IDs, working directories, notification settings, or native scheduler expressions in the manifest.
 
-## `deployments/`
+## Target cadence
 
-Use optional deployment adapters to preserve settings that have no portable equivalent, such as a provider's model identifier, reasoning level, project target, execution environment, working directory, or notification policy.
+Use `schedule` as the learner's intended rhythm, for example `weekly` with `interval` `1`. Apps such as Dashi compare it with the date of the last completed session in `state.md` to show whether the coach is on track, due soon, or overdue.
 
-Keep each adapter as JSON named for its platform. It may preserve a native source ID for audit and update operations. Do not duplicate the behavioral prompt, progress state, or portable schedule in an adapter; reference the canonical package files instead. Another agent may ignore an adapter it cannot use.
-
-Use a minimal platform launcher as the deployed prompt. The launcher supplies the package root and tells the agent to follow `runner.md`. Machine-specific paths belong in this launcher or adapter, not in canonical files.
+- Period: `daily` is 1 day, `weekly` is 7 days, `monthly` is 30 days. Multiply by `interval`.
+- `manual` means no target; apps show only the last run.
+- The last run is the newest entry under `## Last completed session`. Start each entry with a full ISO 8601 timestamp.
 
 ## `runner.md`
 
 Make `runner.md` the portable entrypoint. It must:
 
-- resolve `manifest.json`, `prompt.md`, and `state.md` from the package root supplied by the launcher or current working directory
-- read the manifest, behavioral prompt, and canonical state before coaching
-- treat `prompt.md` as behavior and `state.md` as the cross-agent continuity authority
+- resolve `manifest.json`, `prompt.md`, `curriculum.md`, and `state.md` from the package root supplied by the learner or current working directory
+- read the manifest, behavioral prompt, curriculum, and canonical state before coaching
+- treat `prompt.md` as behavior, `curriculum.md` as the topic map and sequencing guide, and `state.md` as the cross-agent continuity authority
 - resume an open interaction from its recorded phase without automatically reteaching; use evidence or a focused clarification when legacy state lacks teaching details
 - update state after every coaching turn, recording the current objective, interaction position, outstanding work, observed evidence, and remaining budget when an interaction is incomplete
 - reread state immediately before writing and merge newer evidence rather than overwrite it
@@ -120,7 +122,7 @@ Make `runner.md` the portable entrypoint. It must:
 - compact older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples
 - replace stale or superseded statements instead of appending another event
 - preserve evidence and avoid invented history
-- avoid modifying the manifest, prompt, runner, migration record, or deployment adapters
+- avoid modifying the manifest, prompt, curriculum, runner, or migration record
 - emit a complete replacement `state.md` in a clearly labeled handoff block when file writing is unavailable
 - avoid discussing file mechanics unless access fails or a conflict needs user judgment
 
@@ -136,6 +138,7 @@ Make `prompt.md` the canonical behavioral instruction. It must:
 - be self-contained enough to paste into a capable AI agent
 - use “session” rather than scheduler-specific language
 - describe how to use available progress state without assuming proprietary memory
+- point to `curriculum.md` for topics and sequencing instead of embedding the curriculum
 - select guided learning, practice, or factual input gathering from learner requests and demonstrated familiarity
 - introduce concepts in prerequisite order and assess understanding before dependent material
 - adapt teaching and practice to observed performance without fixed question counts or mandatory readiness confirmations
@@ -143,6 +146,18 @@ Make `prompt.md` the canonical behavioral instruction. It must:
 - pause at session limits without forcing mastery or advancement, and resume the saved phase
 - contain only learner context that materially improves coaching
 - exclude schedule syntax, model selection, notifications, project IDs, and machine-specific paths
+
+## `curriculum.md`
+
+Use the title `# <manifest name> curriculum`. Keep it stable: the runner never modifies it, and the learner or designer revises it deliberately. It holds what to teach and in what order; `prompt.md` holds how to coach; `state.md` holds where the learner stands.
+
+Include:
+
+- **Purpose:** the observable long-term capability.
+- **Learning map:** the fewest strands or competencies needed, each with core ideas, practice, and progression criteria (what must be shown to advance).
+- **Session rotation:** how modes and strands alternate, and what takes priority (open work, recorded gaps).
+- **Review checkpoints:** when to revisit and when a skill counts as durable.
+- **Current standing:** one line pointing to `state.md` as the live source. Never record progress or mastery here.
 
 During a preservation migration, copy the selected source prompt without behavioral rewriting even when it violates these portability preferences. Record the violations as warnings and address them only in a later refinement.
 
@@ -212,6 +227,8 @@ Treat this file as mutable canonical state. Treat state as a compact current sna
 - Compact older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples.
 - Replace stale or superseded statements instead of appending another event.
 
+Add an optional `## Curriculum standing` section after `Next useful target` when a coach has a curriculum. Keep one line per strand or competency: evidence so far and the next level. Do not infer mastery from coverage.
+
 Keep teaching position inside `Open interaction`; no new manifest schema is required. Legacy phases such as `awaiting_readiness` remain valid; resume them naturally without imposing that gate on future concepts. Record unknown evidence or readiness as unknown, never as success or consent. Resume outstanding checks, repairs, or practice attempts without automatically restarting instruction. If legacy state records `awaiting_readiness`, honor any learner request to pause, otherwise continue naturally after acknowledging demonstrated understanding. Reteach only when requested or justified by evidence. A budget pause is distinct from concept completion.
 
 Existing states without these details remain compatible. Preserve useful history and derive only what evidence supports; ask one focused clarification if needed. Do not reset learner progress to populate new fields.
@@ -238,7 +255,6 @@ Create this file only when migrating existing material:
   ],
   "behavior_changed": false,
   "state_changed": false,
-  "deployment_changed": false,
   "warnings": []
 }
 ```
@@ -249,15 +265,15 @@ Set `behavior_changed` to `true` for any intentional prompt behavior change, inc
 
 Set `state_changed` to `true` when migration or refinement intentionally reorganizes or summarizes imported state. Keep it `false` during preservation-first migration. Normal evidence-based runner updates do not rewrite migration history and need not change this field.
 
-Set `deployment_changed` to `true` only if a live scheduled task was changed. Package creation alone leaves it `false`.
+`deployment_changed` is a legacy field. Accept it in existing records; omit it from new ones.
 
 ## Source conflicts
 
-When saved and deployed prompts differ:
+When saved and previously deployed prompts differ:
 
 1. Do not select one silently.
 2. Compute and report both checksums.
 3. Preserve both sources until the user chooses the canonical prompt.
 4. Do not claim a lossless migration until the conflict is resolved.
 
-When a definition exists without a live deployment, use `draft` unless the user clearly marked it `archived`. Never infer that it should become active.
+When a definition has no clear active use, use `draft` unless the user clearly marked it `archived`. Never infer that it should become active.

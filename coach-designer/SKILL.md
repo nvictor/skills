@@ -1,23 +1,23 @@
 ---
 name: coach-designer
 metadata:
-  version: "2.0.0"
-description: Design, review, refine, package, run, and deploy portable long-running AI coaches that build durable skills through deliberate practice, feedback, adaptive difficulty, and progress tracking. Use for coach packages, including creating or improving a coach, converting prompts or scheduled coaches into agent-neutral packages, producing a standalone coach prompt, or adding an automation whose target package manifest contains `prompt_file`. Coach-package automations remain owned by this skill; do not route them through the generic task designer.
+  version: "3.0.0"
+description: Design, review, refine, package, and run portable long-running AI coaches that build durable skills through deliberate practice, feedback, adaptive difficulty, and progress tracking. Coaches run manually, on demand. Use for coach packages, including creating or improving a coach or its curriculum, converting prompts or scheduled coaches into agent-neutral manual packages, or producing a standalone coach prompt.
 ---
 
 # Coach Designer
 
 ## Purpose
 
-Design learning systems that produce durable changes in what a learner can do. Author portable coach packages whose behavior, schedule, and canonical state can survive a change of AI agent or scheduler. Do not teach the requested subject or deploy a scheduled task unless the user explicitly asks.
+Design learning systems that produce durable changes in what a learner can do. Author portable coach packages whose behavior, curriculum, target cadence, and canonical state can survive a change of AI agent. Coaches are run manually by the learner; the package never schedules or deploys itself. Do not teach the requested subject unless the user explicitly asks.
 
 ## Canonical naming
 
-Use manifest `name` as the source of truth for human-facing package names, with the format `Coach: <subject>`. See `references/package-format.md` for field rules. Match the main document title and supported launcher display labels to that name. Preserve directory names, ids, slash-command identifiers, and historical records. When deployment changes are authorized, use the manifest name for the native display label without changing other deployment settings.
+Use manifest `name` as the source of truth for human-facing package names, with the format `Coach: <subject>`. See `references/package-format.md` for field rules. Match the main document title and app display labels to that name. Preserve directory names, ids, slash-command identifiers, and historical records.
 
 ## Package ownership
 
-Own a package when its manifest contains `prompt_file`. This includes later requests to run, schedule, automate, pause, resume, or otherwise deploy that coach package. Do not invoke the task designer for a coach-package automation.
+Own a package when its manifest contains `prompt_file`. This includes later requests to run, pause, or resume that coach package. If asked to automate or schedule a coach, explain that coaches run manually and offer a target cadence in the manifest instead.
 
 When the target package type is unknown, inspect its manifest before selecting a workflow:
 
@@ -34,27 +34,26 @@ Choose the operation that matches the request:
 - **Create:** Design a new coach. Create a package when the user provides or implies a destination; otherwise return a standalone prompt.
 - **Review:** Inspect an existing coach and report evidence-backed findings without changing it.
 - **Refine:** Improve an existing prompt or package while preserving unrelated content and recorded state.
-- **Migrate:** Convert legacy prompts, scheduled coaches, or combined documents into packages without changing behavior or live deployments.
+- **Migrate:** Convert legacy prompts, scheduled coaches, or combined documents into manual packages, splitting the curriculum from the prompt and dropping deployments.
 - **Prompt only:** Return one self-contained, provider-neutral coach prompt ready to paste into an AI agent.
 - **Run:** Run a validated coach package only when explicitly requested.
-- **Deploy:** Add or change an automation for a coach package only when explicitly requested.
 
-Treat deployment as a separate operation. Package creation or migration never authorizes creating, updating, pausing, or deleting a live scheduled task.
+Never create, update, pause, or delete a live scheduled task for a coach.
 
 For create, refine, or review, read `references/quality-rubric.md` completely. For any package operation, also read `references/package-format.md` completely. Copy `assets/coach-package/` when a new package needs a starting structure, replace every template marker, and run `scripts/validate_coach_package.py` before delivery.
 
 ## Examples
 
-Create a package without deploying it:
+Create a package with a weekly target cadence:
 
 ```text
-Use the coach-designer skill to create a five-minute architecture judgment coach in design/agents/coaches/architecture-judgment-coach. Schedule it for weekdays at 07:30 America/New_York, but do not deploy it.
+Use the coach-designer skill to create a five-minute architecture judgment coach in design/agents/coaches/architecture-judgment-coach. Target one session per week.
 ```
 
-Migrate a live coach without changing its behavior:
+Migrate a scheduled coach to a manual package:
 
 ```text
-Use the coach-designer skill to migrate this scheduled coach into design/agents/coaches/<coach-id>. Preserve its prompt, state, schedule, timezone, and enabled status. Do not change the live task.
+Use the coach-designer skill to migrate this scheduled coach into design/agents/coaches/<coach-id>. Preserve its prompt and state, split out the curriculum, and keep its frequency as the target cadence. Do not change the live task.
 ```
 
 Review a package without editing it:
@@ -63,19 +62,7 @@ Review a package without editing it:
 Use the coach-designer skill to review design/agents/coaches/communication-coach for deliberate practice, useful progression, portability, and overlap with other coaches. Report findings only.
 ```
 
-Run an existing package:
-
-```text
-Run the portable coach package at design/agents/coaches/communication-coach. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
-```
-
-Deploy an already validated package:
-
-```text
-Use the coach-designer skill to deploy design/agents/coaches/confidence-coach as a scheduled task. Preserve the package schedule and runtime settings, and make the task prompt delegate to runner.md.
-```
-
-Recommend this AI-agnostic scheduler prompt, substituting the actual package root:
+Run an existing package (Dashi copies this prompt with the real package root):
 
 ```text
 Run the portable coach package at `<package-root>`. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
@@ -85,14 +72,13 @@ Run the portable coach package at `<package-root>`. Read and follow `runner.md`.
 
 ### 1. Inspect existing context
 
-Use the request, conversation, available learner profile, existing coach files, deployed configuration, and progress records. Avoid repeating answered questions.
+Use the request, conversation, available learner profile, existing coach files, and progress records. Avoid repeating answered questions.
 
 For an existing coach, identify separately:
 
 - the canonical or saved prompt
-- the deployed prompt, when available
-- schedule, timezone, and enabled state
-- runtime-specific settings
+- the curriculum, whether separate or embedded in the prompt
+- the target cadence
 - durable progress or conversation memory
 
 Do not silently choose between conflicting sources. Report the conflict and preserve every source until the user selects the intended one.
@@ -106,17 +92,17 @@ Determine only what materially affects the coach:
 - the observable long-term transformation
 - session duration and interaction style
 - preferred learning style and tolerance for challenge
-- practice cadence and timezone when creating a package
+- target cadence (for example weekly) when creating a package
 - continuity requirements
 - privacy, safety, or domain constraints
 
 Ask one compact set of questions only when missing information would materially change the result. Infer safe details when possible.
 
-Keep schedule and deployment metadata out of the behavioral prompt. Put them in the manifest.
+Keep cadence metadata out of the behavioral prompt. Put it in the manifest.
 
 ### 3. Design the learning system
 
-Define an observable long-term outcome, such as what the learner should be able to do after approximately 100 sessions, and the fewest competencies needed to reach it. Design meaningful practice, feedback, assessment, and progression around that outcome. Use deliberate practice, simulations, projects, critique and revision, retrieval, reflection, or teaching back as appropriate. Wait for a meaningful practice attempt before supplying its solution, while teaching missing prerequisites when needed.
+Define an observable long-term outcome, such as what the learner should be able to do after approximately 100 sessions, and the fewest competencies needed to reach it. Put the outcome, competencies, learning map, and progression criteria in `curriculum.md`. Keep coaching behavior in `prompt.md`. Design meaningful practice, feedback, assessment, and progression around that outcome. Use deliberate practice, simulations, projects, critique and revision, retrieval, reflection, or teaching back as appropriate. Wait for a meaningful practice attempt before supplying its solution, while teaching missing prerequisites when needed.
 
 #### Teaching approach
 
@@ -141,7 +127,7 @@ Legacy interaction phases remain valid. Resume pending checks, remediation, or p
 
 Start with existing evidence, a guided explanation and check for unfamiliar material, or a bounded baseline task for suitable learned material. Increase difficulty only after demonstrated readiness. Change one relevant dimension at a time, such as ambiguity, complexity, independence, pressure, competing constraints, realism, consequences, transfer, or expected quality.
 
-Define mastery, remediation, and spaced review. Create enough practice modes and scenario variables to remain useful after 50 sessions without relying on random novelty.
+Define mastery, remediation, and spaced review in the curriculum. Create enough practice modes and scenario variables to remain useful after 50 sessions without relying on random novelty.
 
 Tailor the feedback rubric to the skill. Require feedback to:
 
@@ -156,7 +142,7 @@ Track only observable work, demonstrated strengths, recurring errors, feedback a
 
 ### 5. Write the artifacts
 
-Write operational instructions that another capable agent can follow. Make the prompt self-contained enough to work when copied alone while keeping scheduler and vendor configuration outside it.
+Write operational instructions that another capable agent can follow. Make the prompt self-contained enough to work when copied alone while keeping vendor configuration outside it. Point it to `curriculum.md` for topics and sequencing.
 
 Include relevant concerns when they improve execution:
 
@@ -174,7 +160,7 @@ Include relevant concerns when they improve execution:
 
 Use “session,” not platform terms such as “automation run.” Do not include model names, scheduler syntax, notification settings, project identifiers, or machine-specific paths in `prompt.md`.
 
-For packages, write the manifest, runner, prompt, and state according to `references/package-format.md`. Include `migration.json` only for migrations. Keep the runner generic: it must locate files from the package root supplied by the launcher rather than embed a provider or machine path.
+For packages, write the manifest, runner, prompt, curriculum, and state according to `references/package-format.md`. Include `migration.json` only for migrations. Keep the runner generic: it must locate files from the package root supplied by the learner rather than embed a provider or machine path.
 
 ## Preservation-first migration
 
@@ -190,13 +176,14 @@ During migration:
 1. Create packages alongside the sources; never replace or move source files.
 2. Copy the selected prompt without rewriting its behavior.
 3. Preserve the complete progress record. Do not summarize away source history.
-4. Translate schedule metadata without changing its meaning. Preserve the original timezone and flag missing or suspicious timezone data.
-5. Record provenance, checksums, conflicts, and warnings in `migration.json`.
-6. Mark undocumented or non-deployed definitions as draft or archived rather than activating them.
-7. Set `behavior_changed` and `deployment_changed` accurately.
-8. Validate the package and report what would change if it were later deployed.
+4. Translate the source schedule into a target cadence: keep `frequency` and `interval`, set `enabled` to `false`.
+5. Move curriculum content (topic maps, competencies, sequencing, review rules) from the prompt into `curriculum.md` and point the prompt to it. Report any behavior change.
+6. Record provenance, checksums, conflicts, and warnings in `migration.json`.
+7. Mark undocumented definitions as draft or archived rather than activating them.
+8. Set `behavior_changed` accurately.
+9. Validate the package.
 
-Do not merge coaches, improve prompts, normalize timezones, reset state, or update live tasks during a preservation migration. Offer those as a separate refinement after the lossless package exists.
+Do not merge coaches, reset state, or update live tasks during a migration. Offer prompt improvements as a separate refinement. Tell the user that any old scheduled task is theirs to remove.
 
 ## Constraints
 
@@ -215,33 +202,26 @@ Prevent a generated coach from:
 
 Keep sessions within the requested duration. Preserve psychological safety without weakening accurate critique. Add appropriate verification and safety boundaries for regulated, hazardous, medical, legal, financial, or other high-stakes domains.
 
-## Validation and deployment boundary
+## Validation
 
 Run the package validator after every create, refine, or migrate operation. Fix errors before delivery and report warnings that require judgment.
 
 For prompt-only work, apply the coach quality rubric silently. For reviews, report the rubric findings instead of rewriting unless the user asks for changes.
 
-Do not deploy merely because a package is valid. After successfully creating and validating a package, recommend the exact AI-agnostic launcher prompt with the real package root and ask whether the user wants to add an automation using the current AI agent. This question does not authorize deployment.
+After creating and validating a package, give the run prompt with the real package root. The learner runs the coach manually (Dashi copies this prompt):
 
-When the user explicitly authorizes deployment:
-
-1. Read the package manifest and `runner.md`; confirm `prompt_file` identifies a coach package.
-2. Inspect the current AI agent's available native scheduler tools and authoritative agent documentation. Use that native mechanism directly; do not invoke another package-design skill and do not invent scheduler commands.
-3. Check existing automations for the same package before creating one. Update a matching deployment instead of duplicating it.
-4. Map the manifest schedule, timezone, and intended enabled state without changing their meaning. Ask only when the native scheduler cannot represent them safely.
-5. Use a standalone scheduled job that can access and update the canonical package state. Do not use a thread-bound reminder or heartbeat unless the user explicitly requests that behavior.
-6. Use the recommended minimal launcher prompt. Keep model, project, working directory, notifications, and native schedule syntax in live deployment settings or an adapter, not in canonical package files.
-7. Verify the saved schedule, timezone behavior, enabled state, package root, runner path, state write access, and launcher. Retain a recoverable snapshot and report package changes separately from live deployment changes.
+```text
+Run the portable coach package at `<package-root>`. Read and follow `runner.md`. Treat `state.md` as the canonical cross-agent state.
+```
 
 ## Output contract
 
 Match the result to the operation:
 
-- **Create with an authorized destination:** Write and validate the package, summarize the files, validation, behavior, and unresolved warnings, then recommend the exact launcher prompt and ask whether to add an automation using the current AI agent.
+- **Create with an authorized destination:** Write and validate the package, summarize the files, validation, behavior, and unresolved warnings, then give the run prompt.
 - **Refine or migrate with an authorized destination:** Write and validate the package, then summarize the files, validation, preserved behavior, and unresolved warnings.
 - **Review:** Return prioritized, evidence-backed findings. Do not modify files.
 - **Prompt only:** Return only the completed coach prompt, without a preface, design notes, a Markdown fence, placeholders, or TODOs.
 - **Run:** Report the session outcome and whether canonical state was written or handed off.
-- **Deployment:** Report package changes and live deployment changes separately.
 
 Never claim behavior preservation unless the prompt and state provenance have been verified.

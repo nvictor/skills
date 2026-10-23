@@ -1,13 +1,14 @@
 # Portable coach runner
 
-Use the package root supplied by the launcher or the directory containing this file.
+Use the package root supplied by the learner or the directory containing this file.
 
 ## Before coaching
 
 1. Read `manifest.json`.
 2. Read the behavioral instructions named by `prompt_file`.
-3. Read the canonical progress record named by `state_file`.
-4. Resume an open interaction from its recorded phase: pending check, remediation, or practice attempt. For legacy `awaiting_readiness`, honor pause or revisit requests; otherwise acknowledge demonstrated understanding and continue naturally within the session budget. Do not automatically reteach or restart. Reteach only on request or evidence of need. Preserve unknowns in legacy state and ask one focused clarification only when needed. Otherwise select the next useful objective from the learner's request and recorded evidence.
+3. Read the topic map and sequencing guide named by `curriculum_file`.
+4. Read the canonical progress record named by `state_file`.
+5. Resume an open interaction from its recorded phase: pending check, remediation, or practice attempt. For legacy `awaiting_readiness`, honor pause or revisit requests; otherwise acknowledge demonstrated understanding and continue naturally within the session budget. Do not automatically reteach or restart. Reteach only on request or evidence of need. Preserve unknowns in legacy state and ask one focused clarification only when needed. Otherwise select the next useful objective from the learner's request and recorded evidence.
 
 Treat the behavioral prompt as authoritative for coaching and the state file as authoritative for cross-agent continuity. Do not substitute private platform memory for newer package state.
 
@@ -29,6 +30,6 @@ After every coaching turn, including a turn that asks the learner to respond:
    - Retain at most ten completed-session entries, newest first, and preserve those recent entries verbatim.
    - Fold older durable evidence into one line per strength or gap with an observation count and at most three recent dated examples.
 
-Do not modify `manifest.json`, `prompt.md`, `runner.md`, `migration.json`, or deployment adapters.
+Do not modify `manifest.json`, `prompt.md`, `curriculum.md`, `runner.md`, or `migration.json`.
 
 If the state file is read-only or unavailable, continue the session and end the response with a `State handoff` section containing the complete proposed replacement contents of `state.md`. Never imply that state was saved when it was not.

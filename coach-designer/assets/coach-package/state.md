@@ -42,8 +42,14 @@
 
 - Select the first useful concept or practice objective from the learner's request and demonstrated familiarity.
 
+## Curriculum standing
+
+<!-- One line per strand or competency: evidence so far and the next level. Do not infer mastery from coverage. -->
+
+- None recorded.
+
 ## Open interaction
 
-<!-- Keep only the current incomplete interaction: mode, concept/objective, phase, outstanding question, understanding evidence, misconception, next concept, readiness, and exhausted budget. Clear it when completed. -->
+<!-- Keep only the current incomplete interaction: objective, interaction position, outstanding work, observed evidence, and remaining budget. Clear it when completed. -->
 
 - None.

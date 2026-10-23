@@ -35,6 +35,7 @@ STATE_HEADINGS = (
     "## Next useful target",
     "## Open interaction",
 )
+OPTIONAL_STATE_HEADINGS = ("## Curriculum standing",)
 PORTABILITY_MARKERS = {
     "automation run": "Use 'session' instead of scheduler-specific language.",
     "rrule": "Keep native scheduler expressions outside prompt.md.",
@@ -85,7 +86,7 @@ def safe_relative_file(package: Path, value: Any, label: str, errors: list[str])
     return path
 
 
-def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) -> tuple[Path | None, Path | None, Path | None]:
+def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) -> tuple[Path | None, Path | None, Path | None, Path | None]:
     if data.get("schema_version") != 2:
         errors.append("schema_version must be 2.")
 
@@ -117,11 +118,14 @@ def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) ->
 
     runner_path = safe_relative_file(package, data.get("runner_file"), "runner_file", errors)
     prompt_path = safe_relative_file(package, data.get("prompt_file"), "prompt_file", errors)
+    curriculum_path = safe_relative_file(package, data.get("curriculum_file"), "curriculum_file", errors)
     state_path = safe_relative_file(package, data.get("state_file"), "state_file", errors)
 
     schedule = require(data, "schedule", dict, errors)
     if schedule is not None:
         enabled = require(schedule, "enabled", bool, errors, "schedule.")
+        if enabled:
+            errors.append("schedule.enabled must be false: coaches run manually and the schedule is a target cadence.")
         frequency = schedule.get("frequency")
         if frequency not in {"daily", "weekly", "monthly", "manual"}:
             errors.append("schedule.frequency must be daily, weekly, monthly, or manual.")
@@ -177,12 +181,13 @@ def validate_manifest(package: Path, data: dict[str, Any], errors: list[str]) ->
     if data.get("privacy") not in {"private", "internal", "public"}:
         errors.append("privacy must be private, internal, or public.")
 
-    return runner_path, prompt_path, state_path
+    return runner_path, prompt_path, curriculum_path, state_path
 
 
 def validate_text_files(
     runner_path: Path | None,
     prompt_path: Path | None,
+    curriculum_path: Path | None,
     state_path: Path | None,
     warnings: list[str],
     errors: list[str],
@@ -193,7 +198,7 @@ def validate_text_files(
             errors.append("runner.md must not be empty.")
         if "{{" in runner or "}}" in runner:
             errors.append("runner.md contains an unresolved template marker.")
-        for required in ("manifest.json", "prompt_file", "state_file", "State handoff"):
+        for required in ("manifest.json", "prompt_file", "curriculum_file", "state_file", "State handoff"):
             if required not in runner:
                 errors.append(f"runner.md must reference {required}.")
     if prompt_path is not None:
@@ -206,6 +211,13 @@ def validate_text_files(
         for marker, message in PORTABILITY_MARKERS.items():
             if marker in lowered:
                 warnings.append(f"prompt.md: {message}")
+
+    if curriculum_path is not None:
+        curriculum = curriculum_path.read_text(encoding="utf-8")
+        if not curriculum.strip():
+            errors.append("curriculum.md must not be empty.")
+        if "{{" in curriculum or "}}" in curriculum:
+            errors.append("curriculum.md contains an unresolved template marker.")
 
     if state_path is not None:
         state = state_path.read_text(encoding="utf-8")
@@ -269,6 +281,8 @@ def validate_migration(
         if len(selected_state_sources) > 1:
             errors.append("migration.json may select at most one state source.")
     for key in ("behavior_changed", "state_changed", "deployment_changed"):
+        if key == "deployment_changed" and key not in data:
+            continue
         if not isinstance(data.get(key), bool):
             errors.append(f"migration.json {key} must be boolean.")
     if not isinstance(data.get("warnings"), list):
@@ -292,10 +306,13 @@ def validate(package: Path) -> int:
     manifest = read_json(package / "manifest.json", errors)
     runner_path: Path | None = None
     prompt_path: Path | None = None
+    curriculum_path: Path | None = None
     state_path: Path | None = None
     if manifest is not None:
-        runner_path, prompt_path, state_path = validate_manifest(package, manifest, errors)
-    validate_text_files(runner_path, prompt_path, state_path, warnings, errors)
+        runner_path, prompt_path, curriculum_path, state_path = validate_manifest(package, manifest, errors)
+    if (package / "deployments").exists():
+        warnings.append("deployments/ is obsolete: coaches run manually. Delete it.")
+    validate_text_files(runner_path, prompt_path, curriculum_path, state_path, warnings, errors)
     validate_migration(package, prompt_path, state_path, warnings, errors)
 
     for warning in warnings:

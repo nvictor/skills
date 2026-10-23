@@ -6,10 +6,11 @@
   "version": 1,
   "runner_file": "runner.md",
   "prompt_file": "prompt.md",
+  "curriculum_file": "curriculum.md",
   "state_file": "state.md",
   "schedule": {
     "enabled": false,
-    "frequency": "manual",
+    "frequency": "weekly",
     "interval": 1,
     "start_date": null,
     "days": [],

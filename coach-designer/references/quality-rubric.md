@@ -70,8 +70,9 @@ Read this file completely when creating, reviewing, or refining a coach. During 
 ## Portability
 
 - Keep the behavioral prompt independent of AI provider and scheduler.
-- Keep schedules, timezones, and source status in the manifest.
-- Keep model names, project IDs, notifications, machine paths, and scheduler expressions outside the canonical package.
+- Keep topics, sequencing, and progression criteria in `curriculum.md`, not the prompt.
+- Keep the target cadence and source status in the manifest.
+- Keep model names, project IDs, notifications, machine paths, and scheduler expressions out of the package.
 - Make the prompt usable alone while allowing state to improve continuity.
 - Provide a provider-neutral runner that makes state behavior explicit.
 - Make the package understandable without proprietary tooling.

@@ -1,3 +1,5 @@
+> **Obsolete.** This one-time migration targeted skill v2.0.0 and rewrites skill text that no longer exists in v3.0.0. Do not run it. Kept for history.
+
 # Coaching behavior update
 
 `migrate.py` is a one-time update for the existing portable coaches in
