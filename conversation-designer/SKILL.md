@@ -9,7 +9,7 @@ Design conversations whose continuity exists to preserve and deepen an inquiry. 
 
 ## Ownership and destination
 
-Inspect a supplied manifest before selecting the designer. `conversation_file` identifies this package type; `prompt_file`, `workflow_file`, and `task_file` belong to the coach, workflow, and task designers respectively. Report conflicting discriminators rather than choosing silently.
+Inspect a supplied manifest before selecting the designer. `opportunity_file` identifies a potential improvement being evaluated before commitment; use the opportunity designer. `conversation_file` identifies this package type; `prompt_file`, `workflow_file`, and `task_file` belong to the coach, workflow, and task designers respectively. Report conflicting discriminators rather than choosing silently.
 
 Default new packages to `/Users/victor/Developer/design/agents/conversations/<id>`. Honor an explicit destination. This local default belongs only in the designer, never in generated canonical files. Use an explicit package path or the package already established in the current exchange for existing-package operations. Ask for a target when ambiguous; do not guess from recency or maintain an active-package pointer.
 

@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "id": "{{id}}",
+  "name": "Opportunity: {{subject}}",
+  "opportunity_file": "opportunity.md",
+  "state_file": "state.md",
+  "runner_file": "runner.md"
+}

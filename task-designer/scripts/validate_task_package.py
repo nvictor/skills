@@ -287,7 +287,7 @@ def validate_manifest(
     if version is not None and version < 1:
         errors.append("version must be at least 1.")
 
-    for discriminator in ('prompt_file', 'workflow_file', 'conversation_file'):
+    for discriminator in ('prompt_file', 'workflow_file', 'conversation_file', 'opportunity_file'):
         if discriminator in data:
             errors.append(f"Conflicting package discriminator: {discriminator}")
 

@@ -19,6 +19,7 @@ Own a package when its manifest contains `task_file`. This includes later reques
 
 When the package type is unknown, inspect its manifest:
 
+- `opportunity_file` identifies an improvement being evaluated before commitment; use the opportunity designer.
 - `conversation_file` identifies an ongoing inquiry; use the conversation designer.
 - `task_file` identifies a task package; continue with this skill.
 - `workflow_file` identifies a finite multi-stage workflow; use the workflow designer.

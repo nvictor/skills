@@ -38,10 +38,10 @@ def validate(package: Path) -> tuple[list[str], list[str]]:
     name = data.get("name")
     if not isinstance(name, str) or not re.fullmatch(r"Conversation: \S(?:[^\r\n]*\S)?", name):
         errors.append("name must use 'Conversation: <subject>' with a trimmed, nonempty subject.")
-    for key in ("prompt_file", "workflow_file", "task_file"):
+    for key in ("prompt_file", "workflow_file", "task_file", "opportunity_file"):
         if key in data:
             errors.append(f"Conflicting package discriminator: {key}")
-    for key in sorted(data.keys() - KEYS - {"prompt_file", "workflow_file", "task_file"}):
+    for key in sorted(data.keys() - KEYS - {"prompt_file", "workflow_file", "task_file", "opportunity_file"}):
         warnings.append(f"Noncanonical manifest extension: {key}")
     if re.search(r"\{\{.*?\}\}", json.dumps(data)):
         errors.append("manifest.json contains an unresolved template marker.")
