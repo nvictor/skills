@@ -99,6 +99,21 @@ Work machines:
 - Ask whether company policy allows work cards in any Anki cloud sync before enabling one.
 - Each deck root has its own `registry.json`, so IDs on two machines do not collide.
 
+## Adding new cards later
+
+Two workflows. The default is Markdown first. Both end with a verified sync.
+
+| Workflow | Use for | Steps |
+| --- | --- | --- |
+| Markdown first (default) | Planned material: docs, code, notes, gaps | Draft, `fcd.py promote`, `anki_sync.py plan`, `apply`. Add `S:` to Basic cards that should be spoken. |
+| UI first, adopt in batches | Quick one-off cards | Add the note in Anki in the target deck, then `anki_adopt.py draft`, `fcd.py promote`, `link`, `anki_sync.py` as in the adopt section below, using the deck's own name for `--deck`. |
+
+- Sync ignores notes without an `ID`: they are neither added to Git nor reported as orphans. A UI-added card stays outside Git until adopted.
+- Adopting from inside `anki::repo` is a normal case. `draft` skips notes that already have an ID, and `link` moves nothing because the cards already sit in the right deck.
+- Do not edit adopted cards in the Anki UI. The next sync plan overwrites the edit with the Markdown text. Scheduling and review history are never overwritten.
+- `note:add` through the CLI needs every field of the note type, including `ID` (pass `--ID ""`). Always pass `--col <copy>` when testing, because the CLI does not read `ANKI_COL`. Only `anki_sync.py` does. A test command without `--col` writes to the real collection.
+- Verified on a copy: two Basic notes added with `Speak`, then drafted, promoted, linked, and synced. The plan before adoption stayed empty, only the two new notes were drafted, no cards moved, the sync made two updates, and the re-plan was empty. `S:` carried the `Speak` text.
+
 ## Adopting an existing deck
 
 Do this only when a specific deck is worth maintaining in Git. History stays on the original Anki cards. The script never recreates them. It writes the new card `ID` into the original note and moves the cards under the sync parent.

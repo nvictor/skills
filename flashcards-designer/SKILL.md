@@ -35,6 +35,25 @@ Use the root the user supplies. If none is given, ask. Keep work decks in work r
 - **setup:** Prepare a new computer or a fresh Anki install, or capture the current styling. Run `doctor` first and follow the "New machine" checklist in [references/anki-adapter.md](references/anki-adapter.md). Installing software and running `restore` need the user's approval.
 - **adopt:** Convert existing Anki notes to Markdown without losing review history, with `scripts/anki_adopt.py`. Do it only when the user names a specific deck worth maintaining in Git. Read "Adopting an existing deck" in [references/anki-adapter.md](references/anki-adapter.md) first. Always show the draft and the `link` plan and get approval before `link --approved`.
 
+## Adding new cards: two workflows
+
+Markdown owns card content and sync is one way (Git to Anki). Anki edits are never pulled back, so tell the user which workflow a card follows.
+
+**Default: author in Markdown, then sync.** For planned material (docs, code, notes, gaps). Draft with `ID: pending`, get approval, `fcd.py promote`, then `anki_sync.py plan` and `apply`. The card gets its ID before it reaches Anki. For a Basic card that should be spoken, add `S:`.
+
+**Quick one-offs: add in the Anki UI, adopt in batches.** The user adds notes in the target deck (for example `anki::repo::language::pronunciation`) and fills `Speak` if wanted. Sync ignores notes without an `ID`, so nothing breaks in the meantime and the card is not in Git yet. Later:
+
+```bash
+python3 scripts/anki_adopt.py --root <deck-root> draft --deck anki::repo::<a>::<b> --folder <a/b> --prefix <p> --strip-markup
+python3 scripts/fcd.py --root <deck-root> promote <draft> <deck-root>/<a/b>/<p>.md --prefix <p>
+python3 scripts/anki_adopt.py --root <deck-root> link --deck anki::repo::<a>::<b> --folder <a/b> --approved --backup-dir <dir>
+python3 scripts/anki_sync.py --root <deck-root> plan
+```
+
+`draft` picks up only notes without an `ID`. Cards already in the target deck are not moved. Show the draft and the `link` plan first, and get approval before `link --approved` and `apply`.
+
+**Do not edit adopted cards in Anki.** The next sync would overwrite the edit with the Markdown text (the plan shows it as an update). Edit in the repository. Review history is never overwritten.
+
 For generate, refine, and check, read [references/card-format.md](references/card-format.md) and [references/quality-rubric.md](references/quality-rubric.md) completely.
 
 ## Tooling

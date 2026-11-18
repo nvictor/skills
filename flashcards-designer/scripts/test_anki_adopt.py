@@ -110,7 +110,7 @@ class TestLink(unittest.TestCase):
     def test_plan_link_flags_problems(self):
         notes = [note(nid=1), note(nid=2, ID="other-001"), note(nid=3, ID="sre-003")]
         todo, problems = a.plan_link(notes, {1: "sre-001", 2: "sre-002", 3: "sre-003", 4: "sre-004"}, "d")
-        self.assertEqual([(n.id, c) for n, c in todo], [(1, "sre-001"), (3, "sre-003")])
+        self.assertEqual([(n.id, c) for n, c in todo], [(1, "sre-001")])
         self.assertEqual(len(problems), 2)
 
     def test_plan_link_skips_already_linked_ids(self):

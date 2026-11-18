@@ -207,6 +207,8 @@ def plan_link(
             continue
         if n is None:
             problems.append(f"{cid}: note {nid} not found directly in the source deck")
+        elif n.fields.get("ID", "").strip() == cid:
+            continue  # already linked, nothing to write
         elif n.fields.get("ID", "").strip() not in ("", cid):
             problems.append(f"{cid}: note {nid} already has ID {n.fields['ID']!r}")
         else:
