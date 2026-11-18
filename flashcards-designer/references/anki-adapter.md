@@ -15,7 +15,7 @@ Existing note types are used. No new note type is created.
 
 - Both note types need an `ID` field. Add it once with `anki notetype:field:add --notetype Basic --field ID` (and `Cloze`). This forces a one-time full sync with AnkiWeb.
 - Notes are matched by the `ID` field, never by question text.
-- Decks: `<parent>::<topic folder>`, with parent `anki::repo` by default (`--parent`). Cards at the deck root go in the parent deck.
+- Decks: `<parent>::<topic folder>`, with parent `anki::repo` by default (`--parent`). Cards at the deck root go in the parent deck. Every deck this skill creates must be `anki` or under `anki::`; the scripts refuse any other parent.
 - Tags: `fc` and the topic. Tags are set on add only.
 - Content is rendered to HTML: escaped, newlines as `<br>`, inline code as `<code>`, fenced code as `<pre><code>`. The source line shows the file name and section, not the hash.
 - Retired cards are suspended, never deleted, so history is kept.
@@ -79,6 +79,24 @@ python3 scripts/anki_setup.py restore --approved --backup-dir <dir> [--allow-sha
 - Verified on a copy of the collection (`--col`): create (normal and cloze), field add, template add, template edit, CSS set, deck create, and options set.
 - Not covered: Anki preferences, add-ons, FSRS parameters, media, other note types, and other decks' options. AnkiWeb sync or a collection backup carries those.
 - Restore only styles the note types. Cards still come from `anki_sync.py`.
+
+## New machine
+
+Run `python3 scripts/anki_setup.py doctor [--root <deck-root>]` first and after each step. It is read only and prints the exact fix for each problem. Then:
+
+1. Install the CLI: `uv tool install anki-cli` (needs the user's approval).
+2. Open Anki once so it creates a profile, then quit it.
+3. `doctor` again. Fix anything listed.
+4. `python3 scripts/anki_setup.py plan`, show it, then `restore --approved --backup-dir <dir> --allow-shared-options` on approval. A fresh install has no other decks, so the shared preset is safe to change.
+5. Create the deck root in the right repository (see below) and generate cards.
+6. Sync with `anki_sync.py plan`, then `apply --approved --backup-dir <dir>` with Anki closed.
+
+Work machines:
+
+- Use a company-approved repository for the deck root and a company-approved agent.
+- The work Anki collection is separate from the personal one. Do not sign in to a personal AnkiWeb account on it.
+- Ask whether company policy allows work cards in any Anki cloud sync before enabling one.
+- Each deck root has its own `registry.json`, so IDs on two machines do not collide.
 
 ## Existing Anki decks (adopt, deferred)
 

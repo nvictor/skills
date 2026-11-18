@@ -32,7 +32,7 @@ Use the root the user supplies. If none is given, ask. Keep work decks in work r
 - **check:** Audit the deck and propose fixes or retirements.
 - **gaps:** Identify useful knowledge the deck does not cover.
 - **sync:** Push approved cards to Anki with `scripts/anki_sync.py`. Read [references/anki-adapter.md](references/anki-adapter.md) completely first. Always show the `plan` and get approval before `apply`.
-- **setup:** Capture or restore the Basic and Cloze styling and `anki::repo` deck options with `scripts/anki_setup.py`, for a new computer or a fresh Anki install. Read the setup section of [references/anki-adapter.md](references/anki-adapter.md) first.
+- **setup:** Prepare a new computer or a fresh Anki install, or capture the current styling. Run `doctor` first and follow the "New machine" checklist in [references/anki-adapter.md](references/anki-adapter.md). Installing software and running `restore` need the user's approval.
 - **adopt:** Convert existing Anki notes to Markdown. Deferred. Do it only when the user names a specific deck worth maintaining in Git; the adapter reference describes the approach.
 
 For generate, refine, and check, read [references/card-format.md](references/card-format.md) and [references/quality-rubric.md](references/quality-rubric.md) completely.
@@ -60,6 +60,7 @@ python3 scripts/anki_sync.py --root <deck-root> apply --approved --backup-dir <d
 Anki styling snapshot (ships with the skill at `assets/anki-setup.json`, the default on every machine):
 
 ```bash
+python3 scripts/anki_setup.py doctor [--root <deck-root>]   # read only; lists what to fix
 python3 scripts/anki_setup.py capture
 python3 scripts/anki_setup.py plan
 python3 scripts/anki_setup.py restore --approved --backup-dir <dir> [--allow-shared-options]

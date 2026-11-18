@@ -84,5 +84,33 @@ class TestOptions(unittest.TestCase):
         self.assertTrue(steps[1].blocked)
 
 
+class TestDoctor(unittest.TestCase):
+    def test_missing_cli_stops_early(self):
+        with mock.patch.object(s.shutil, "which", return_value=None):
+            checks = s.run_doctor(s.DEFAULT_SNAPSHOT, None, "anki::repo")
+        self.assertEqual([c.level for c in checks if c.level == "FAIL"], ["FAIL"])
+        self.assertIn("uv tool install anki-cli", [c.fix for c in checks][-1])
+
+    def test_rejects_parent_outside_anki(self):
+        with mock.patch.object(s.shutil, "which", return_value=None):
+            checks = s.run_doctor(s.DEFAULT_SNAPSHOT, None, "repo")
+        self.assertTrue(any(c.name == "parent deck" and c.level == "FAIL" for c in checks))
+
+    def test_format_reports_problem_count(self):
+        out = s.format_doctor([s.Check("FAIL", "x", "m", "do y"), s.Check("OK", "z", "fine")])
+        self.assertIn("fix: do y", out)
+        self.assertTrue(out.endswith("1 problem(s) to fix"))
+
+
+class TestRootDeck(unittest.TestCase):
+    def test_guard(self):
+        from anki_sync import require_root_deck, SyncError
+        require_root_deck("anki")
+        require_root_deck("anki::repo")
+        for bad in ("repo", "ankiX", "other::anki"):
+            with self.assertRaises(SyncError):
+                require_root_deck(bad)
+
+
 if __name__ == "__main__":
     unittest.main()

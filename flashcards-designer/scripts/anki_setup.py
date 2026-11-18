@@ -5,6 +5,7 @@ Narrow scope: the Basic and Cloze note types (fields, templates, CSS) and the
 scheduler options of the parent deck. The snapshot ships with the skill, at
 assets/anki-setup.json, so it is the default on every machine that has the skill.
 
+  doctor   read only: check this machine and say how to fix what is wrong
   capture  read Anki, write the snapshot
   plan     read only: what restore would change on this Anki
   restore  apply the plan (requires --approved and --backup-dir)
@@ -18,12 +19,14 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import shutil
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import anki_sync  # noqa: E402
+import fcd  # noqa: E402
 from anki_sync import SyncError, anki  # noqa: E402
 
 DEFAULT_SNAPSHOT = Path(__file__).resolve().parent.parent / "assets" / "anki-setup.json"
@@ -180,6 +183,8 @@ def _steps_options(spec: dict, allow_shared: bool) -> list[Step]:
 
 
 def make_plan(snap: dict, allow_shared: bool) -> tuple[list[Step], list[str]]:
+    if snap.get("deck_options"):
+        anki_sync.require_root_deck(snap["deck_options"]["deck"])
     existing = {n["name"] for n in _items(anki("notetypes"))}
     steps: list[Step] = []
     warnings: list[str] = []
@@ -218,6 +223,93 @@ def apply_steps(steps: list[Step]) -> list[str]:
     return done
 
 
+# ----------------------------------------------------------------- doctor
+
+
+@dataclass
+class Check:
+    level: str  # OK | WARN | FAIL
+    name: str
+    message: str
+    fix: str = ""
+
+
+def run_doctor(snapshot: Path, root: Path | None, parent: str) -> list[Check]:
+    out: list[Check] = []
+    ok = lambda n, m: out.append(Check("OK", n, m))  # noqa: E731
+    bad = lambda n, m, f="": out.append(Check("FAIL", n, m, f))  # noqa: E731
+    warn = lambda n, m, f="": out.append(Check("WARN", n, m, f))  # noqa: E731
+
+    if sys.version_info >= (3, 9):
+        ok("python", sys.version.split()[0])
+    else:
+        bad("python", f"{sys.version.split()[0]} is too old", "install Python 3.9 or newer")
+    try:
+        anki_sync.require_root_deck(parent)
+        ok("parent deck", parent)
+    except SyncError as e:
+        bad("parent deck", str(e), "pass --parent anki::repo")
+    if not shutil.which(anki_sync.ANKI):
+        bad("anki cli", f"`{anki_sync.ANKI}` not found on PATH", "uv tool install anki-cli")
+        return out
+    try:
+        st = anki("status")
+    except SyncError as e:
+        bad("anki status", str(e), "open Anki once so it creates a profile, quit it, then retry")
+        return out
+    ok("anki cli", f"backend={st.get('backend')}, profile={st.get('profile')}")
+    if st.get("backend") == "direct" and not anki_sync.COL and anki_sync.anki_running():
+        warn("anki running", "Anki is open; writes are refused while it is open (direct backend)", "quit Anki before sync or restore")
+    else:
+        ok("anki closed", "writes are allowed")
+    if not snapshot.is_file():
+        bad("snapshot", f"missing {snapshot}", "run `capture` on a machine that has your setup, then commit it")
+        return out
+    snap = json.loads(snapshot.read_text(encoding="utf-8"))
+    try:
+        steps, warnings = make_plan(snap, allow_shared=True)
+    except SyncError as e:
+        bad("snapshot", str(e))
+        return out
+    note_steps = [s for s in steps if not s.action.startswith(("OPTIONS", "DECK"))]
+    option_steps = [s for s in steps if s.action.startswith(("OPTIONS", "DECK"))]
+    if note_steps:
+        bad("note types", f"{len(note_steps)} difference(s) from the snapshot: " + ", ".join(f"{s.action} {s.target}" for s in note_steps[:6]),
+            "python3 scripts/anki_setup.py plan, then restore --approved --backup-dir <dir> --allow-shared-options")
+    else:
+        ok("note types", "Basic and Cloze match the snapshot")
+    if option_steps:
+        warn("deck options", ", ".join(f"{s.action} {s.target}" for s in option_steps),
+             "restore --approved --backup-dir <dir> --allow-shared-options (changes the shared preset)")
+    else:
+        ok("deck options", f"{parent} matches the snapshot")
+    for w in warnings:
+        warn("snapshot", w)
+    if root is not None:
+        if not root.is_dir():
+            bad("deck root", f"{root} does not exist", f"mkdir -p {root}  (use a company-approved repo for work decks)")
+        else:
+            findings = fcd.check_deck(root)
+            errors = [f for f in findings if f["severity"] == "error"]
+            n = sum(len(fcd.parse_cards(f)) for f in fcd.card_files(root))
+            if errors:
+                bad("deck root", f"{n} card(s), {len(errors)} error(s)", f"python3 scripts/fcd.py --root {root} check")
+            else:
+                ok("deck root", f"{n} card(s), 0 errors")
+    return out
+
+
+def format_doctor(checks: list[Check]) -> str:
+    lines = []
+    for c in checks:
+        lines.append(f"{c.level:5} {c.name}: {c.message}")
+        if c.fix:
+            lines.append(f"      fix: {c.fix}")
+    fails = sum(1 for c in checks if c.level == "FAIL")
+    lines.append("ready" if not fails else f"{fails} problem(s) to fix")
+    return "\n".join(lines)
+
+
 # -------------------------------------------------------------------- CLI
 
 
@@ -228,6 +320,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--notetype", action="append", help="note type to include (repeatable; default Basic and Cloze)")
     ap.add_argument("--col", help="collection file to use instead of the default (for testing on a copy)")
     sub = ap.add_subparsers(dest="cmd", required=True)
+    p = sub.add_parser("doctor", help="check this machine (read only)")
+    p.add_argument("--root", help="also check this deck root")
     sub.add_parser("capture", help="write the snapshot from this Anki")
     p = sub.add_parser("plan", help="show what restore would change (read only)")
     p.add_argument("--allow-shared-options", action="store_true")
@@ -242,6 +336,11 @@ def main(argv: list[str] | None = None) -> int:
         anki_sync.COL = args.col
     path = Path(args.snapshot).resolve()
     try:
+        if args.cmd == "doctor":
+            checks = run_doctor(path, Path(args.root).resolve() if args.root else None, args.parent)
+            print(format_doctor(checks))
+            return 1 if any(c.level == "FAIL" for c in checks) else 0
+        anki_sync.require_root_deck(args.parent)
         if args.cmd == "capture":
             snap = capture(args.parent, args.notetype or DEFAULT_NOTETYPES)
             path.parent.mkdir(parents=True, exist_ok=True)

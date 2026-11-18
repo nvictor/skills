@@ -33,11 +33,17 @@ import fcd  # noqa: E402
 ANKI = os.environ.get("ANKI_CLI", "anki")
 COL = os.environ.get("ANKI_COL")  # optional collection file, e.g. a test copy
 SUSPENDED_QUEUE = -1
+ROOT_DECK = "anki"  # every deck this skill creates lives under this deck
 REQUIRED_FIELDS = {"basic": ["Front", "Back", "ID"], "cloze": ["Text", "Back Extra", "ID"]}
 
 
 class SyncError(Exception):
     pass
+
+
+def require_root_deck(parent: str) -> None:
+    if parent != ROOT_DECK and not parent.startswith(ROOT_DECK + "::"):
+        raise SyncError(f"parent deck {parent!r} must be {ROOT_DECK!r} or a deck under it ({ROOT_DECK}::...)")
 
 
 # ---------------------------------------------------------------- Anki CLI
@@ -319,6 +325,7 @@ def main(argv: list[str] | None = None) -> int:
     root = Path(args.root).resolve()
     names = {"basic": args.basic_notetype, "cloze": args.cloze_notetype}
     try:
+        require_root_deck(args.parent)
         check_notetypes(names)
         desired = desired_notes(root, args.parent)
         plan = make_plan(desired, dump_existing(args.parent, names), names)
