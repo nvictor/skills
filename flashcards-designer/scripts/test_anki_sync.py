@@ -98,6 +98,21 @@ class TestDesired(unittest.TestCase):
             self.assertEqual(d["a-002"].fields["Text"], "The {{c1::answer}}.")
             self.assertTrue(d["a-003"].retired)
 
+    def test_nested_folders_map_to_nested_deck_and_tag(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp).resolve()
+            root = base / "deck"
+            (root / "core" / "sre").mkdir(parents=True)
+            (base / "docs").mkdir()
+            (base / "docs" / "a.md").write_text("# A\n\n## S\n\ntext\n")
+            f = root / "core" / "sre" / "x.md"
+            src = fcd.source_value(f, base / "docs" / "a.md", "S")
+            f.write_text(f"## One\n\nID: a-001\nQ: Q?\nA: A.\nSource: {src}\n")
+            fcd.save_registry(root, {"version": 1, "counters": {"a": 1}})
+            d = {x.id: x for x in s.desired_notes(root, "anki::repo")}
+            self.assertEqual(d["a-001"].deck, "anki::repo::core::sre")
+            self.assertEqual(d["a-001"].tags, ["fc", "core::sre"])
+
     def test_refuses_deck_with_errors(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp).resolve()

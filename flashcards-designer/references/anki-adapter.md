@@ -15,8 +15,8 @@ Existing note types are used. No new note type is created.
 
 - Both note types need an `ID` field. Add it once with `anki notetype:field:add --notetype Basic --field ID` (and `Cloze`). This forces a one-time full sync with AnkiWeb.
 - Notes are matched by the `ID` field, never by question text.
-- Decks: `<parent>::<topic folder>`, with parent `anki::repo` by default (`--parent`). Cards at the deck root go in the parent deck. Every deck this skill creates must be `anki` or under `anki::`; the scripts refuse any other parent.
-- Tags: `fc` and the topic. Tags are set on add only.
+- Decks: `<parent>::<folder path>`, nested to any depth, with parent `anki::repo` by default (`--parent`). `core/sre/x.md` goes to `anki::repo::core::sre`. Cards at the deck root go in the parent deck. Every deck this skill creates must be `anki` or under `anki::`; the scripts refuse any other parent.
+- Tags: `fc` and the folder path as one hierarchical tag (`core::sre`). Anki matches `tag:core` against child tags too. Spaces in folder names become `_` in the tag. Tags are set on add only.
 - Content is rendered to HTML: escaped, newlines as `<br>`, inline code as `<code>`, fenced code as `<pre><code>`. The source line shows the file name and section, not the hash.
 - Retired cards are suspended, never deleted, so history is kept.
 - Orphans (notes in the target deck whose ID is not in the deck) are reported and left alone.
@@ -58,7 +58,8 @@ python3 scripts/anki_sync.py --root <deck-root> [--parent anki::repo] apply --ap
 - Whether the `direct` backend is safe while Anki is open. The script refuses.
 - Review history preservation across an update for a card that has real reviews (only a card with zero reviews was tested; IDs stay the same, so the schedule should too).
 - Mobile and AnkiWeb behavior after the `ID` field is added.
-- Moving an existing note to another deck when its topic folder changes.
+- Moving an existing note to another deck when its folder changes. Cards previously synced from a top-level folder stay in the old deck if they are later nested deeper.
+- Nested deck creation against a real Anki collection (`deck:create` with a `::` path). Covered by a unit test only.
 - Cloze cards with several deletions (several cards per note). The script groups cards by note but this was not tested.
 
 ## Setup snapshot (new computer or fresh Anki)

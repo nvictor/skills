@@ -10,7 +10,9 @@ Markdown owns card content. Anki owns review history. Notes are matched by the
 Mapping:
   Q/A card -> Basic: Front=Q, Back=A + source line, ID
   C card   -> Cloze: Text=C, Back Extra=source line, ID
-  Deck     -> <parent>::<topic folder>; retired cards are suspended.
+  Deck     -> <parent>::<folder path>, nested (core/sre/x.md -> anki::repo::core::sre)
+  Tags     -> fc and the folder path as one hierarchical tag (core::sre)
+  Retired cards are suspended.
 """
 from __future__ import annotations
 
@@ -131,8 +133,9 @@ def desired_notes(root: Path, parent: str) -> list[Desired]:
     out: list[Desired] = []
     for f in fcd.card_files(root):
         parts = f.relative_to(root).parts
-        topic = parts[0] if len(parts) > 1 else None
-        deck = f"{parent}::{topic}" if topic else parent
+        folders = parts[:-1]
+        deck = "::".join([parent, *folders])
+        tag = "::".join(re.sub(r"\s+", "_", p) for p in folders)  # hierarchical tag, no spaces
         for c in fcd.parse_cards(f):
             src = f'<small>{html.escape(source_label(c.fields["Source"]), quote=False)}</small>'
             if "C" in c.fields:
@@ -147,7 +150,7 @@ def desired_notes(root: Path, parent: str) -> list[Desired]:
                     "Back": render_html(c.fields["A"]) + "<br>" + src,
                     "ID": c.id,
                 }
-            out.append(Desired(c.id, kind, deck, ["fc"] + ([topic] if topic else []), c.retired, fields, c.title))
+            out.append(Desired(c.id, kind, deck, ["fc"] + ([tag] if tag else []), c.retired, fields, c.title))
     return out
 
 
