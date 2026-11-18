@@ -73,8 +73,20 @@ def fetch_notes(deck: str, names: dict[str, str]) -> list[Note]:
     return sorted(notes.values(), key=lambda n: n.id)
 
 
-def adoptable(n: Note) -> tuple[dict[str, str] | None, str]:
-    """Return (markdown fields keyed Q/A/C, "") or (None, reason)."""
+_TAG_RE = re.compile(r"<(?!br\s*/?>)[^>]*>", re.IGNORECASE)
+
+
+def render_only_change(raw: str) -> bool:
+    """True when sync would only reformat plain text: no markup in the field except <br>."""
+    return not _TAG_RE.search(raw)
+
+
+def adoptable(n: Note, accept_render: bool = False) -> tuple[dict[str, str] | None, str]:
+    """Return (markdown fields keyed Q/A/C, "") or (None, reason).
+
+    accept_render also adopts fields that only differ because sync renders
+    plain text differently (for example `code` in backticks becomes <code>).
+    """
     if n.fields.get("ID", "").strip():
         return None, "already has an ID"
     out: dict[str, str] = {}
@@ -85,7 +97,7 @@ def adoptable(n: Note) -> tuple[dict[str, str] | None, str]:
             if anki_field in OPTIONAL:
                 continue
             return None, f"{anki_field} is empty"
-        if render_html(md) != raw:
+        if render_html(md) != raw and not (accept_render and render_only_change(raw)):
             return None, f"{anki_field} would change on sync (markup, media, or whitespace)"
         out[md_field] = md
     return out, ""
@@ -106,12 +118,12 @@ def survives_parse(block: str, md: dict[str, str]) -> bool:
     return len(cards) == 1 and all(cards[0].fields.get(k, "").strip() == v.strip() for k, v in md.items())
 
 
-def build_draft(notes: list[Note]) -> tuple[str, list[int], list[tuple[int, str]]]:
+def build_draft(notes: list[Note], accept_render: bool = False) -> tuple[str, list[int], list[tuple[int, str]]]:
     blocks: list[str] = []
     ids: list[int] = []
     skipped: list[tuple[int, str]] = []
     for n in notes:
-        md, why = adoptable(n)
+        md, why = adoptable(n, accept_render)
         if md is None:
             skipped.append((n.id, why))
             continue
@@ -126,7 +138,7 @@ def build_draft(notes: list[Note]) -> tuple[str, list[int], list[tuple[int, str]
 
 def cmd_draft(args, names) -> int:
     notes = fetch_notes(args.deck, names)
-    body, ids, skipped = build_draft(notes)
+    body, ids, skipped = build_draft(notes, args.accept_render)
     if not ids:
         print(f"no adoptable notes in {args.deck!r} ({len(skipped)} skipped)")
         return 1
@@ -222,6 +234,8 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--folder", required=True, help="target folder in the deck root, e.g. core/sre")
     d = sub.choices["draft"]
     d.add_argument("--prefix", required=True, help="ID prefix, also the draft and target file name")
+    d.add_argument("--accept-render", action="store_true",
+                   help="also adopt plain-text fields that sync would render differently (backticks become <code>)")
     k = sub.choices["link"]
     k.add_argument("--parent", default="anki::repo", help="sync parent deck (default: anki::repo)")
     k.add_argument("--approved", action="store_true")

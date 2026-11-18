@@ -38,6 +38,15 @@ class TestAdoptable(unittest.TestCase):
         self.assertIsNone(md)
         self.assertIn("would change", why)
 
+    def test_accept_render_adopts_backticks_only(self):
+        n = note(Text="run `ls {{c1::-l}}` now<br>next")
+        self.assertIsNone(a.adoptable(n)[0])
+        self.assertEqual(a.adoptable(n, accept_render=True)[0]["C"], "run `ls {{c1::-l}}` now\nnext")
+
+    def test_accept_render_still_skips_real_markup(self):
+        n = note(Text='<div>{{c1::x}}</div> `a`')
+        self.assertIsNone(a.adoptable(n, accept_render=True)[0])
+
     def test_skips_empty_field(self):
         self.assertIsNone(a.adoptable(note(Text=" "))[0])
 
