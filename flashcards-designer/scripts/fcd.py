@@ -5,11 +5,12 @@ Owns the parts of a deck that must not depend on an agent's judgment:
 ID allocation, source hashing, structural checks, retirement, and promotion
 of approved draft batches into the deck. Standard library only.
 
-Deck root layout:
-  cards/<topic>/<name>.md         approved cards (the deck)
-  .flashcards/registry.json       per-prefix ID counters (never decrease)
-  .flashcards/drafts/*.md         proposed batches (not part of the deck)
-  .flashcards/drafts/_promoted/   drafts already promoted
+Everything lives in one deck root folder:
+  <topic>/<name>.md       approved cards (the deck)
+  registry.json           per-prefix ID counters (never decrease)
+  drafts/*.md             proposed batches (not part of the deck)
+  drafts/_promoted/       drafts already promoted
+"drafts" is a reserved name and cannot be a topic.
 """
 from __future__ import annotations
 
@@ -36,6 +37,7 @@ YES_NO_RE = re.compile(
     re.IGNORECASE,
 )
 HASH_LEN = 12
+DRAFTS_DIR = "drafts"
 MAX_ANSWER_WORDS = 60
 MAX_ANSWER_LINES = 5
 
@@ -183,7 +185,7 @@ def inside(root: Path, path: Path) -> bool:
 
 
 def registry_path(root: Path) -> Path:
-    return root / ".flashcards" / "registry.json"
+    return root / "registry.json"
 
 
 def load_registry(root: Path) -> dict:
@@ -200,8 +202,11 @@ def save_registry(root: Path, reg: dict) -> None:
 
 
 def card_files(root: Path) -> list[Path]:
-    base = root / "cards"
-    return sorted(base.rglob("*.md")) if base.is_dir() else []
+    drafts = root / DRAFTS_DIR
+    return sorted(
+        f for f in root.rglob("*.md")
+        if not inside(drafts, f) and not any(part.startswith(".") for part in f.relative_to(root).parts)
+    )
 
 
 def deck_max_numbers(root: Path) -> dict[str, int]:
@@ -376,11 +381,11 @@ def retire(root: Path, card_id: str, replaced_by: list[str], date: str) -> None:
 
 
 def promote(root: Path, draft: Path, target: Path, prefix: str | None) -> list[tuple[str, str]]:
-    drafts_dir = root / ".flashcards" / "drafts"
+    drafts_dir = root / DRAFTS_DIR
     if not inside(drafts_dir, draft) or not draft.is_file():
-        raise FcdError("draft must be a file under .flashcards/drafts/")
-    if not inside(root / "cards", target) or target.suffix != ".md":
-        raise FcdError("target must be a .md file under cards/")
+        raise FcdError("draft must be a file under drafts/")
+    if not inside(root, target) or inside(drafts_dir, target) or target.suffix != ".md":
+        raise FcdError("target must be a .md file under the deck root, outside drafts/")
     prefix = prefix or re.sub(r"[^a-z0-9]+", "-", target.stem.lower()).strip("-")
     cards = parse_cards(draft)
     if not cards:
@@ -439,7 +444,7 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("promote", help="move an approved draft batch into the deck")
     p.add_argument("draft")
-    p.add_argument("target", help="deck file under cards/")
+    p.add_argument("target", help="deck file under the deck root, e.g. <topic>/<name>.md")
     p.add_argument("--prefix")
 
     args = ap.parse_args(argv)

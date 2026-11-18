@@ -13,13 +13,15 @@ Prioritize knowledge Victor needs often, struggles to remember, or must retrieve
 
 ## Deck root
 
-A deck root contains:
+A deck root is one folder that holds everything. Do not create files or folders anywhere else.
 
 ```text
-cards/<topic>/<name>.md        approved cards (the deck)
-.flashcards/registry.json      ID counters, owned by the allocator
-.flashcards/drafts/*.md        proposed batches, not part of the deck
+<topic>/<name>.md       approved cards (the deck)
+registry.json           ID counters, owned by the allocator
+drafts/*.md             proposed batches, not part of the deck
 ```
+
+`drafts` is reserved and cannot be a topic. Source documents live outside the root.
 
 Use the root the user supplies. If none is given, ask. Keep work decks in work repositories and personal decks in personal repositories, never mixed, and use only company-approved agents for work decks. Read and write only inside the chosen root, plus sources the user selected. Never touch review history files.
 
@@ -42,7 +44,7 @@ For generate, refine, and check, read [references/card-format.md](references/car
 python3 scripts/fcd.py --root <deck-root> alloc <prefix> -n 5        # reserve IDs
 python3 scripts/fcd.py --root <deck-root> source <card-file> <source-file> --locator "Heading"
 python3 scripts/fcd.py --root <deck-root> check [--json]             # read only
-python3 scripts/fcd.py --root <deck-root> promote <draft> <cards/topic/name.md>
+python3 scripts/fcd.py --root <deck-root> promote <draft> <topic>/<name>.md
 python3 scripts/fcd.py --root <deck-root> refresh <id>               # re-hash after review
 python3 scripts/fcd.py --root <deck-root> retire <id> --replaced-by a-001,a-002
 ```
@@ -55,7 +57,7 @@ Run `python3 -B -m unittest test_fcd` in `scripts/` after changing the script.
 
 1. Resolve the deck root and read the sources. For each source, note its path and, for sections, its heading. For pasted material, record a short label.
 2. Decide what is worth recalling. Prefer decisions, distinctions, causes, and numbers that matter in practice. Skip what the source states only in passing.
-3. Draft cards into `.flashcards/drafts/<YYYYMMDD>-<slug>.md` with `ID: pending`. Get each file-backed `Source:` value from `fcd.py source`, never by hand. Agents propose content; the allocator assigns IDs.
+3. Draft cards into `drafts/<YYYYMMDD>-<slug>.md` with `ID: pending`. Get each file-backed `Source:` value from `fcd.py source`, never by hand. Agents propose content; the allocator assigns IDs.
 4. Present the batch to the user as a readable list or diff. Flag uncertain answers and claims the source does not support.
 5. Write to the deck only after the user approves the batch. Run `fcd.py promote`, then `fcd.py check`, and report the result. Approval may cover part of a batch; remove rejected cards from the draft first.
 6. Never commit. Ask separately before committing.

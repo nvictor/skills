@@ -9,27 +9,29 @@ import fcd
 class DeckCase(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
-        self.root = Path(self._tmp.name).resolve()
-        (self.root / "docs").mkdir()
-        (self.root / "cards" / "ds").mkdir(parents=True)
-        (self.root / ".flashcards" / "drafts").mkdir(parents=True)
-        self.doc = self.root / "docs" / "rep.md"
+        base = Path(self._tmp.name).resolve()
+        self.root = base / "deck"
+        self.root.mkdir()
+        (base / "docs").mkdir()
+        (self.root / "ds").mkdir()
+        (self.root / "drafts").mkdir()
+        self.doc = base / "docs" / "rep.md"
         self.doc.write_text("# Rep\n\n## Quorum\n\nR + W > N.\n\n## Other\n\nunrelated\n")
 
     def tearDown(self):
         self._tmp.cleanup()
 
     def draft(self, name="d.md", n=2):
-        src = fcd.source_value(self.root / "cards" / "ds" / "rep.md", self.doc, "Quorum")
+        src = fcd.source_value(self.root / "ds" / "rep.md", self.doc, "Quorum")
         body = "# Draft\n\n"
         for i in range(n):
             body += f"## Card {i}\n\nID: pending\nQ: Why overlap {i}?\nA: Because R+W>N {i}.\nSource: {src}\n\n"
-        p = self.root / ".flashcards" / "drafts" / name
+        p = self.root / "drafts" / name
         p.write_text(body)
         return p
 
     def promote(self, name="d.md", n=2):
-        return fcd.promote(self.root, self.draft(name, n), self.root / "cards" / "ds" / "rep.md", None)
+        return fcd.promote(self.root, self.draft(name, n), self.root / "ds" / "rep.md", None)
 
 
 class TestHash(DeckCase):
@@ -73,25 +75,25 @@ class TestPromote(DeckCase):
     def test_promote_assigns_ids_and_moves_draft(self):
         got = self.promote()
         self.assertEqual([i for _, i in got], ["rep-001", "rep-002"])
-        self.assertTrue((self.root / ".flashcards" / "drafts" / "_promoted" / "d.md").exists())
-        cards = fcd.parse_cards(self.root / "cards" / "ds" / "rep.md")
+        self.assertTrue((self.root / "drafts" / "_promoted" / "d.md").exists())
+        cards = fcd.parse_cards(self.root / "ds" / "rep.md")
         self.assertEqual([c.id for c in cards], ["rep-001", "rep-002"])
 
     def test_second_promote_appends(self):
         self.promote("a.md", 1)
         self.promote("b.md", 1)
-        cards = fcd.parse_cards(self.root / "cards" / "ds" / "rep.md")
+        cards = fcd.parse_cards(self.root / "ds" / "rep.md")
         self.assertEqual([c.id for c in cards], ["rep-001", "rep-002"])
 
     def test_rejects_draft_with_existing_id(self):
         p = self.draft()
         p.write_text(p.read_text().replace("ID: pending", "ID: rep-009", 1))
         with self.assertRaises(fcd.FcdError):
-            fcd.promote(self.root, p, self.root / "cards" / "ds" / "rep.md", None)
+            fcd.promote(self.root, p, self.root / "ds" / "rep.md", None)
 
     def test_rejects_target_outside_cards(self):
         with self.assertRaises(fcd.FcdError):
-            fcd.promote(self.root, self.draft(), self.root / "elsewhere.md", None)
+            fcd.promote(self.root, self.draft(), self.root.parent / "elsewhere.md", None)
 
 
 class TestCheck(DeckCase):
@@ -102,6 +104,10 @@ class TestCheck(DeckCase):
         self.promote()
         self.assertEqual({f["severity"] for f in fcd.check_deck(self.root)} - {"info"}, set())
 
+    def test_drafts_are_not_checked_as_deck(self):
+        self.draft()
+        self.assertEqual(fcd.card_files(self.root), [])
+
     def test_stale_and_missing_source(self):
         self.promote()
         self.doc.write_text(self.doc.read_text().replace("R + W > N.", "changed"))
@@ -110,21 +116,21 @@ class TestCheck(DeckCase):
         self.assertIn("SOURCE_MISSING", self.codes())
 
     def test_pasted_source_is_unverifiable(self):
-        f = self.root / "cards" / "ds" / "x.md"
+        f = self.root / "ds" / "x.md"
         f.write_text("## T\n\nID: x-001\nQ: Why X?\nA: Y.\nSource: pasted: meeting notes\n")
         fcd.save_registry(self.root, {"version": 1, "counters": {"x": 1}})
         self.assertIn("SOURCE_UNVERIFIABLE", self.codes())
 
     def test_duplicate_id_and_registry_behind(self):
         self.promote()
-        f = self.root / "cards" / "ds" / "rep.md"
+        f = self.root / "ds" / "rep.md"
         f.write_text(f.read_text() + f.read_text().split("## Card 0")[1].join(["\n## Dup", ""]).replace("rep-002", "rep-001", 1))
         self.assertIn("ID_DUPLICATE", self.codes())
         fcd.save_registry(self.root, {"version": 1, "counters": {}})
         self.assertIn("REGISTRY_BEHIND", self.codes())
 
     def test_quality_heuristics(self):
-        f = self.root / "cards" / "ds" / "q.md"
+        f = self.root / "ds" / "q.md"
         f.write_text(
             "## A\n\nID: q-001\nQ: Is it fast?\nA: " + "word " * 70 + "\nSource: pasted: x\n\n"
             "## B\n\nID: q-002\nQ: Is it fast?\nA: Yes.\nSource: pasted: x\n"
@@ -134,7 +140,7 @@ class TestCheck(DeckCase):
         self.assertTrue({"POSSIBLE_YES_NO", "ANSWER_OVERLOADED", "QUESTION_DUPLICATE"} <= c)
 
     def test_code_fence_does_not_split_cards(self):
-        f = self.root / "cards" / "ds" / "f.md"
+        f = self.root / "ds" / "f.md"
         f.write_text("## T\n\nID: f-001\nQ: Show it.\nA:\n```\n## not a card\nQ: nor a field\n```\nSource: pasted: x\n")
         cards = fcd.parse_cards(f)
         self.assertEqual(len(cards), 1)

@@ -2,7 +2,7 @@
 
 ## File
 
-One Markdown file per topic area under `cards/<topic>/<name>.md`. A file has an optional `# Title` and any number of cards. Each card starts with `## <short title>`.
+One Markdown file per topic area at `<deck-root>/<topic>/<name>.md`. The deck root is a single folder holding the cards, `registry.json`, and `drafts/`. A file has an optional `# Title` and any number of cards. Each card starts with `## <short title>`.
 
 ```markdown
 # Replication
@@ -49,4 +49,4 @@ The hash covers the normalized text of the section: from the heading to the next
 
 ## Drafts
 
-Proposed batches live in `.flashcards/drafts/` using the same format with `ID: pending`. `fcd.py promote` validates the batch, assigns IDs, appends the cards to the target file, and moves the draft to `.flashcards/drafts/_promoted/`.
+Proposed batches live in `drafts/` using the same format with `ID: pending`. `fcd.py promote` validates the batch, assigns IDs, appends the cards to the target file, and moves the draft to `drafts/_promoted/`.
