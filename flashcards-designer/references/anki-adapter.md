@@ -1,75 +1,65 @@
 # Anki Adapter
 
-One-way sync from the deck (Git) to Anki. Markdown owns card content. Anki owns review history. Edits made in Anki are not pulled back, so tell the user to edit cards in the repository.
+One-way sync from the deck (Git) to Anki, done by `scripts/anki_sync.py`. Markdown owns card content. Anki owns review history. Edits made in Anki are not pulled back, so tell the user to edit cards in the repository.
 
-The CLI is `anki` (package anki-cli 0.2.0, installed as a uv tool). It is not named `anki-cli`. Verify each command below against `anki <command> --help` and the installed version before relying on it.
+The CLI is `anki` (package anki-cli 0.2.0, installed as a uv tool). It is not named `anki-cli`. Re-verify the behavior below after upgrading it.
 
-## Facts verified against anki-cli 0.2.0, direct backend
+## Model
 
-- `notetype:create --name N --field A --field B ... --template T --front '...' --back '...'` creates a custom note type.
-- `deck:create --name "A::B"` creates a deck, with hierarchy. The name is a flag, not positional.
-- `note:add --deck D --notetype N --tags "a b" --Field value ...` adds a note. Fields are dynamic flags named after the note type's fields. A value that starts with `--` is rejected.
-- `note:edit --id N --Field value` updates fields in place. `--tags` replaces tags.
-- `note:bulk --deck D --notetype N --file cards.json` adds notes from a JSON array of flat objects (`{"ID": ..., "Front": ..., "Back": ..., "tags": [...]}`). It succeeds partially: failed items return `null` in `ids`.
-- Duplicates are detected on the first field of the note type, and `note:add` refuses a duplicate with the existing note ID.
-- Field search is not supported. `ID:x` fails. Do not look cards up by field.
-- `cards --query "deck:D" --format json` returns every card with its `fields` (in note type order), `tags`, `reps`, and `lapses`, plus `note` (note ID) and `cardId`.
-- `note:delete` and `deck:delete` need `--yes`.
-- There is no command to delete a note type.
+Existing note types are used. No new note type is created.
 
-## Not verified yet
+| Deck card | Note type | Fields |
+| --- | --- | --- |
+| `Q:` and `A:` | `Basic` | `Front` = Q, `Back` = A plus a small source line, `ID` = card ID. Other fields (such as `Speak`) are left empty. |
+| `C:` | `Cloze` | `Text` = C, `Back Extra` = source line, `ID` = card ID. |
 
-- Whether the `direct` backend is safe while Anki is open. Assume it is not.
-- `card:suspend` and `card:reset` usage and effect. Read `--help` and test on a throwaway deck before the first real use.
-- Cloze note types. Sync basic cards first.
-- Exposure or setting of note GUIDs. Do not rely on GUIDs. Use the `ID` field.
+- Both note types need an `ID` field. Add it once with `anki notetype:field:add --notetype Basic --field ID` (and `Cloze`). This forces a one-time full sync with AnkiWeb.
+- Notes are matched by the `ID` field, never by question text.
+- Decks: `<parent>::<topic folder>`, with parent `repo` by default (`--parent`). Cards at the deck root go in the parent deck.
+- Tags: `fc` and the topic. Tags are set on add only.
+- Content is rendered to HTML: escaped, newlines as `<br>`, inline code as `<code>`, fenced code as `<pre><code>`. The source line shows the file name and section, not the hash.
+- Retired cards are suspended, never deleted, so history is kept.
+- Orphans (notes in the target deck whose ID is not in the deck) are reported and left alone.
 
-## Setup
-
-Create once, with the `ID` field first so duplicate detection works on it:
+## Commands
 
 ```bash
-anki notetype:create --name RepoCard --field ID --field Front --field Back --field Source \
-  --template Card --front '{{Front}}' \
-  --back '{{FrontSide}}<hr id=answer>{{Back}}<br><small>{{Source}}</small>'
+python3 scripts/anki_sync.py --root <deck-root> [--parent repo] plan
+python3 scripts/anki_sync.py --root <deck-root> [--parent repo] apply --approved --backup-dir <dir> [--reset id1,id2]
 ```
 
-Use a dedicated parent deck so repository cards never mix with existing cards, for example `repo::<deck-name>`.
+- `plan` is read only. It prints counts, then every add, update (old and new field text), suspension, orphan, and error.
+- `apply` re-plans, refuses without `--approved` and `--backup-dir`, copies the collection into the backup directory, applies the plan, then re-plans. A correct sync ends with `verify: plan is empty`. The exit code is non-zero on any failure.
+- `--reset` runs `card:reset` on the named cards, only if they were updated in this run.
+- It refuses to run if `fcd.py check` reports errors, if a required field is missing from a note type, if Anki has two notes with the same ID, or if the backend is `direct` while Anki is running.
 
-## Preflight
+## Procedure
 
-1. `anki --format plain status` must report `ok=True`. Note the backend.
-2. If the backend is `direct`, require Anki to be closed: `pgrep -x Anki` must print nothing. Otherwise require a working AnkiConnect connection. Do not write otherwise.
-3. Copy the collection file reported by `status` to a backup location before the first write of the session, and report the path.
+1. Run `fcd.py check`. Fix errors first.
+2. Run `plan`. Show the user the plan.
+3. For each update, say whether it changes what the card tests or its correct answer. Those are reset candidates. Run with `--reset <id>` only for cards the user explicitly approves.
+4. After approval, quit Anki (direct backend), then run `apply --approved --backup-dir <dir>` and report the backup path, each result line, and the verify line.
+5. Report failures by card ID. A failed add usually means the note type rejected the fields or Anki found a duplicate question.
 
-## Plan (read only)
+## Verified against anki-cli 0.2.0 (direct backend)
 
-1. Select cards: approved deck cards under the chosen files. Never drafts.
-2. Dump the target deck: `anki --format json cards --query 'notetype:RepoCard deck:"repo::<name>"'`. Build a map from the `ID` field (first entry of `fields`) to `note` (note ID). If any ID appears twice, abort and report it.
-3. Compare each non-retired deck card with its note:
-   - not in Anki: **add**
-   - in Anki with different Front, Back, or Source: **update**
-   - identical: no-op
-4. For each retired card present in Anki and not suspended: **suspend**. Retired cards absent from Anki are skipped.
-5. Report Anki notes whose `ID` is not in the deck as **orphans**. Never delete them.
-6. For each update, say whether it is substantive (changes what is tested or the correct answer). Those are reset candidates. Run `card:reset` only with explicit approval for that card.
-7. Show the counts and every update and suspension. Wait for approval.
+- Sync twice: the second run changes nothing and creates no duplicates.
+- Edit a card and sync: the note and card IDs are unchanged, so the schedule survives.
+- Retire a card and sync: the card is suspended (`queue` -1) and a re-plan is empty.
+- `card:reset` runs on an updated card.
+- Add of Basic and Cloze notes, including HTML in fields.
+- `note:add` and `note:bulk` require every field of the note type, including unmanaged ones. The script fills them with empty strings.
+- `note:bulk` reports failures only as `null` IDs with no message. Use `note:add` to see the reason.
+- Field search is unsupported (`ID:x` fails). The script dumps the target deck and matches IDs itself.
+- Argument values starting with `--` are rejected. The script prefixes them with an empty span.
 
-## Apply
+## Not verified
 
-1. Render fields. Anki fields are HTML: escape `&`, `<`, `>`, convert newlines to `<br>`, and convert fenced code to `<pre><code>`. Use the same renderer for add and update so the comparison in the plan stays stable.
-2. Add new cards with one `note:bulk` call and tags `repo` plus the topic. Check `ids` for `null` and report each failure with its card ID.
-3. Update with `note:edit --id <note> --Front ... --Back ... --Source ...`.
-4. Suspend retired cards with `card:suspend`, verified as above. Suspension removes them from review and keeps their history.
-5. Re-dump and re-plan. A correct sync leaves an empty plan.
-
-## Acceptance checks
-
-Run these on a throwaway deck before trusting the adapter, and again after any CLI upgrade:
-
-- Sync the same batch twice. The second run adds nothing and creates no duplicates.
-- Edit a reviewed card and sync. Its schedule (`reps`, due date) survives.
-- Retire a card by splitting it and sync. The original stops appearing in reviews and its history remains.
+- Whether the `direct` backend is safe while Anki is open. The script refuses.
+- Review history preservation across an update for a card that has real reviews (only a card with zero reviews was tested; IDs stay the same, so the schedule should too).
+- Mobile and AnkiWeb behavior after the `ID` field is added.
+- Moving an existing note to another deck when its topic folder changes.
+- Cloze cards with several deletions (several cards per note). The script groups cards by note but this was not tested.
 
 ## Existing Anki decks (adopt, deferred)
 
@@ -77,5 +67,5 @@ Do this only when a specific deck is worth maintaining in Git.
 
 - For backups or transfers that need media and review history, use Anki's built-in `.apkg` export.
 - To move a deck into Markdown, read it with `cards --format json`, convert selected notes into a draft batch with `ID: pending`, and let the user approve it.
-- After the batch is promoted, write the new card `ID` into the original note so history stays attached. This needs a note type with an `ID` field. Check how to add one without losing data before attempting it, and back up first.
+- After the batch is promoted, write the new card `ID` into the `ID` field of the original note so history stays attached and later syncs update it in place. Back up first.
 - Do not export review history into Git.

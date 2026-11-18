@@ -31,7 +31,7 @@ Use the root the user supplies. If none is given, ask. Keep work decks in work r
 - **refine:** Sharpen, split, or reword existing cards.
 - **check:** Audit the deck and propose fixes or retirements.
 - **gaps:** Identify useful knowledge the deck does not cover.
-- **sync:** Push approved cards to Anki. Read [references/anki-adapter.md](references/anki-adapter.md) completely first.
+- **sync:** Push approved cards to Anki with `scripts/anki_sync.py`. Read [references/anki-adapter.md](references/anki-adapter.md) completely first. Always show the `plan` and get approval before `apply`.
 - **adopt:** Convert existing Anki notes to Markdown. Deferred. Do it only when the user names a specific deck worth maintaining in Git; the adapter reference describes the approach.
 
 For generate, refine, and check, read [references/card-format.md](references/card-format.md) and [references/quality-rubric.md](references/quality-rubric.md) completely.
@@ -49,7 +49,14 @@ python3 scripts/fcd.py --root <deck-root> refresh <id>               # re-hash a
 python3 scripts/fcd.py --root <deck-root> retire <id> --replaced-by a-001,a-002
 ```
 
-Run `python3 -B -m unittest test_fcd` in `scripts/` after changing the script.
+Anki sync (needs the `anki` CLI; see the adapter reference):
+
+```bash
+python3 scripts/anki_sync.py --root <deck-root> plan
+python3 scripts/anki_sync.py --root <deck-root> apply --approved --backup-dir <dir> [--reset <ids>]
+```
+
+Run `python3 -B -m unittest discover -p "test_*.py"` in `scripts/` after changing a script.
 
 ## Workflow
 
@@ -96,6 +103,6 @@ Compare the sources the user names with the deck's coverage. Report missing topi
 - **refine:** diffs with change classification, then what was written.
 - **check:** prioritized findings, proposed fixes, nothing changed.
 - **gaps:** missing topics with reasons.
-- **sync:** the dry-run plan first, then verified results (created, updated, suspended, failed).
+- **sync:** the `plan` first, then after approval the backup path, each result line, and the verify line.
 
 Never claim a card was written, synced, hashed, or checked unless the tool output confirms it.
