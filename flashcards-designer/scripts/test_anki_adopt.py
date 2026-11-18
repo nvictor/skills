@@ -26,6 +26,14 @@ class TestAdoptable(unittest.TestCase):
         md, _ = a.adoptable(note("basic"))
         self.assertEqual(md, {"Q": "Q?", "A": "A."})
 
+    def test_basic_speak_becomes_s(self):
+        md, _ = a.adoptable(note("basic", Speak="Ethereum"))
+        self.assertEqual(md, {"Q": "Q?", "A": "A.", "S": "Ethereum"})
+
+    def test_empty_speak_is_omitted(self):
+        md, _ = a.adoptable(note("basic"))
+        self.assertNotIn("S", md)
+
     def test_skips_existing_id(self):
         self.assertIn("ID", a.adoptable(note(ID="x-001"))[1])
 
@@ -46,6 +54,20 @@ class TestAdoptable(unittest.TestCase):
     def test_accept_render_still_skips_real_markup(self):
         n = note(Text='<div>{{c1::x}}</div> `a`')
         self.assertIsNone(a.adoptable(n, accept_render=True)[0])
+
+    def test_strip_markup_drops_wrappers(self):
+        n = note(Text="<div><div>`terraform plan` option:</div></div><div>{{c1::-refresh-only}}</div>")
+        self.assertIsNone(a.adoptable(n, accept_render=True)[0])
+        md, _ = a.adoptable(n, strip=True)
+        self.assertEqual(md["C"], "`terraform plan` option:\n{{c1::-refresh-only}}")
+
+    def test_strip_markup_drops_bold(self):
+        md, _ = a.adoptable(note(Text="a <strong>{{c1::b}}</strong> c"), strip=True)
+        self.assertEqual(md["C"], "a {{c1::b}} c")
+
+    def test_strip_markup_still_skips_images_and_links(self):
+        for raw in ('<img src="a.png"> {{c1::x}}', '<a href="u">{{c1::x}}</a>', "{{c1::x}}<ul><li>a</li></ul>"):
+            self.assertIsNone(a.adoptable(note(Text=raw), strip=True)[0], raw)
 
     def test_skips_empty_field(self):
         self.assertIsNone(a.adoptable(note(Text=" "))[0])
@@ -90,6 +112,12 @@ class TestLink(unittest.TestCase):
         todo, problems = a.plan_link(notes, {1: "sre-001", 2: "sre-002", 3: "sre-003", 4: "sre-004"}, "d")
         self.assertEqual([(n.id, c) for n, c in todo], [(1, "sre-001"), (3, "sre-003")])
         self.assertEqual(len(problems), 2)
+
+    def test_plan_link_skips_already_linked_ids(self):
+        todo, problems = a.plan_link([note(nid=1)], {1: "sre-001", 2: "sre-002", 3: "sre-003"}, "d", linked={"sre-002"})
+        self.assertEqual([c for _, c in todo], ["sre-001"])
+        self.assertEqual(len(problems), 1)
+        self.assertIn("sre-003", problems[0])
 
     def test_link_refuses_non_anki_parent(self):
         with self.assertRaises(s.SyncError):

@@ -30,6 +30,7 @@ Retired: 2026-11-18 replaced-by: replication-005, replication-006
 - `C:` for cloze cards, instead of `Q:` and `A:`. Contains at least one `{{c1::deletion}}`. Use only when a cloze suits the material.
 - `X:` optional, only on `C:` cards. Answer-side explanation shown after the cloze is revealed (Anki `Back Extra`). Never put it in `C:`, which shows on the front.
 - **Escaping.** A continuation line that starts with a field name and colon (`ID:`, `Q:`, `A:`, `C:`, `X:`, `Source:`, `Retired:`) or with `## ` would be read as a new field or card. Write it with one leading backslash (`\\A: Access`). The parser removes one backslash, so lines that already start with a backslash before such a prefix gain another. `fcd.py promote` and `anki_adopt.py` escape automatically. Lines inside code fences are never parsed and need no escape. The first line of a value (after `Q: `) never needs one.
+- `S:` optional, only on `Q:`/`A:` cards. The Anki `Speak` field (text read aloud by the card template), kept in Git so a rebuild restores it. Omit it when the field is empty. Sync writes it only when present.
 - `Source:` required. See below.
 - `Retired:` present only on retired cards. Format `<date>` or `<date> replaced-by: <ids>`. Retired cards stay in the file so their IDs and history are never lost, and sync suspends them.
 

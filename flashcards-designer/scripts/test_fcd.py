@@ -193,5 +193,23 @@ class TestEscape(unittest.TestCase):
         self.assertEqual(self.roundtrip(v).fields["C"], v)
 
 
+class TestSpeakField(DeckCase):
+    def test_s_round_trips_and_is_rendered_after_a(self):
+        out = fcd.render_card("T", "x-001", {"Q": "q", "A": "a", "S": "Q-word", "Source": "pasted: n"})
+        self.assertIn("A: a\nS: Q-word\nSource", out)
+        p = self.root / "t" / "x.md"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(out)
+        self.assertEqual(fcd.parse_cards(p)[0].fields["S"], "Q-word")
+
+    def test_s_on_cloze_is_an_error(self):
+        p = self.root / "t" / "x.md"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("## T\n\nID: x-001\nC: {{c1::a}}\nS: x\nSource: pasted: n\n")
+        fcd.save_registry(self.root, {"version": 1, "counters": {"x": 1}})
+        codes = {f["code"] for f in fcd.check_deck(self.root)}
+        self.assertIn("SPEAK_ON_CLOZE", codes)
+
+
 if __name__ == "__main__":
     unittest.main()

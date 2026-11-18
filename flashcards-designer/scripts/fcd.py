@@ -22,10 +22,10 @@ import re
 import sys
 from pathlib import Path
 
-FIELD_RE = re.compile(r"^(ID|Q|A|C|X|Source|Retired):[ \t]?(.*)$")
+FIELD_RE = re.compile(r"^(ID|Q|A|C|X|S|Source|Retired):[ \t]?(.*)$")
 # A continuation line that looks like a field or card heading is written with one
 # extra leading backslash, and read back with one removed.
-ESCAPABLE_RE = re.compile(r"^(\\*)((?:ID|Q|A|C|X|Source|Retired):|## )")
+ESCAPABLE_RE = re.compile(r"^(\\*)((?:ID|Q|A|C|X|S|Source|Retired):|## )")
 ID_RE = re.compile(r"^(?P<prefix>[a-z0-9][a-z0-9-]*)-(?P<num>\d{3,})$")
 PREFIX_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 SOURCE_RE = re.compile(
@@ -127,6 +127,8 @@ def render_card(title: str, card_id: str, fields: dict[str, str]) -> str:
     else:
         out.append(f"Q: {escape_value(fields['Q'])}")
         out.append(f"A: {escape_value(fields['A'])}")
+        if fields.get("S"):
+            out.append(f"S: {escape_value(fields['S'])}")
     out.append(f"Source: {fields['Source']}")
     return "\n".join(out) + "\n"
 
@@ -300,6 +302,8 @@ def check_deck(root: Path) -> list[dict]:
             is_cloze = "C" in c.fields
             if "X" in c.fields and not is_cloze:
                 findings.append(_finding("error", "EXTRA_WITHOUT_CLOZE", c, "X: is only valid on C: cards"))
+            if "S" in c.fields and is_cloze:
+                findings.append(_finding("error", "SPEAK_ON_CLOZE", c, "S: is only valid on Q:/A: cards"))
             if is_cloze:
                 if "{{c" not in c.fields["C"]:
                     findings.append(_finding("error", "CLOZE_NO_DELETION", c, "C: has no {{c1::...}}"))

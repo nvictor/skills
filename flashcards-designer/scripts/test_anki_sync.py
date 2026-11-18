@@ -122,6 +122,19 @@ class TestDesired(unittest.TestCase):
             d = s.desired_notes(root, "anki")[0]
             self.assertEqual(d.fields["Back Extra"], "why<br><small>n</small>")
 
+    def test_s_maps_to_speak(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            (root / "t").mkdir()
+            (root / "t" / "x.md").write_text(
+                "## A\n\nID: x-001\nQ: word\nA: wurd\nS: Word\nSource: pasted: n\n\n"
+                "## B\n\nID: x-002\nQ: other\nA: o\nSource: pasted: n\n"
+            )
+            fcd.save_registry(root, {"version": 1, "counters": {"x": 2}})
+            d = {x.id: x for x in s.desired_notes(root, "anki")}
+            self.assertEqual(d["x-001"].fields["Speak"], "Word")
+            self.assertNotIn("Speak", d["x-002"].fields)
+
     def test_refuses_deck_with_errors(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp).resolve()

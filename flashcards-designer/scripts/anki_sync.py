@@ -8,7 +8,7 @@ Markdown owns card content. Anki owns review history. Notes are matched by the
   apply  perform the plan (requires --approved and --backup-dir)
 
 Mapping:
-  Q/A card -> Basic: Front=Q, Back=A + source line, ID
+  Q/A card -> Basic: Front=Q, Back=A + source line, Speak=S (if any), ID
   C card   -> Cloze: Text=C, Back Extra=X (if any) + source line, ID
   Deck     -> <parent>::<folder path>, nested (core/sre/x.md -> anki::repo::core::sre)
   Tags     -> fc and the folder path as one hierarchical tag (core::sre)
@@ -151,6 +151,8 @@ def desired_notes(root: Path, parent: str) -> list[Desired]:
                     "Back": render_html(c.fields["A"]) + "<br>" + src,
                     "ID": c.id,
                 }
+                if c.fields.get("S"):
+                    fields["Speak"] = render_html(c.fields["S"])
             out.append(Desired(c.id, kind, deck, ["fc"] + ([tag] if tag else []), c.retired, fields, c.title))
     return out
 
@@ -158,6 +160,11 @@ def desired_notes(root: Path, parent: str) -> list[Desired]:
 def notetype_fields(name: str) -> list[str]:
     d = anki("notetype", "--name", name)
     return [f if isinstance(f, str) else f["name"] for f in d["fields"]]
+
+
+def check_speak(desired: list["Desired"], names: dict[str, str]) -> None:
+    if any("Speak" in d.fields for d in desired) and "Speak" not in notetype_fields(names["basic"]):
+        raise SyncError(f"cards use S: but note type {names['basic']!r} has no Speak field")
 
 
 def check_notetypes(names: dict[str, str]) -> None:
@@ -332,6 +339,7 @@ def main(argv: list[str] | None = None) -> int:
         require_root_deck(args.parent)
         check_notetypes(names)
         desired = desired_notes(root, args.parent)
+        check_speak(desired, names)
         plan = make_plan(desired, dump_existing(args.parent, names), names)
         print(format_plan(plan))
         if plan.errors:

@@ -15,7 +15,9 @@ Flow:
      anki_adopt.py link --deck anki::core::sre --folder core/sre --approved --backup-dir <dir>
   4. anki_sync.py plan   (expect updates only, no adds)
 
-Cloze Back Extra becomes the optional X: field. Only Basic and Cloze notes whose text survives a Markdown round trip unchanged
+  speak  for cards linked before S: existed: anki_adopt.py speak --folder <a/b> [--write]
+
+Cloze Back Extra becomes the optional X: field, Basic Speak the optional S: field. Only Basic and Cloze notes whose text survives a Markdown round trip unchanged
 are drafted. Everything else is listed as skipped and stays untouched in Anki.
 """
 from __future__ import annotations
@@ -37,8 +39,8 @@ TITLE_PREFIX = "anki-note-"
 TITLE_RE = re.compile(rf"^{TITLE_PREFIX}(\d+)$")
 SOURCE = "pasted: imported from Anki"
 # Anki field -> card field. Optional fields may be empty.
-FIELD_MAP = {"basic": {"Front": "Q", "Back": "A"}, "cloze": {"Text": "C", "Back Extra": "X"}}
-OPTIONAL = {"Back Extra"}
+FIELD_MAP = {"basic": {"Front": "Q", "Back": "A", "Speak": "S"}, "cloze": {"Text": "C", "Back Extra": "X"}}
+OPTIONAL = {"Back Extra", "Speak"}
 KINDS = {"Basic": "basic", "Cloze": "cloze"}
 
 
@@ -81,17 +83,33 @@ def render_only_change(raw: str) -> bool:
     return not _TAG_RE.search(raw)
 
 
-def adoptable(n: Note, accept_render: bool = False) -> tuple[dict[str, str] | None, str]:
+_STRIPPABLE_RE = re.compile(r"</?(?:div|span|strong|b|em|i|u)(?:\s[^>]*)?>", re.IGNORECASE)
+
+
+def strip_markup(raw: str) -> str:
+    """Drop formatting wrappers (div, span, bold, italic, underline). Block ends become <br>."""
+    out = re.sub(r"(?:</div\s*>\s*)+", "<br>", raw, flags=re.IGNORECASE)
+    out = _STRIPPABLE_RE.sub("", out)
+    out = out.replace("&nbsp;", " ")
+    return re.sub(r"(?:<br\s*/?>)+$", "", out.strip(), flags=re.IGNORECASE)
+
+
+def adoptable(n: Note, accept_render: bool = False, strip: bool = False) -> tuple[dict[str, str] | None, str]:
     """Return (markdown fields keyed Q/A/C, "") or (None, reason).
 
     accept_render also adopts fields that only differ because sync renders
     plain text differently (for example `code` in backticks becomes <code>).
+    strip also drops formatting wrappers (div, span, bold, italic, underline) first. Other
+    markup (images, links, lists, tables, sound) still skips the note. Implies accept_render.
     """
+    accept_render = accept_render or strip
     if n.fields.get("ID", "").strip():
         return None, "already has an ID"
     out: dict[str, str] = {}
     for anki_field, md_field in FIELD_MAP[n.kind].items():
         raw = n.fields.get(anki_field, "")
+        if strip:
+            raw = strip_markup(raw)
         md = to_markdown(raw).strip("\n")
         if not md.strip():
             if anki_field in OPTIONAL:
@@ -118,12 +136,12 @@ def survives_parse(block: str, md: dict[str, str]) -> bool:
     return len(cards) == 1 and all(cards[0].fields.get(k, "").strip() == v.strip() for k, v in md.items())
 
 
-def build_draft(notes: list[Note], accept_render: bool = False) -> tuple[str, list[int], list[tuple[int, str]]]:
+def build_draft(notes: list[Note], accept_render: bool = False, strip: bool = False) -> tuple[str, list[int], list[tuple[int, str]]]:
     blocks: list[str] = []
     ids: list[int] = []
     skipped: list[tuple[int, str]] = []
     for n in notes:
-        md, why = adoptable(n, accept_render)
+        md, why = adoptable(n, accept_render, strip)
         if md is None:
             skipped.append((n.id, why))
             continue
@@ -138,7 +156,7 @@ def build_draft(notes: list[Note], accept_render: bool = False) -> tuple[str, li
 
 def cmd_draft(args, names) -> int:
     notes = fetch_notes(args.deck, names)
-    body, ids, skipped = build_draft(notes, args.accept_render)
+    body, ids, skipped = build_draft(notes, args.accept_render, args.strip_markup)
     if not ids:
         print(f"no adoptable notes in {args.deck!r} ({len(skipped)} skipped)")
         return 1
@@ -175,12 +193,18 @@ def promoted(root: Path, folder: str) -> dict[int, str]:
     return out
 
 
-def plan_link(notes: list[Note], ids: dict[int, str], dest: str) -> tuple[list[tuple[Note, str]], list[str]]:
+def plan_link(
+    notes: list[Note], ids: dict[int, str], dest: str, linked: set[str] | None = None
+) -> tuple[list[tuple[Note, str]], list[str]]:
+    """`linked` holds card IDs already present in Anki; those need no work and are not errors."""
+    linked = linked or set()
     by_note = {n.id: n for n in notes}
     todo: list[tuple[Note, str]] = []
     problems: list[str] = []
     for nid, cid in sorted(ids.items()):
         n = by_note.get(nid)
+        if n is None and cid in linked:
+            continue
         if n is None:
             problems.append(f"{cid}: note {nid} not found directly in the source deck")
         elif n.fields.get("ID", "").strip() not in ("", cid):
@@ -197,7 +221,8 @@ def cmd_link(args, names) -> int:
     ids = promoted(root, args.folder)
     if not ids:
         raise SyncError(f"no promoted import cards (titles {TITLE_PREFIX}<note id>) under {args.folder!r}")
-    todo, problems = plan_link(fetch_notes(args.deck, names), ids, dest)
+    linked = set(anki_sync.dump_existing(args.parent, names))
+    todo, problems = plan_link(fetch_notes(args.deck, names), ids, dest, linked)
     moves = sum(1 for n, _ in todo for c in n.cards if c["deck"] != dest)
     print(f"set ID on {len(todo)} notes, move {moves} cards to {dest}, problems {len(problems)}")
     for n, cid in todo:
@@ -222,6 +247,44 @@ def cmd_link(args, names) -> int:
     return 0
 
 
+# ------------------------------------------------------------ speak backfill
+
+
+def cmd_speak(args, names) -> int:
+    """Copy non-empty Speak values from Anki into S: lines of already-linked Basic cards."""
+    root = Path(args.root).resolve()
+    want = tuple(p for p in re.split(r"[/:]+", args.folder) if p)
+    existing = anki_sync.dump_existing(args.parent, names)
+    todo = skipped = 0
+    for f in fcd.card_files(root):
+        if f.relative_to(root).parts[:-1] != want:
+            continue
+        inserts: list[tuple[int, str]] = []
+        for c in fcd.parse_cards(f):
+            e = existing.get(c.id or "")
+            if c.retired or "C" in c.fields or "S" in c.fields or e is None:
+                continue
+            raw = e.fields.get("Speak", "")
+            if not raw.strip():
+                continue
+            md = to_markdown(raw).strip("\n")
+            if render_html(md) != raw:
+                skipped += 1
+                print(f"  SKIP {c.id}: Speak would change on sync")
+                continue
+            inserts.append((c.field_lines["Source"] - 1, f"S: {fcd.escape_value(md)}"))
+        if inserts and args.write:
+            lines = f.read_text(encoding="utf-8").splitlines()
+            for idx, line in sorted(inserts, reverse=True):
+                lines.insert(idx, line)
+            f.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        todo += len(inserts)
+    print(f"{'wrote' if args.write else 'would add'} S: to {todo} cards, skipped {skipped}")
+    if todo and not args.write:
+        print("rerun with --write to edit the card files (Git only; Anki is not changed)")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--root", default=".", help="deck root")
@@ -236,6 +299,12 @@ def main(argv: list[str] | None = None) -> int:
     d.add_argument("--prefix", required=True, help="ID prefix, also the draft and target file name")
     d.add_argument("--accept-render", action="store_true",
                    help="also adopt plain-text fields that sync would render differently (backticks become <code>)")
+    d.add_argument("--strip-markup", action="store_true",
+                   help="drop div, span, bold, italic, underline wrappers (formatting is lost); implies --accept-render")
+    s = sub.add_parser("speak", help="copy Speak values from Anki into S: lines (edits card files only)")
+    s.add_argument("--folder", required=True)
+    s.add_argument("--parent", default="anki::repo")
+    s.add_argument("--write", action="store_true")
     k = sub.choices["link"]
     k.add_argument("--parent", default="anki::repo", help="sync parent deck (default: anki::repo)")
     k.add_argument("--approved", action="store_true")
@@ -244,7 +313,7 @@ def main(argv: list[str] | None = None) -> int:
     names = {"basic": args.basic_notetype, "cloze": args.cloze_notetype}
     try:
         anki_sync.check_notetypes(names)
-        return cmd_draft(args, names) if args.cmd == "draft" else cmd_link(args, names)
+        return {"draft": cmd_draft, "link": cmd_link, "speak": cmd_speak}[args.cmd](args, names)
     except (SyncError, fcd.FcdError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2

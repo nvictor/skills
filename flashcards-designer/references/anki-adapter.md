@@ -10,7 +10,7 @@ Existing note types are used. No new note type is created.
 
 | Deck card | Note type | Fields |
 | --- | --- | --- |
-| `Q:` and `A:` | `Basic` | `Front` = Q, `Back` = A plus a small source line, `ID` = card ID. Other fields (such as `Speak`) are left empty. |
+| `Q:` and `A:` (and optional `S:`) | `Basic` | `Front` = Q, `Back` = A plus a small source line, `Speak` = S (if any), `ID` = card ID. Fields not managed here are left empty. |
 | `C:` (and optional `X:`) | `Cloze` | `Text` = C, `Back Extra` = X (if any) then the source line, `ID` = card ID. |
 
 - Both note types need an `ID` field. Add it once with `anki notetype:field:add --notetype Basic --field ID` (and `Cloze`). This forces a one-time full sync with AnkiWeb.
@@ -111,12 +111,13 @@ python3 scripts/anki_adopt.py --root <deck-root> link --deck anki::core::sre --f
 python3 scripts/anki_sync.py --root <deck-root> plan                                                         # updates only, no adds
 ```
 
-- `draft` is read only for Anki. It writes `drafts/import-<prefix>.md` with `ID: pending`, one card per note, titled `anki-note-<note id>`. The title is how `link` finds the note, so do not rename it. Source is `pasted: imported from Anki`. A cloze note's `Back Extra` becomes the card's `X:` field, so it is kept and still shows on the answer side only.
+- `draft` is read only for Anki. It writes `drafts/import-<prefix>.md` with `ID: pending`, one card per note, titled `anki-note-<note id>`. The title is how `link` finds the note, so do not rename it. Source is `pasted: imported from Anki`. A cloze note's `Back Extra` becomes the card's `X:` field, so it is kept and still shows on the answer side only. A Basic note's `Speak` becomes `S:`.
 - Show the user the draft and the skipped list before promoting.
-- Only `Basic` and `Cloze` notes are drafted, and only if `render_html(markdown)` equals the stored field exactly, so sync will not rewrite their text. Skipped, and left untouched in Anki: notes that already have an ID, and notes with images or other markup that does not round trip. `draft --accept-render` also adopts plain-text fields (no markup except `<br>`) that sync would render differently, mainly backticks, which become `<code>`. The sync plan then lists a `Text` update for each, and the schedule is unaffected. Lines that look like fields (an acronym list such as `C: ...`, `A: ...`) are escaped in the draft, see card-format.md. Subdecks of `--deck` are not included. Run `draft` for each one.
+- Only `Basic` and `Cloze` notes are drafted, and only if `render_html(markdown)` equals the stored field exactly, so sync will not rewrite their text. Skipped, and left untouched in Anki: notes that already have an ID, and notes with images or other markup that does not round trip. `draft --accept-render` also adopts plain-text fields (no markup except `<br>`) that sync would render differently, mainly backticks, which become `<code>`. The sync plan then lists a `Text` update for each, and the schedule is unaffected. `--strip-markup` (implies `--accept-render`) also drops `div`, `span`, bold, italic and underline wrappers first, so formatting such as bold is lost. Images, links, lists, tables and sound still skip the note. Lines that look like fields (an acronym list such as `C: ...`, `A: ...`) are escaped in the draft, see card-format.md. Subdecks of `--deck` are not included. Run `draft` for each one.
 - `link` without `--approved` is a plan. With `--approved --backup-dir` it backs up, creates the target deck, sets `ID` on each note, and moves its cards with `card:move` to `<parent>::<folder path>` (`--parent` defaults to `anki::repo`). The parent must be `anki` or under it.
 - After `link`, sync shows one update per note (the source line on the back) and no adds. Do not pass `--reset` for them.
 - The folder decides the destination. To keep cards where they are, use `--parent` and `--folder` that reproduce the current deck (for example `--parent anki::core --folder sre`).
+- Cards linked before `S:` existed: `python3 scripts/anki_adopt.py --root <deck-root> speak --folder <a/b> [--write]` copies each non-empty `Speak` into an `S:` line. It edits card files only (never Anki). Without `--write` it only reports.
 - Do not export review history into Git. For backups or transfers that need media and history, use Anki's `.apkg` export.
 
 Verified on a copy of the collection (`ANKI_COL`) with a 41-note, 103-card, 829-review cloze deck: 31 notes adopted (10 more with Back Extra content were skipped before `X:` existed), 76 cards moved to `anki::repo::core::sre`. Card IDs, due, interval, ease, reps, and lapses were identical before and after, the review log entries were still attached, and a second sync was empty. Not verified: Basic notes on real data, notes with several cards in different decks, and FSRS memory state (only the fields above were compared).
