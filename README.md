@@ -21,6 +21,9 @@ agent-specific skill directories for Codex, Copilot, Gemini, and Claude Code:
   practice, feedback, reflection, adaptation, and progress tracking.
 - `diagram-creator`: creates deterministic SVG architecture, workflow, and
   systems diagrams from a semantic model and layout intent.
+- `flashcards-designer`: creates, refines, audits, and maintains Git-backed
+  Markdown flashcard decks with stable IDs and source tracking, and syncs
+  approved cards one way to Anki.
 - `macos-icon-creator`: creates macOS-style app icon SVG concepts from an app
   or product brief.
 - `opportunity-designer`: captures and evaluates potential improvements before committing to delivery, preserving evidence and decision rationale.

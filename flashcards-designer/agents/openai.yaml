@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flashcards Designer"
+  short_description: "Create and maintain Git-backed flashcard decks"
+  default_prompt: "Use $flashcards-designer to generate, refine, check, or sync a flashcard deck."
