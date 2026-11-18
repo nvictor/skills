@@ -61,6 +61,25 @@ python3 scripts/anki_sync.py --root <deck-root> [--parent anki::repo] apply --ap
 - Moving an existing note to another deck when its topic folder changes.
 - Cloze cards with several deletions (several cards per note). The script groups cards by note but this was not tested.
 
+## Setup snapshot (new computer or fresh Anki)
+
+`scripts/anki_setup.py` saves and restores what the synced cards depend on, in `assets/anki-setup.json` inside the skill. It ships with the skill, so it is the default on every machine that has the skill. Use `--snapshot <file>` for another one:
+
+- Basic and Cloze: fields, templates (front and back), and CSS.
+- Scheduler options of the parent deck (`anki::repo`): new per day, reviews per day, desired retention, maximum interval, learn and relearn steps.
+
+```bash
+python3 scripts/anki_setup.py capture        # on the source machine
+python3 scripts/anki_setup.py plan           # on the new machine, read only
+python3 scripts/anki_setup.py restore --approved --backup-dir <dir> [--allow-shared-options]
+```
+
+- Restore creates missing note types, adds missing fields and templates, and sets templates and CSS that differ. It never reorders or removes fields. It warns when field order differs.
+- **Shared presets.** Scheduler options belong to a preset, and a preset is usually shared by every deck. Changing it changes all of them, so restore blocks the options step unless `--allow-shared-options` is given. On a fresh install this is normally what you want. On a populated collection, check the plan first.
+- Verified on a copy of the collection (`--col`): create (normal and cloze), field add, template add, template edit, CSS set, deck create, and options set.
+- Not covered: Anki preferences, add-ons, FSRS parameters, media, other note types, and other decks' options. AnkiWeb sync or a collection backup carries those.
+- Restore only styles the note types. Cards still come from `anki_sync.py`.
+
 ## Existing Anki decks (adopt, deferred)
 
 Do this only when a specific deck is worth maintaining in Git.

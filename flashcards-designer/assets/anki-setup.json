@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "captured": "2026-11-18",
+  "notetypes": {
+    "Basic": {
+      "kind": "normal",
+      "fields": [
+        "Front",
+        "Back",
+        "Speak",
+        "ID"
+      ],
+      "templates": {
+        "Card 1": {
+          "front": "<div class=\"deck-label\">{{Subdeck}}</div>\n{{Front}}",
+          "back": "{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}\n\n{{#Speak}}{{tts en_US:Speak}}{{/Speak}}"
+        }
+      },
+      "css": ".card {\n    font-family: arial;\n    font-size: 20px;\n    text-align: center;\n    color: black;\n    background-color: white;\n}\n\n.deck-label {\n  font-size: 12px;\n  text-transform: uppercase;\n  letter-spacing: 0.05em;\n  opacity: 0.6;\n  margin-bottom: 8px;\n}"
+    },
+    "Cloze": {
+      "kind": "cloze",
+      "fields": [
+        "Text",
+        "Back Extra",
+        "ID"
+      ],
+      "templates": {
+        "Cloze": {
+          "front": "<div class=\"deck-label\">{{Subdeck}}</div>\n{{cloze:Text}}",
+          "back": "<div class=\"deck-label\">{{Subdeck}}</div>\n{{cloze:Text}}<br>\n{{Back Extra}}"
+        }
+      },
+      "css": ".card {\n    font-family: arial;\n    font-size: 20px;\n    text-align: center;\n    color: black;\n    background-color: white;\n}\n.cloze {\n    font-weight: bold;\n    color: blue;\n}\n.nightMode .cloze {\n    color: lightblue;\n}\n.deck-label {\n  font-size: 12px;\n  text-transform: uppercase;\n  letter-spacing: 0.05em;\n  opacity: 0.6;\n  margin-bottom: 8px;\n}"
+    }
+  },
+  "deck_options": {
+    "deck": "anki::repo",
+    "preset_name": "Default",
+    "config": {
+      "new_per_day": 5,
+      "reviews_per_day": 50,
+      "desired_retention": 0.800000011920929,
+      "maximum_review_interval": 36500,
+      "learn_steps": [
+        1.0,
+        10.0
+      ],
+      "relearn_steps": [
+        10.0
+      ]
+    },
+    "shared_with_other_decks": 17
+  }
+}

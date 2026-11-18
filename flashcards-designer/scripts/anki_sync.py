@@ -31,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import fcd  # noqa: E402
 
 ANKI = os.environ.get("ANKI_CLI", "anki")
+COL = os.environ.get("ANKI_COL")  # optional collection file, e.g. a test copy
 SUSPENDED_QUEUE = -1
 REQUIRED_FIELDS = {"basic": ["Front", "Back", "ID"], "cloze": ["Text", "Back Extra", "ID"]}
 
@@ -43,7 +44,8 @@ class SyncError(Exception):
 
 
 def anki(*args: str) -> dict:
-    r = subprocess.run([ANKI, "--format", "json", *args], capture_output=True, text=True)
+    cmd = [ANKI, "--format", "json", *(["--col", COL] if COL else []), *args]
+    r = subprocess.run(cmd, capture_output=True, text=True)
     try:
         out = json.loads(r.stdout) if r.stdout.strip() else {}
     except json.JSONDecodeError:
@@ -249,9 +251,9 @@ def format_plan(plan: Plan) -> str:
 
 def preflight(backup_dir: Path) -> Path:
     st = anki("status")
-    if st.get("backend") == "direct" and anki_running():
+    if not COL and st.get("backend") == "direct" and anki_running():
         raise SyncError("Anki is running and the backend is direct; quit Anki first")
-    src = Path(st["collection"])
+    src = Path(COL or st["collection"])
     backup_dir.mkdir(parents=True, exist_ok=True)
     dest = backup_dir / f"{src.stem}-{dt.datetime.now():%Y%m%d-%H%M%S}{src.suffix}"
     shutil.copy2(src, dest)
