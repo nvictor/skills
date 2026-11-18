@@ -22,7 +22,10 @@ import re
 import sys
 from pathlib import Path
 
-FIELD_RE = re.compile(r"^(ID|Q|A|C|Source|Retired):[ \t]?(.*)$")
+FIELD_RE = re.compile(r"^(ID|Q|A|C|X|Source|Retired):[ \t]?(.*)$")
+# A continuation line that looks like a field or card heading is written with one
+# extra leading backslash, and read back with one removed.
+ESCAPABLE_RE = re.compile(r"^(\\*)((?:ID|Q|A|C|X|Source|Retired):|## )")
 ID_RE = re.compile(r"^(?P<prefix>[a-z0-9][a-z0-9-]*)-(?P<num>\d{3,})$")
 PREFIX_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 SOURCE_RE = re.compile(
@@ -93,19 +96,37 @@ def parse_cards(path: Path) -> list[Card]:
             cur.fields[field] = m.group(2)
             cur.field_lines[field] = i
         elif field:
+            if not in_fence:
+                m = ESCAPABLE_RE.match(line)
+                if m and m.group(1):
+                    line = line[1:]
             cur.fields[field] += "\n" + line
     for c in cards:
         c.fields = {k: v.strip() for k, v in c.fields.items()}
     return cards
 
 
+def escape_value(value: str) -> str:
+    """Escape continuation lines (outside code fences) that the parser would misread."""
+    lines = value.split("\n")
+    in_fence = False
+    for i, line in enumerate(lines):
+        if FENCE_RE.match(line):
+            in_fence = not in_fence
+        elif i and not in_fence and ESCAPABLE_RE.match(line):
+            lines[i] = "\\" + line
+    return "\n".join(lines)
+
+
 def render_card(title: str, card_id: str, fields: dict[str, str]) -> str:
     out = [f"## {title}", "", f"ID: {card_id}"]
     if "C" in fields:
-        out.append(f"C: {fields['C']}")
+        out.append(f"C: {escape_value(fields['C'])}")
+        if fields.get("X"):
+            out.append(f"X: {escape_value(fields['X'])}")
     else:
-        out.append(f"Q: {fields['Q']}")
-        out.append(f"A: {fields['A']}")
+        out.append(f"Q: {escape_value(fields['Q'])}")
+        out.append(f"A: {escape_value(fields['A'])}")
     out.append(f"Source: {fields['Source']}")
     return "\n".join(out) + "\n"
 
@@ -277,6 +298,8 @@ def check_deck(root: Path) -> list[dict]:
             else:
                 by_id.setdefault(cid, []).append(c)
             is_cloze = "C" in c.fields
+            if "X" in c.fields and not is_cloze:
+                findings.append(_finding("error", "EXTRA_WITHOUT_CLOZE", c, "X: is only valid on C: cards"))
             if is_cloze:
                 if "{{c" not in c.fields["C"]:
                     findings.append(_finding("error", "CLOZE_NO_DELETION", c, "C: has no {{c1::...}}"))

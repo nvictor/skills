@@ -11,7 +11,7 @@ Existing note types are used. No new note type is created.
 | Deck card | Note type | Fields |
 | --- | --- | --- |
 | `Q:` and `A:` | `Basic` | `Front` = Q, `Back` = A plus a small source line, `ID` = card ID. Other fields (such as `Speak`) are left empty. |
-| `C:` | `Cloze` | `Text` = C, `Back Extra` = source line, `ID` = card ID. |
+| `C:` (and optional `X:`) | `Cloze` | `Text` = C, `Back Extra` = X (if any) then the source line, `ID` = card ID. |
 
 - Both note types need an `ID` field. Add it once with `anki notetype:field:add --notetype Basic --field ID` (and `Cloze`). This forces a one-time full sync with AnkiWeb.
 - Notes are matched by the `ID` field, never by question text.
@@ -58,7 +58,7 @@ python3 scripts/anki_sync.py --root <deck-root> [--parent anki::repo] apply --ap
 - Whether the `direct` backend is safe while Anki is open. The script refuses.
 - Review history preservation across an update for a card that has real reviews (only a card with zero reviews was tested; IDs stay the same, so the schedule should too).
 - Mobile and AnkiWeb behavior after the `ID` field is added.
-- Moving an existing note to another deck when its folder changes. Cards previously synced from a top-level folder stay in the old deck if they are later nested deeper.
+- `anki_sync.py` moving an existing note when its folder changes (it does not; only `anki_adopt.py link` moves cards, once). Cards previously synced from a top-level folder stay in the old deck if they are later nested deeper.
 - Nested deck creation against a real Anki collection (`deck:create` with a `::` path). Covered by a unit test only.
 - Cloze cards with several deletions (several cards per note). The script groups cards by note but this was not tested.
 
@@ -99,11 +99,24 @@ Work machines:
 - Ask whether company policy allows work cards in any Anki cloud sync before enabling one.
 - Each deck root has its own `registry.json`, so IDs on two machines do not collide.
 
-## Existing Anki decks (adopt, deferred)
+## Adopting an existing deck
 
-Do this only when a specific deck is worth maintaining in Git.
+Do this only when a specific deck is worth maintaining in Git. History stays on the original Anki cards. The script never recreates them. It writes the new card `ID` into the original note and moves the cards under the sync parent.
 
-- For backups or transfers that need media and review history, use Anki's built-in `.apkg` export.
-- To move a deck into Markdown, read it with `cards --format json`, convert selected notes into a draft batch with `ID: pending`, and let the user approve it.
-- After the batch is promoted, write the new card `ID` into the `ID` field of the original note so history stays attached and later syncs update it in place. Back up first.
-- Do not export review history into Git.
+```bash
+python3 scripts/anki_adopt.py --root <deck-root> draft --deck anki::core::sre --folder core/sre --prefix sre
+python3 scripts/fcd.py --root <deck-root> promote <deck-root>/drafts/import-sre.md <deck-root>/core/sre/sre.md --prefix sre
+python3 scripts/anki_adopt.py --root <deck-root> link --deck anki::core::sre --folder core/sre             # plan
+python3 scripts/anki_adopt.py --root <deck-root> link --deck anki::core::sre --folder core/sre --approved --backup-dir <dir>
+python3 scripts/anki_sync.py --root <deck-root> plan                                                         # updates only, no adds
+```
+
+- `draft` is read only for Anki. It writes `drafts/import-<prefix>.md` with `ID: pending`, one card per note, titled `anki-note-<note id>`. The title is how `link` finds the note, so do not rename it. Source is `pasted: imported from Anki`. A cloze note's `Back Extra` becomes the card's `X:` field, so it is kept and still shows on the answer side only.
+- Show the user the draft and the skipped list before promoting.
+- Only `Basic` and `Cloze` notes are drafted, and only if `render_html(markdown)` equals the stored field exactly, so sync will not rewrite their text. Skipped, and left untouched in Anki: notes that already have an ID, and notes with images or other markup that does not round trip. Lines that look like fields (an acronym list such as `C: ...`, `A: ...`) are escaped in the draft, see card-format.md. Subdecks of `--deck` are not included. Run `draft` for each one.
+- `link` without `--approved` is a plan. With `--approved --backup-dir` it backs up, creates the target deck, sets `ID` on each note, and moves its cards with `card:move` to `<parent>::<folder path>` (`--parent` defaults to `anki::repo`). The parent must be `anki` or under it.
+- After `link`, sync shows one update per note (the source line on the back) and no adds. Do not pass `--reset` for them.
+- The folder decides the destination. To keep cards where they are, use `--parent` and `--folder` that reproduce the current deck (for example `--parent anki::core --folder sre`).
+- Do not export review history into Git. For backups or transfers that need media and history, use Anki's `.apkg` export.
+
+Verified on a copy of the collection (`ANKI_COL`) with a 41-note, 103-card, 829-review cloze deck: 31 notes adopted (10 more with Back Extra content were skipped before `X:` existed), 76 cards moved to `anki::repo::core::sre`. Card IDs, due, interval, ease, reps, and lapses were identical before and after, the review log entries were still attached, and a second sync was empty. Not verified: Basic notes on real data, notes with several cards in different decks, and FSRS memory state (only the fields above were compared).

@@ -113,6 +113,15 @@ class TestDesired(unittest.TestCase):
             self.assertEqual(d["a-001"].deck, "anki::repo::core::sre")
             self.assertEqual(d["a-001"].tags, ["fc", "core::sre"])
 
+    def test_x_goes_before_source_in_back_extra(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp).resolve()
+            (root / "t").mkdir()
+            (root / "t" / "x.md").write_text("## A\n\nID: x-001\nC: The {{c1::a}}.\nX: why\nSource: pasted: n\n")
+            fcd.save_registry(root, {"version": 1, "counters": {"x": 1}})
+            d = s.desired_notes(root, "anki")[0]
+            self.assertEqual(d.fields["Back Extra"], "why<br><small>n</small>")
+
     def test_refuses_deck_with_errors(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp).resolve()

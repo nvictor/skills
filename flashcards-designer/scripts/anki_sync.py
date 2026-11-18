@@ -9,7 +9,7 @@ Markdown owns card content. Anki owns review history. Notes are matched by the
 
 Mapping:
   Q/A card -> Basic: Front=Q, Back=A + source line, ID
-  C card   -> Cloze: Text=C, Back Extra=source line, ID
+  C card   -> Cloze: Text=C, Back Extra=X (if any) + source line, ID
   Deck     -> <parent>::<folder path>, nested (core/sre/x.md -> anki::repo::core::sre)
   Tags     -> fc and the folder path as one hierarchical tag (core::sre)
   Retired cards are suspended.
@@ -139,9 +139,10 @@ def desired_notes(root: Path, parent: str) -> list[Desired]:
         for c in fcd.parse_cards(f):
             src = f'<small>{html.escape(source_label(c.fields["Source"]), quote=False)}</small>'
             if "C" in c.fields:
+                extra = render_html(c.fields["X"]) + "<br>" if c.fields.get("X") else ""
                 kind, fields = "cloze", {
                     "Text": render_html(c.fields["C"]),
-                    "Back Extra": src,
+                    "Back Extra": extra + src,
                     "ID": c.id,
                 }
             else:

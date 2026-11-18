@@ -33,7 +33,7 @@ Use the root the user supplies. If none is given, ask. Keep work decks in work r
 - **gaps:** Identify useful knowledge the deck does not cover.
 - **sync:** Push approved cards to Anki with `scripts/anki_sync.py`. Read [references/anki-adapter.md](references/anki-adapter.md) completely first. Always show the `plan` and get approval before `apply`.
 - **setup:** Prepare a new computer or a fresh Anki install, or capture the current styling. Run `doctor` first and follow the "New machine" checklist in [references/anki-adapter.md](references/anki-adapter.md). Installing software and running `restore` need the user's approval.
-- **adopt:** Convert existing Anki notes to Markdown. Deferred. Do it only when the user names a specific deck worth maintaining in Git; the adapter reference describes the approach.
+- **adopt:** Convert existing Anki notes to Markdown without losing review history, with `scripts/anki_adopt.py`. Do it only when the user names a specific deck worth maintaining in Git. Read "Adopting an existing deck" in [references/anki-adapter.md](references/anki-adapter.md) first. Always show the draft and the `link` plan and get approval before `link --approved`.
 
 For generate, refine, and check, read [references/card-format.md](references/card-format.md) and [references/quality-rubric.md](references/quality-rubric.md) completely.
 
@@ -55,6 +55,14 @@ Anki sync (needs the `anki` CLI; see the adapter reference):
 ```bash
 python3 scripts/anki_sync.py --root <deck-root> plan
 python3 scripts/anki_sync.py --root <deck-root> apply --approved --backup-dir <dir> [--reset <ids>]
+```
+
+Adopt an existing Anki deck (keeps history; see the adapter reference):
+
+```bash
+python3 scripts/anki_adopt.py --root <deck-root> draft --deck <anki deck> --folder <a/b> --prefix <p>
+python3 scripts/fcd.py --root <deck-root> promote <draft> <deck-root>/<a/b>/<p>.md --prefix <p>
+python3 scripts/anki_adopt.py --root <deck-root> link --deck <anki deck> --folder <a/b> [--parent anki::repo] [--approved --backup-dir <dir>]
 ```
 
 Anki styling snapshot (ships with the skill at `assets/anki-setup.json`, the default on every machine):

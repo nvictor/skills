@@ -166,5 +166,32 @@ class TestMutation(DeckCase):
             fcd.retire(self.root, "rep-001", [], "2026-11-18")
 
 
+class TestEscape(unittest.TestCase):
+    def roundtrip(self, value):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "x.md"
+            p.write_text(fcd.render_card("T", "x-001", {"C": value, "Source": "pasted: n"}), encoding="utf-8")
+            return fcd.parse_cards(p)[0]
+
+    def test_field_like_lines_round_trip(self):
+        v = "Scope\nC: one\nA: two\n\\A: already escaped\n## heading"
+        c = self.roundtrip(v)
+        self.assertEqual(c.fields["C"], v)
+        self.assertEqual(set(c.fields), {"ID", "C", "Source"})
+
+    def test_rendered_lines_are_escaped(self):
+        out = fcd.render_card("T", "x-001", {"C": "a\nA: b", "Source": "pasted: n"})
+        self.assertIn("\n\\A: b\n", out)
+
+    def test_plain_backslash_lines_untouched(self):
+        v = "a\n\\n is a newline"
+        self.assertEqual(self.roundtrip(v).fields["C"], v)
+
+    def test_fenced_lines_not_escaped(self):
+        v = "code:\n```\nA: inside\n```"
+        self.assertEqual(fcd.escape_value(v), v)
+        self.assertEqual(self.roundtrip(v).fields["C"], v)
+
+
 if __name__ == "__main__":
     unittest.main()
