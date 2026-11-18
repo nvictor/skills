@@ -15,7 +15,7 @@ Existing note types are used. No new note type is created.
 
 - Both note types need an `ID` field. Add it once with `anki notetype:field:add --notetype Basic --field ID` (and `Cloze`). This forces a one-time full sync with AnkiWeb.
 - Notes are matched by the `ID` field, never by question text.
-- Decks: `<parent>::<topic folder>`, with parent `repo` by default (`--parent`). Cards at the deck root go in the parent deck.
+- Decks: `<parent>::<topic folder>`, with parent `anki::repo` by default (`--parent`). Cards at the deck root go in the parent deck.
 - Tags: `fc` and the topic. Tags are set on add only.
 - Content is rendered to HTML: escaped, newlines as `<br>`, inline code as `<code>`, fenced code as `<pre><code>`. The source line shows the file name and section, not the hash.
 - Retired cards are suspended, never deleted, so history is kept.
@@ -24,8 +24,8 @@ Existing note types are used. No new note type is created.
 ## Commands
 
 ```bash
-python3 scripts/anki_sync.py --root <deck-root> [--parent repo] plan
-python3 scripts/anki_sync.py --root <deck-root> [--parent repo] apply --approved --backup-dir <dir> [--reset id1,id2]
+python3 scripts/anki_sync.py --root <deck-root> [--parent anki::repo] plan
+python3 scripts/anki_sync.py --root <deck-root> [--parent anki::repo] apply --approved --backup-dir <dir> [--reset id1,id2]
 ```
 
 - `plan` is read only. It prints counts, then every add, update (old and new field text), suspension, orphan, and error.

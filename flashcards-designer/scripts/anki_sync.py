@@ -303,7 +303,7 @@ def apply_plan(plan: Plan, names: dict[str, str], resets: list[str], summary: li
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--root", default=".", help="deck root")
-    ap.add_argument("--parent", default="repo", help="parent Anki deck (default: repo)")
+    ap.add_argument("--parent", default="anki::repo", help="parent Anki deck (default: anki::repo)")
     ap.add_argument("--basic-notetype", default="Basic")
     ap.add_argument("--cloze-notetype", default="Cloze")
     sub = ap.add_subparsers(dest="cmd", required=True)
