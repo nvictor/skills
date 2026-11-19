@@ -129,7 +129,8 @@ def render_card(title: str, card_id: str, fields: dict[str, str]) -> str:
         out.append(f"A: {escape_value(fields['A'])}")
         if fields.get("S"):
             out.append(f"S: {escape_value(fields['S'])}")
-    out.append(f"Source: {fields['Source']}")
+    if fields.get("Source"):
+        out.append(f"Source: {fields['Source']}")
     return "\n".join(out) + "\n"
 
 
@@ -311,8 +312,6 @@ def check_deck(root: Path) -> list[dict]:
                 for req in ("Q", "A"):
                     if not c.fields.get(req):
                         findings.append(_finding("error", "FIELD_MISSING", c, f"missing {req}:"))
-            if not c.fields.get("Source"):
-                findings.append(_finding("error", "FIELD_MISSING", c, "missing Source:"))
             if c.retired:
                 continue
             q = c.fields.get("Q", "")
@@ -424,8 +423,8 @@ def promote(root: Path, draft: Path, target: Path, prefix: str | None) -> list[t
         if "Retired" in c.fields:
             raise FcdError(f"draft card '{c.title}' must not be retired")
         has_body = "C" in c.fields or ("Q" in c.fields and "A" in c.fields)
-        if not has_body or not c.fields.get("Source"):
-            raise FcdError(f"draft card '{c.title}' needs Q+A (or C) and Source")
+        if not has_body:
+            raise FcdError(f"draft card '{c.title}' needs Q+A (or C)")
     ids = allocate(root, prefix, len(cards))
     blocks = [render_card(c.title, i, c.fields) for c, i in zip(cards, ids)]
     body = "\n".join(blocks)

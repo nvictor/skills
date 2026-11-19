@@ -137,18 +137,22 @@ def desired_notes(root: Path, parent: str) -> list[Desired]:
         deck = "::".join([parent, *folders])
         tag = "::".join(re.sub(r"\s+", "_", p) for p in folders)  # hierarchical tag, no spaces
         for c in fcd.parse_cards(f):
-            src = f'<small>{html.escape(source_label(c.fields["Source"]), quote=False)}</small>'
+            src = (
+                f'<small>{html.escape(source_label(c.fields["Source"]), quote=False)}</small>'
+                if c.fields.get("Source")
+                else ""
+            )
             if "C" in c.fields:
                 extra = render_html(c.fields["X"]) + "<br>" if c.fields.get("X") else ""
                 kind, fields = "cloze", {
                     "Text": render_html(c.fields["C"]),
-                    "Back Extra": extra + src,
+                    "Back Extra": (extra + src).removesuffix("<br>"),
                     "ID": c.id,
                 }
             else:
                 kind, fields = "basic", {
                     "Front": render_html(c.fields["Q"]),
-                    "Back": render_html(c.fields["A"]) + "<br>" + src,
+                    "Back": render_html(c.fields["A"]) + ("<br>" + src if src else ""),
                     "ID": c.id,
                 }
                 if c.fields.get("S"):

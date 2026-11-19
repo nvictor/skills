@@ -37,7 +37,6 @@ from anki_sync import SyncError, anki, notetype_fields, render_html  # noqa: E40
 
 TITLE_PREFIX = "anki-note-"
 TITLE_RE = re.compile(rf"^{TITLE_PREFIX}(\d+)$")
-SOURCE = "pasted: imported from Anki"
 # Anki field -> card field. Optional fields may be empty.
 FIELD_MAP = {"basic": {"Front": "Q", "Back": "A", "Speak": "S"}, "cloze": {"Text": "C", "Back Extra": "X"}}
 OPTIONAL = {"Back Extra", "Speak"}
@@ -124,7 +123,6 @@ def adoptable(n: Note, accept_render: bool = False, strip: bool = False) -> tupl
 def draft_block(n: Note, md: dict[str, str]) -> str:
     lines = [f"## {TITLE_PREFIX}{n.id}", "", "ID: pending"]
     lines += [f"{k}: {fcd.escape_value(v)}" for k, v in md.items()]
-    lines.append(f"Source: {SOURCE}")
     return "\n".join(lines) + "\n"
 
 
