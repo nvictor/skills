@@ -1,0 +1,28 @@
+{
+  "app_concept": "Hues turns pitches and chords into color: every note has one fixed color and a chord is a gradient from its lowest to its highest note.",
+  "primary_metaphor": "Three tall tiles in a charcoal shell, each a bottom-to-top gradient through the pitch colors of one chord (Am, F, C)",
+  "supporting_motifs": [
+    "raised rounded tiles with a soft top highlight",
+    "gradients that share colors across neighboring chords"
+  ],
+  "composition_family": "centered-object",
+  "tone": [
+    "playful",
+    "tactile",
+    "colorful"
+  ],
+  "palette_hints": [
+    "charcoal shell",
+    "pitch colors: orange A, green C, purple E, violet F, red G"
+  ],
+  "include_symbols": [
+    "three equal tiles",
+    "vertical multi-stop gradients"
+  ],
+  "avoid_symbols": [
+    "text",
+    "music notes",
+    "piano keys",
+    "rainbow arcs"
+  ]
+}
