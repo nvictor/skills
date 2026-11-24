@@ -1,7 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512">
-  <title>Grooves pad grid</title>
-  <desc>A dark shell holding four large drum pads, one lit orange. Depth uses vector geometry and gradients without filter dependencies.</desc>
-  <defs><linearGradient id="shell" x1="0" y1="0" x2="0.7" y2="1"><stop stop-color="#454B5A"/><stop offset="1" stop-color="#161920"/></linearGradient><linearGradient id="off" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#323847"/><stop offset="1" stop-color="#232733"/></linearGradient><linearGradient id="on" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFB45A"/><stop offset="1" stop-color="#FF7A1A"/></linearGradient></defs>
-  <rect x="24" y="30" width="464" height="464" rx="104" fill="#0C0E13"/><rect x="24" y="24" width="464" height="464" rx="104" fill="url(#shell)"/>
-  <rect x="96" y="106" width="152" height="152" rx="38" fill="#B84A0A"/><rect x="96" y="96" width="152" height="152" rx="38" fill="url(#on)"/><rect x="112" y="104" width="120" height="16" rx="8" fill="#FFD9A8" opacity="0.55"/><rect x="264" y="104" width="152" height="152" rx="38" fill="#0B0D12"/><rect x="264" y="96" width="152" height="152" rx="38" fill="url(#off)"/><rect x="96" y="272" width="152" height="152" rx="38" fill="#0B0D12"/><rect x="96" y="264" width="152" height="152" rx="38" fill="url(#off)"/><rect x="264" y="272" width="152" height="152" rx="38" fill="#0B0D12"/><rect x="264" y="264" width="152" height="152" rx="38" fill="url(#off)"/>
+  <title>Grooves step sequencer</title>
+  <desc>A two-row graphite step sequencer with two amber pads marking the rhythm.</desc>
+  <defs>
+    <linearGradient id="shell" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#444c63"/>
+      <stop offset="100%" stop-color="#202331"/>
+    </linearGradient>
+    <linearGradient id="bed" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#171822"/>
+      <stop offset="100%" stop-color="#313645"/>
+    </linearGradient>
+    <linearGradient id="pad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#535e77"/>
+      <stop offset="100%" stop-color="#2d3549"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffe19c"/>
+      <stop offset="100%" stop-color="#fc741a"/>
+    </linearGradient>
+  </defs>
+  <rect x="27" y="33" width="458" height="458" rx="105" fill="#10121b"/>
+  <rect x="27" y="22" width="458" height="458" rx="105" fill="url(#shell)" stroke="#61697d" stroke-width="2"/>
+  <rect x="39" y="34" width="434" height="434" rx="94" fill="none" stroke="#c1c9df" stroke-opacity=".14" stroke-width="2"/>
+  <rect x="81" y="102" width="350" height="308" rx="52" fill="#10111a"/>
+  <rect x="84" y="98" width="344" height="306" rx="50" fill="url(#bed)" stroke="#687289" stroke-width="2"/>
+  <rect x="109" y="137" width="88" height="104" rx="22" fill="#9d3d16"/>
+  <rect x="109" y="128" width="88" height="104" rx="22" fill="url(#accent)"/>
+  <rect x="121" y="138" width="64" height="5" rx="2.5" fill="#fff2d3" opacity=".55"/>
+  <rect x="212" y="137" width="88" height="104" rx="22" fill="#141722"/>
+  <rect x="212" y="128" width="88" height="104" rx="22" fill="url(#pad)"/>
+  <rect x="224" y="138" width="64" height="5" rx="2.5" fill="#99a9c6" opacity=".55"/>
+  <rect x="315" y="137" width="88" height="104" rx="22" fill="#141722"/>
+  <rect x="315" y="128" width="88" height="104" rx="22" fill="url(#pad)"/>
+  <rect x="327" y="138" width="64" height="5" rx="2.5" fill="#99a9c6" opacity=".55"/>
+  <rect x="109" y="267" width="88" height="104" rx="22" fill="#141722"/>
+  <rect x="109" y="258" width="88" height="104" rx="22" fill="url(#pad)"/>
+  <rect x="121" y="268" width="64" height="5" rx="2.5" fill="#99a9c6" opacity=".55"/>
+  <rect x="212" y="267" width="88" height="104" rx="22" fill="#141722"/>
+  <rect x="212" y="258" width="88" height="104" rx="22" fill="url(#pad)"/>
+  <rect x="224" y="268" width="64" height="5" rx="2.5" fill="#99a9c6" opacity=".55"/>
+  <rect x="315" y="267" width="88" height="104" rx="22" fill="#9d3d16"/>
+  <rect x="315" y="258" width="88" height="104" rx="22" fill="url(#accent)"/>
+  <rect x="327" y="268" width="64" height="5" rx="2.5" fill="#fff2d3" opacity=".55"/>
 </svg>
