@@ -1,0 +1,28 @@
+{
+  "app_concept": "Bars shows playback progress through a song, section by section and bar by bar.",
+  "primary_metaphor": "Four upright section bars with the third partly filled",
+  "supporting_motifs": [
+    "raised rounded bars",
+    "top-edge highlights"
+  ],
+  "composition_family": "centered-object",
+  "tone": [
+    "tactile",
+    "rhythmic"
+  ],
+  "palette_hints": [
+    "charcoal",
+    "blue intro",
+    "green verse",
+    "amber chorus",
+    "muted purple ending"
+  ],
+  "include_symbols": [
+    "four equal-height bars",
+    "partial fill on the third bar"
+  ],
+  "avoid_symbols": [
+    "text",
+    "music notes"
+  ]
+}

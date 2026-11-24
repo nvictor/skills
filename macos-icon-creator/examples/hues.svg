@@ -1,38 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512">
-  <title>Hues chord tile</title>
-  <desc>A glass tile blends C, E, and G, with three pitch swatches visible across its face.</desc>
+  <title>Hues chord gradients</title>
+  <desc>Three upright tiles blend the pitches of A minor, F major, and C major.</desc>
   <defs>
     <linearGradient id="shell" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#414557"/>
-      <stop offset="100%" stop-color="#1d2030"/>
+      <stop offset="0%" stop-color="#444c60"/>
+      <stop offset="100%" stop-color="#1d202b"/>
     </linearGradient>
-    <linearGradient id="depth" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#352249"/>
-      <stop offset="100%" stop-color="#20182f"/>
+    <linearGradient id="am" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#8430df"/>
+      <stop offset="50%" stop-color="#24d94d"/>
+      <stop offset="100%" stop-color="#ff6500"/>
     </linearGradient>
-    <linearGradient id="chord" x1="12%" y1="88%" x2="88%" y2="12%">
+    <linearGradient id="f" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#24d94d"/>
-      <stop offset="52%" stop-color="#8430df"/>
-      <stop offset="100%" stop-color="#e10012"/>
+      <stop offset="50%" stop-color="#ff6500"/>
+      <stop offset="100%" stop-color="#a12af0"/>
     </linearGradient>
-    <linearGradient id="glaze" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff"/>
-      <stop offset="100%" stop-color="#baace6"/>
+    <linearGradient id="c" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e10012"/>
+      <stop offset="50%" stop-color="#8430df"/>
+      <stop offset="100%" stop-color="#24d94d"/>
     </linearGradient>
   </defs>
   <rect x="27" y="33" width="458" height="458" rx="105" fill="#10121b"/>
   <rect x="27" y="22" width="458" height="458" rx="105" fill="url(#shell)" stroke="#61697d" stroke-width="2"/>
   <rect x="39" y="34" width="434" height="434" rx="94" fill="none" stroke="#c1c9df" stroke-opacity=".14" stroke-width="2"/>
-  <g transform="rotate(-12 256 252)">
-  <rect x="100" y="112" width="312" height="312" rx="76" fill="#13131f"/>
-  <rect x="99" y="98" width="314" height="314" rx="76" fill="url(#depth)" stroke="#69567d" stroke-width="2"/>
-  <rect x="103" y="80" width="306" height="306" rx="72" fill="url(#chord)" stroke="#f0bbff" stroke-opacity=".5" stroke-width="2"/>
-  <path d="M156 119 Q169 102 198 102 H332 Q363 102 378 121" fill="none" stroke="url(#glaze)" stroke-opacity=".62" stroke-width="8" stroke-linecap="round"/>
-  </g>
-  <circle cx="174" cy="268" r="25" fill="#161326" opacity=".8"/>
-  <circle cx="174" cy="264" r="20" fill="#24d94d" stroke="#b9ffbf" stroke-width="3"/>
-  <circle cx="256" cy="268" r="25" fill="#161326" opacity=".8"/>
-  <circle cx="256" cy="264" r="20" fill="#8430df" stroke="#dfb7ff" stroke-width="3"/>
-  <circle cx="338" cy="268" r="25" fill="#161326" opacity=".8"/>
-  <circle cx="338" cy="264" r="20" fill="#e10012" stroke="#ffbaa0" stroke-width="3"/>
+  <rect x="82" y="108" width="108" height="304" rx="33" fill="#151522"/>
+  <rect x="82" y="100" width="108" height="304" rx="33" fill="url(#am)"/>
+  <rect x="97" y="112" width="78" height="6" rx="3" fill="#fff" opacity="0.52"/>
+  <rect x="202" y="108" width="108" height="304" rx="33" fill="#151522"/>
+  <rect x="202" y="100" width="108" height="304" rx="33" fill="url(#f)"/>
+  <rect x="217" y="112" width="78" height="6" rx="3" fill="#fff" opacity="0.52"/>
+  <rect x="322" y="108" width="108" height="304" rx="33" fill="#151522"/>
+  <rect x="322" y="100" width="108" height="304" rx="33" fill="url(#c)"/>
+  <rect x="337" y="112" width="78" height="6" rx="3" fill="#fff" opacity="0.52"/>
 </svg>

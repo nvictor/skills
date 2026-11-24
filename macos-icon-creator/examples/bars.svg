@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512">
+  <title>Bars section playback</title>
+  <desc>Four upright section bars show completed, in-progress, and upcoming sections.</desc>
+  <defs>
+    <linearGradient id="shell" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#444c60"/>
+      <stop offset="100%" stop-color="#1d202b"/>
+    </linearGradient>
+    <linearGradient id="intro" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#74bcff"/>
+      <stop offset="100%" stop-color="#3378e1"/>
+    </linearGradient>
+    <linearGradient id="verse" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#77e8b5"/>
+      <stop offset="100%" stop-color="#26a679"/>
+    </linearGradient>
+    <linearGradient id="chorus" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffbd68"/>
+      <stop offset="100%" stop-color="#fa7822"/>
+    </linearGradient>
+    <linearGradient id="waiting" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6d5a96"/>
+      <stop offset="100%" stop-color="#44365f"/>
+    </linearGradient>
+    <linearGradient id="track" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#76553f"/>
+      <stop offset="100%" stop-color="#4a302d"/>
+    </linearGradient>
+  </defs>
+  <rect x="27" y="33" width="458" height="458" rx="105" fill="#10121b"/>
+  <rect x="27" y="22" width="458" height="458" rx="105" fill="url(#shell)" stroke="#61697d" stroke-width="2"/>
+  <rect x="39" y="34" width="434" height="434" rx="94" fill="none" stroke="#c1c9df" stroke-opacity=".14" stroke-width="2"/>
+  <rect x="82" y="108" width="72" height="304" rx="28" fill="#1a478e"/>
+  <rect x="82" y="100" width="72" height="304" rx="28" fill="url(#intro)"/>
+  <rect x="97" y="112" width="42" height="6" rx="3" fill="#fff" opacity="0.42"/>
+  <rect x="174" y="108" width="72" height="304" rx="28" fill="#14604d"/>
+  <rect x="174" y="100" width="72" height="304" rx="28" fill="url(#verse)"/>
+  <rect x="189" y="112" width="42" height="6" rx="3" fill="#fff" opacity="0.42"/>
+  <rect x="266" y="108" width="72" height="304" rx="28" fill="#33252c"/>
+  <rect x="266" y="100" width="72" height="304" rx="28" fill="url(#track)"/>
+  <rect x="281" y="112" width="42" height="6" rx="3" fill="#fff" opacity="0"/>
+  <rect x="358" y="108" width="72" height="304" rx="28" fill="#252038"/>
+  <rect x="358" y="100" width="72" height="304" rx="28" fill="url(#waiting)"/>
+  <rect x="373" y="112" width="42" height="6" rx="3" fill="#fff" opacity="0.42"/>
+  <clipPath id="chorus-track"><rect x="266" y="100" width="72" height="304" rx="28"/></clipPath>
+  <g clip-path="url(#chorus-track)">
+    <rect x="266" y="242" width="72" height="162" fill="url(#chorus)"/>
+    <rect x="281" y="254" width="42" height="6" rx="3" fill="#fff1ce" opacity=".56"/>
+  </g>
+</svg>

@@ -1,28 +1,29 @@
 {
   "app_concept": "Hues turns pitches into colors and chords into gradients.",
-  "primary_metaphor": "One tilted glass tile that blends a C major chord",
+  "primary_metaphor": "Three upright gradient tiles representing A minor, F major, and C major",
   "supporting_motifs": [
-    "three pitch swatches",
-    "reflected highlight"
+    "raised rounded tiles",
+    "top-edge highlights"
   ],
   "composition_family": "centered-object",
   "tone": [
-    "colorful",
-    "tactile"
+    "tactile",
+    "colorful"
   ],
   "palette_hints": [
-    "graphite",
-    "C green",
-    "E violet",
-    "G red"
+    "charcoal",
+    "orange A",
+    "green C",
+    "purple E",
+    "violet F",
+    "red G"
   ],
   "include_symbols": [
-    "three pitch swatches",
-    "chord gradient"
+    "three upright tiles",
+    "vertical pitch gradients"
   ],
   "avoid_symbols": [
     "text",
-    "music notes",
-    "piano keys"
+    "music notes"
   ]
 }

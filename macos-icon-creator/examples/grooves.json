@@ -1,9 +1,9 @@
 {
   "app_concept": "Grooves is a drum step sequencer for sketching rhythms and exporting them as GUS.",
-  "primary_metaphor": "A graphite step sequencer with two amber hits across a recessed pad grid",
+  "primary_metaphor": "A square grid of four drum pads with a single lit hit",
   "supporting_motifs": [
-    "recessed instrument tray",
-    "raised pads with illuminated edges"
+    "raised rounded pads",
+    "top-edge highlights"
   ],
   "composition_family": "centered-object",
   "tone": [
@@ -11,12 +11,13 @@
     "rhythmic"
   ],
   "palette_hints": [
+    "charcoal",
     "graphite blue",
-    "warm amber"
+    "amber"
   ],
   "include_symbols": [
-    "two rows of three pads",
-    "two lit pads"
+    "two-by-two pad grid",
+    "one amber pad"
   ],
   "avoid_symbols": [
     "text",
