@@ -26,25 +26,40 @@
       <stop offset="0%" stop-color="#76553f"/>
       <stop offset="100%" stop-color="#4a302d"/>
     </linearGradient>
+    <radialGradient id="sheen" cx="50%" cy="0%" r="75%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shade" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity=".28"/>
+    </linearGradient>
   </defs>
   <rect x="27" y="33" width="458" height="458" rx="105" fill="#10121b"/>
   <rect x="27" y="22" width="458" height="458" rx="105" fill="url(#shell)" stroke="#61697d" stroke-width="2"/>
+  <rect x="27" y="22" width="458" height="458" rx="105" fill="url(#sheen)"/>
   <rect x="39" y="34" width="434" height="434" rx="94" fill="none" stroke="#c1c9df" stroke-opacity=".14" stroke-width="2"/>
   <rect x="82" y="108" width="72" height="304" rx="28" fill="#1a478e"/>
   <rect x="82" y="100" width="72" height="304" rx="28" fill="url(#intro)"/>
+  <rect x="82" y="100" width="72" height="304" rx="28" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
   <rect x="97" y="112" width="42" height="6" rx="3" fill="#fff" opacity="0.42"/>
   <rect x="174" y="108" width="72" height="304" rx="28" fill="#14604d"/>
   <rect x="174" y="100" width="72" height="304" rx="28" fill="url(#verse)"/>
+  <rect x="174" y="100" width="72" height="304" rx="28" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
   <rect x="189" y="112" width="42" height="6" rx="3" fill="#fff" opacity="0.42"/>
   <rect x="266" y="108" width="72" height="304" rx="28" fill="#33252c"/>
   <rect x="266" y="100" width="72" height="304" rx="28" fill="url(#track)"/>
+  <rect x="266" y="100" width="72" height="304" rx="28" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
   <rect x="281" y="112" width="42" height="6" rx="3" fill="#fff" opacity="0"/>
   <rect x="358" y="108" width="72" height="304" rx="28" fill="#252038"/>
   <rect x="358" y="100" width="72" height="304" rx="28" fill="url(#waiting)"/>
+  <rect x="358" y="100" width="72" height="304" rx="28" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
   <rect x="373" y="112" width="42" height="6" rx="3" fill="#fff" opacity="0.42"/>
   <clipPath id="chorus-track"><rect x="266" y="100" width="72" height="304" rx="28"/></clipPath>
   <g clip-path="url(#chorus-track)">
     <rect x="266" y="242" width="72" height="162" fill="url(#chorus)"/>
+  <rect x="266" y="242" width="72" height="162" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
     <rect x="281" y="254" width="42" height="6" rx="3" fill="#fff1ce" opacity=".56"/>
   </g>
+  <rect x="266" y="238" width="72" height="8" rx="4" fill="#fff" opacity=".9"/>
 </svg>

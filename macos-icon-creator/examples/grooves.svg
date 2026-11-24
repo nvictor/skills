@@ -14,20 +14,36 @@
       <stop offset="0%" stop-color="#ffbe68"/>
       <stop offset="100%" stop-color="#fa781f"/>
     </linearGradient>
+    <radialGradient id="sheen" cx="50%" cy="0%" r="75%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity=".16"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shade" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity=".28"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop offset="0%" stop-color="#ffa040" stop-opacity=".55"/><stop offset="100%" stop-color="#ffa040" stop-opacity="0"/></radialGradient>
   </defs>
   <rect x="27" y="33" width="458" height="458" rx="105" fill="#10121b"/>
   <rect x="27" y="22" width="458" height="458" rx="105" fill="url(#shell)" stroke="#61697d" stroke-width="2"/>
+  <rect x="27" y="22" width="458" height="458" rx="105" fill="url(#sheen)"/>
   <rect x="39" y="34" width="434" height="434" rx="94" fill="none" stroke="#c1c9df" stroke-opacity=".14" stroke-width="2"/>
+  <ellipse cx="172" cy="176" rx="130" ry="130" fill="url(#glow)"/>
   <rect x="96" y="100" width="152" height="152" rx="36" fill="#a64617"/>
   <rect x="96" y="92" width="152" height="152" rx="36" fill="url(#amber)"/>
+  <rect x="96" y="92" width="152" height="152" rx="36" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
   <rect x="111" y="104" width="122" height="6" rx="3" fill="#fff1ce" opacity="0.66"/>
   <rect x="264" y="100" width="152" height="152" rx="36" fill="#10131d"/>
   <rect x="264" y="92" width="152" height="152" rx="36" fill="url(#pad)"/>
+  <rect x="264" y="92" width="152" height="152" rx="36" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
   <rect x="279" y="104" width="122" height="6" rx="3" fill="#a2b2d3" opacity="0.24"/>
   <rect x="96" y="268" width="152" height="152" rx="36" fill="#10131d"/>
   <rect x="96" y="260" width="152" height="152" rx="36" fill="url(#pad)"/>
+  <rect x="96" y="260" width="152" height="152" rx="36" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
   <rect x="111" y="272" width="122" height="6" rx="3" fill="#a2b2d3" opacity="0.24"/>
   <rect x="264" y="268" width="152" height="152" rx="36" fill="#10131d"/>
   <rect x="264" y="260" width="152" height="152" rx="36" fill="url(#pad)"/>
+  <rect x="264" y="260" width="152" height="152" rx="36" fill="url(#shade)" stroke="#fff" stroke-opacity=".22" stroke-width="2"/>
   <rect x="279" y="272" width="122" height="6" rx="3" fill="#a2b2d3" opacity="0.24"/>
+  <rect x="264" y="92" width="152" height="152" rx="36" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="6"/>
 </svg>
