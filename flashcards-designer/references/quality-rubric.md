@@ -24,6 +24,11 @@ Apply to every card before presenting it. Cut or rewrite what fails.
 - Matches the source. If the source does not support it, flag it on the card and in the batch summary rather than asserting it.
 - States the condition under which it holds when that matters.
 
+## Card content
+
+- Every field, including `X:`, holds study material only.
+- No agent notes or change history ("Replaces the separate cards", "Errors was missing"). Put them in the batch summary.
+
 ## Source
 
 - Points at the narrowest section that supports the answer.

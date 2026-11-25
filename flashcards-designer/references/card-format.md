@@ -25,7 +25,7 @@ Retired: 2026-11-18 replaced-by: replication-005, replication-006
 
 ## Fields
 
-- `ID:` unique and stable. Format `<prefix>-<NNN>`, prefix lowercase letters, digits, and hyphens, number at least three digits. Assigned only by `fcd.py`. Drafts use `ID: pending`.
+- `ID:` unique and stable. Format `<prefix>-<NNN>`, prefix lowercase letters, digits, and hyphens, number at least three digits. The prefix names the card's topic (`sre`, `docker`), never the task that created it (`audit`). Assigned only by `fcd.py`. Drafts use `ID: pending`.
 - `Q:` and `A:` for basic and free-form cards. Values may continue over several lines until the next field or card. Fenced code blocks are preserved.
 - `C:` for cloze cards, instead of `Q:` and `A:`. Contains at least one `{{c1::deletion}}`. Use only when a cloze suits the material.
 - `X:` optional, only on `C:` cards. Answer-side explanation shown after the cloze is revealed (Anki `Back Extra`). Never put it in `C:`, which shows on the front.
