@@ -180,7 +180,7 @@ downbeat audio export --track "Vocals" --output vocals.wav
 
 - `import` needs an audio track and free bars.
 - `export` bounces one track to WAVE, starting at the project start. Other export settings are the ones Logic last used. A muted track still exports its audio.
-- Audio regions that start or end inside a bar cannot be moved, renamed or deleted yet.
+- `region delete`, `move`, `duplicate` and `rename` work on audio regions too.
 
 ## Import and delete
 
@@ -314,7 +314,8 @@ downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 - A region with Loop, Mute, transpose, velocity offset, delay, quantize, dynamics,
   gate time or pitch source set is refused. Report it. Do not change settings yourself.
 - A region with a custom color is refused too. An edit finds this at the end and undoes itself.
-- Regions must start and end on a bar line.
+- MIDI export, import and note commands need a region that starts and ends on a bar line.
+  `delete`, `move`, `duplicate` and `rename` accept any region; `--bar` is the bar it starts in.
 - A region with several MIDI channels can be read but not edited.
 - A region on a muted track, or silenced by a solo, cannot be read or edited. Report it.
 - A failed replace undoes its own steps. If the message says it could not restore,
