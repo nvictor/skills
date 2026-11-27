@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing and bypassing plugins, listing MIDI ports, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, adding or removing plugins, plugin settings, audio editing, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing, adding, removing and bypassing plugins, listing MIDI ports, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugin settings, audio editing, or deleting tracks.
 ---
 
 # downbeat
@@ -149,10 +149,22 @@ downbeat plugin list "Bass" --json
 ```
 
 ```bash
+downbeat plugin add "Bass" "Limiter" --project "Night Drive"
+```
+
+```bash
+downbeat plugin remove "Bass" "Limiter" --project "Night Drive"
+```
+
+```bash
 downbeat plugin bypass "Bass" "Compressor" --project "Night Drive"
 ```
 
-- The list includes the instrument. Bypassing it silences the track.
+- The list follows the signal: instrument first, then effects. Numbers change after `add` and `remove`.
+- `add` adds an effect at the end. It cannot add an instrument. Use the name in Logic's menu; `--format "Dual Mono"` picks a format.
+- `remove` loses the plugin's settings. Confirm with the user first.
+- Bypassing or removing the instrument silences the track.
+- A `null` bypass state means Logic does not report it. Tell the user to check the Mixer.
 - `--off` turns the bypass off. A plugin is picked by name or by its number from the list.
 - `list` selects the track while it reads, so it drives the UI.
 
