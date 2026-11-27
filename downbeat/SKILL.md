@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing, adding, removing and bypassing plugins, listing MIDI ports, importing and bouncing audio files, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugin settings, editing audio, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing, adding, removing and bypassing plugins, listing MIDI ports, importing and bouncing audio files, importing MIDI files, listing, creating, renaming, moving, duplicating, splitting, joining, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugin settings, editing audio, or deleting tracks.
 ---
 
 # downbeat
@@ -235,6 +235,20 @@ downbeat region move --region "Chorus" --bar 9 --to-bar 17 --project "Night Driv
 - Same track only. The target bars must be free.
 - `--bar` picks the source. `--to-bar` is the destination.
 - The copy keeps the name. Afterwards, pick a region with `--bar` too.
+
+## Split and join
+
+```bash
+downbeat region split --region "Chorus" --at-bar 13 --project "Night Drive"
+```
+
+```bash
+downbeat region join --region "Chorus" --bar 9 --project "Night Drive"
+```
+
+- `split` cuts at the start of a bar. `--notes keep|shorten|split` handles crossing MIDI notes.
+  Prefer the default `keep`. After `split`, downbeat cannot read the second part.
+- `join` takes the region and the next one that touches it.
 
 ## Read
 
