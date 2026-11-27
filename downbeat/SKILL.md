@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing, adding, removing and bypassing plugins, listing MIDI ports, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugin settings, audio editing, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing, adding, removing and bypassing plugins, listing MIDI ports, importing and bouncing audio files, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugin settings, editing audio, or deleting tracks.
 ---
 
 # downbeat
@@ -167,6 +167,20 @@ downbeat plugin bypass "Bass" "Compressor" --project "Night Drive"
 - A `null` bypass state means Logic does not report it. Tell the user to check the Mixer.
 - `--off` turns the bypass off. A plugin is picked by name or by its number from the list.
 - `list` selects the track while it reads, so it drives the UI.
+
+## Audio files
+
+```bash
+downbeat audio import take.wav --track "Vocals" --bar 5 --project "Night Drive"
+```
+
+```bash
+downbeat audio export --track "Vocals" --output vocals.wav
+```
+
+- `import` needs an audio track and free bars.
+- `export` bounces one track to WAVE, starting at the project start. Other export settings are the ones Logic last used. A muted track still exports its audio.
+- Audio regions that start or end inside a bar cannot be moved, renamed or deleted yet.
 
 ## Import and delete
 
