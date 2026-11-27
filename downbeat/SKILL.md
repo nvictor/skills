@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugins, audio editing, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugins, audio editing, or deleting tracks.
 ---
 
 # downbeat
@@ -124,6 +124,15 @@ downbeat mixer pan "Bass" --value -20 --project "Night Drive"
 - Volume: up to `6`. `-inf` silences the track. Not for external MIDI tracks.
 - Pan: `-64` (left) to `63` (right). `0` is the middle.
 - Each command prints the value reached. Report that one.
+
+## Markers
+
+```bash
+downbeat marker create "Chorus" --bar 9 --project "Night Drive"
+```
+
+- One marker per bar. No `#` in the name.
+- There is no command to list, move or delete markers.
 
 ## Import and delete
 
