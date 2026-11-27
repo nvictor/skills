@@ -24,6 +24,8 @@ agent-specific skill directories for Codex, Copilot, Gemini, and Claude Code:
 - `flashcards-designer`: creates, refines, audits, and maintains Git-backed
   Markdown flashcard decks with stable IDs and source tracking, and syncs
   approved cards one way to Anki.
+- `logic-cli`: reads and edits MIDI regions in Logic Pro through the `logic`
+  command.
 - `macos-icon-creator`: creates macOS-style app icon SVG concepts from an app
   or product brief.
 - `opportunity-designer`: captures and evaluates potential improvements before committing to delivery, preserving evidence and decision rationale.
