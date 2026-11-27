@@ -1,45 +1,45 @@
 ---
-name: logic-cli
-description: Create Logic Pro projects and read and edit MIDI notes with the `logic` command. Use for starting a project with a tempo, meter and key, checking status, setting tempo, listing, creating and renaming tracks, listing regions and notes, transposing, setting velocity, quantizing, or exporting and replacing a MIDI region. Not for playback, mixing, plugins, audio editing, deleting tracks, or creating regions.
+name: downbeat
+description: Create Logic Pro projects and read and edit MIDI notes with the `downbeat` command. Use for starting a project with a tempo, meter and key, checking status, setting tempo, listing, creating and renaming tracks, listing regions and notes, transposing, setting velocity, quantizing, or exporting and replacing a MIDI region. Not for playback, mixing, plugins, audio editing, deleting tracks, or creating regions.
 ---
 
-# Logic CLI
+# downbeat
 
-Start projects and edit MIDI regions in Logic Pro through the `logic` command.
-Source: `~/Developer/logic-cli`.
+Start projects and edit MIDI regions in Logic Pro through the `downbeat` command.
+Source: `~/Developer/downbeat`.
 
 ## Before any command
 
 ```bash
-logic check
+downbeat check
 ```
 
 - Stop and report if it lists a problem.
-- If `logic` is missing, ask the user to install it (see the repo README).
+- If `downbeat` is missing, ask the user to install it (see the repo README).
 - Every command except `check`, `inspect`, `status`, `tempo get`, `track list`, `region list` and `project template` drives the Logic Pro UI.
   Ask the user to keep hands off keyboard and mouse.
 
 ## New project
 
 ```bash
-logic project new "Night Drive" --tempo 92 --signature 6/8 --key "A minor"
+downbeat project new "Night Drive" --tempo 92 --signature 6/8 --key "A minor"
 ```
 
-- Works with Logic Pro closed. `logic check` is not needed first.
+- Works with Logic Pro closed. `downbeat check` is not needed first.
 - Saved in `~/Music/Logic` unless `--directory` says otherwise.
 - All settings are optional. Meters: 3/4, 4/4, 5/4, 6/8, 7/8, 12/8. Tempo: whole numbers.
 - Needs a template. If missing, ask the user to save an empty project and run
-  `logic project template <path.logicx>`, or pass `--template`.
+  `downbeat project template <path.logicx>`, or pass `--template`.
 - Refused while a project has unsaved changes. Report it. Never save or discard for the user.
 
 ## Status and tempo
 
 ```bash
-logic status --json
+downbeat status --json
 ```
 
 ```bash
-logic tempo set 92 --project "Night Drive"
+downbeat tempo set 92 --project "Night Drive"
 ```
 
 `tempo set` does not save.
@@ -47,15 +47,15 @@ logic tempo set 92 --project "Night Drive"
 ## Tracks
 
 ```bash
-logic track list --json
+downbeat track list --json
 ```
 
 ```bash
-logic track create --type instrument --name "Bass" --project "Night Drive"
+downbeat track create --type instrument --name "Bass" --project "Night Drive"
 ```
 
 ```bash
-logic track rename 1 "Drums" --project "Night Drive"
+downbeat track rename 1 "Drums" --project "Night Drive"
 ```
 
 - Types: `instrument`, `audio`, `external` (MIDI). A new track goes after the selected one.
@@ -65,7 +65,7 @@ logic track rename 1 "Drums" --project "Night Drive"
 ## Address a region
 
 ```bash
-logic region list --json
+downbeat region list --json
 ```
 
 - Pick with `--track` (name or number), `--bar` (start bar) and `--region` (name).
@@ -74,7 +74,7 @@ logic region list --json
 ## Read
 
 ```bash
-logic note list --track 1 --bar 3 --json
+downbeat note list --track 1 --bar 3 --json
 ```
 
 - `beat` counts quarter notes from the region start, from 0.
@@ -88,25 +88,25 @@ Edits replace the region. `--project` must name the front project.
 Confirm the project name and the target region with the user before the first edit.
 
 ```bash
-logic note transpose --track 1 --bar 3 --project MySong --semitones=-2
+downbeat note transpose --track 1 --bar 3 --project MySong --semitones=-2
 ```
 
 ```bash
-logic note velocity --track 1 --bar 3 --project MySong --value 100
+downbeat note velocity --track 1 --bar 3 --project MySong --value 100
 ```
 
 ```bash
-logic note quantize --track 1 --bar 3 --project MySong --division 1/16
+downbeat note quantize --track 1 --bar 3 --project MySong --division 1/16
 ```
 
 For other changes, export, edit the file, then import:
 
 ```bash
-logic region export --track 1 --bar 3 --output /tmp/part.mid
+downbeat region export --track 1 --bar 3 --output /tmp/part.mid
 ```
 
 ```bash
-logic region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
+downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 ```
 
 - Keep the exported file's start events and end-of-track tick, so the length stays the same.
@@ -124,8 +124,8 @@ logic region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 
 ## Limits
 
-- Tested on Logic Pro 13.0, English UI, 4/4 and 3/4.
+- Tested on Logic Pro 13.0, English UI.
 - Automation and other unlisted region settings may be lost on replace.
-- Off-screen tracks or regions may not be listed.
+- Off-screen regions may not be listed or selected.
 - Recorded pitch bend denser than 1/256 note is thinned.
 - Not available: adding or deleting single notes by command, creating regions, deleting tracks.
