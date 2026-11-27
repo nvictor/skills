@@ -1,11 +1,11 @@
 ---
 name: logic-cli
-description: Read and edit MIDI notes in a running Logic Pro project with the `logic` command. Use for listing regions and notes, transposing, setting velocity, quantizing, or exporting and replacing a MIDI region in Logic Pro. Not for transport, mixing, plugins, audio, or creating tracks and regions.
+description: Create Logic Pro projects and read and edit MIDI notes with the `logic` command. Use for starting a project with a tempo, meter and key, checking status, setting tempo, listing regions and notes, transposing, setting velocity, quantizing, or exporting and replacing a MIDI region. Not for playback, mixing, plugins, audio, or creating tracks and regions.
 ---
 
 # Logic CLI
 
-Edit MIDI regions in Logic Pro through the `logic` command.
+Start projects and edit MIDI regions in Logic Pro through the `logic` command.
 Source: `~/Developer/logic-cli`.
 
 ## Before any command
@@ -16,8 +16,33 @@ logic check
 
 - Stop and report if it lists a problem.
 - If `logic` is missing, ask the user to install it (see the repo README).
-- Every command except `check`, `inspect` and `region list` drives the Logic Pro UI.
+- Every command except `check`, `inspect`, `status`, `tempo get`, `region list` and `project template` drives the Logic Pro UI.
   Ask the user to keep hands off keyboard and mouse.
+
+## New project
+
+```bash
+logic project new "Night Drive" --tempo 92 --signature 6/8 --key "A minor"
+```
+
+- Works with Logic Pro closed. `logic check` is not needed first.
+- Saved in `~/Music/Logic` unless `--directory` says otherwise.
+- All settings are optional. Meters: 3/4, 4/4, 5/4, 6/8, 7/8, 12/8. Tempo: whole numbers.
+- Needs a template. If missing, ask the user to save an empty project and run
+  `logic project template <path.logicx>`, or pass `--template`.
+- Refused while a project has unsaved changes. Report it. Never save or discard for the user.
+
+## Status and tempo
+
+```bash
+logic status --json
+```
+
+```bash
+logic tempo set 92 --project "Night Drive"
+```
+
+`tempo set` does not save.
 
 ## Address a region
 
@@ -77,7 +102,7 @@ logic region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 - Regions must start and end on a bar line.
 - A failed replace undoes its own steps. If the message says it could not restore,
   tell the user to use Undo in Logic Pro.
-- Never save the project. The user decides.
+- Never save an existing project. The user decides. `project new` saves only the project it creates.
 
 ## Limits
 
