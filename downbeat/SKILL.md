@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, deleting, exporting and replacing regions, and listing, adding, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, deleting tracks, or creating empty regions.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, deleting, exporting and replacing regions, and listing, adding, deleting, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, deleting tracks, or creating empty regions.
 ---
 
 # downbeat
@@ -158,6 +158,10 @@ downbeat note add --track 1 --bar 3 --project MySong --pitch F#3 --beat 0 --dura
 ```
 
 ```bash
+downbeat note delete --track 1 --bar 3 --project MySong --id 2
+```
+
+```bash
 downbeat note velocity --track 1 --bar 3 --project MySong --value 100
 ```
 
@@ -167,6 +171,7 @@ downbeat note quantize --track 1 --bar 3 --project MySong --division 1/16
 
 - `note add`: `--pitch` is a name (middle C is `C3`) or 0 to 127. `--beat` counts from 0.
   The note must end inside the region and not overlap the same pitch.
+- `note delete`: take `--id` from a fresh `note list`. Ids change after every edit, so list again before the next delete.
 
 For other changes, export, edit the file, then import:
 
@@ -199,4 +204,4 @@ downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 - Automation and other unlisted region settings may be lost on replace.
 - Off-screen regions may not be listed or selected.
 - Recorded pitch bend denser than 1/256 note is thinned.
-- Not available: deleting or changing single notes by command, creating empty regions, deleting tracks.
+- Not available: changing single notes by command, creating empty regions, deleting tracks.
