@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for pan, sends, plugins, audio editing, or deleting tracks.
 ---
 
 # downbeat
@@ -110,6 +110,15 @@ downbeat track solo "Bass" --off --project "Night Drive"
 
 - `--off` unmutes or ends a solo.
 - A solo hides mute states, so `mute` is refused until solo is off.
+
+## Volume
+
+```bash
+downbeat mixer volume "Bass" --db -6 --project "Night Drive"
+```
+
+- Up to `6`. `-inf` silences the track.
+- The command prints the level reached. Report that one.
 
 ## Import and delete
 
