@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, deleting, exporting and replacing regions, and listing, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, deleting tracks, or creating empty regions.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, deleting, exporting and replacing regions, and listing, adding, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, deleting tracks, or creating empty regions.
 ---
 
 # downbeat
@@ -154,12 +154,19 @@ downbeat note transpose --track 1 --bar 3 --project MySong --semitones=-2
 ```
 
 ```bash
+downbeat note add --track 1 --bar 3 --project MySong --pitch F#3 --beat 0 --duration 0.5 --velocity 100
+```
+
+```bash
 downbeat note velocity --track 1 --bar 3 --project MySong --value 100
 ```
 
 ```bash
 downbeat note quantize --track 1 --bar 3 --project MySong --division 1/16
 ```
+
+- `note add`: `--pitch` is a name (middle C is `C3`) or 0 to 127. `--beat` counts from 0.
+  The note must end inside the region and not overlap the same pitch.
 
 For other changes, export, edit the file, then import:
 
@@ -180,6 +187,7 @@ downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
   gate time or pitch source set is refused. Report it. Do not change settings yourself.
 - A region with a custom color is refused too. An edit finds this at the end and undoes itself.
 - Regions must start and end on a bar line.
+- A region with several MIDI channels can be read but not edited.
 - A region on a muted track, or silenced by a solo, cannot be read or edited. Report it.
 - A failed replace undoes its own steps. If the message says it could not restore,
   tell the user to use Undo in Logic Pro.
@@ -191,4 +199,4 @@ downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 - Automation and other unlisted region settings may be lost on replace.
 - Off-screen regions may not be listed or selected.
 - Recorded pitch bend denser than 1/256 note is thinned.
-- Not available: adding or deleting single notes by command, creating empty regions, deleting tracks.
+- Not available: deleting or changing single notes by command, creating empty regions, deleting tracks.
