@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, creating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, creating, renaming, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, or deleting tracks.
 ---
 
 # downbeat
@@ -143,6 +143,14 @@ downbeat region create --track "Bass" --bar 1 --bars 4 --name "Verse" --project 
 - Software instrument and external MIDI tracks only. The bars must be free.
 - `--bars` defaults to 1, `--name` to the track name.
 
+## Rename a region
+
+```bash
+downbeat region rename "Chorus" --region "Verse" --project "Night Drive"
+```
+
+The new name comes first. The options pick the region.
+
 ## Read
 
 ```bash
@@ -234,4 +242,4 @@ downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 - Automation and other unlisted region settings may be lost on replace.
 - Off-screen regions may not be listed or selected.
 - Recorded pitch bend denser than 1/256 note is thinned.
-- Not available: deleting tracks, renaming, moving or duplicating regions.
+- Not available: deleting tracks, moving or duplicating regions.
