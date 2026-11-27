@@ -1,6 +1,6 @@
 ---
 name: logic-cli
-description: Create Logic Pro projects and read and edit MIDI notes with the `logic` command. Use for starting a project with a tempo, meter and key, checking status, setting tempo, listing regions and notes, transposing, setting velocity, quantizing, or exporting and replacing a MIDI region. Not for playback, mixing, plugins, audio, or creating tracks and regions.
+description: Create Logic Pro projects and read and edit MIDI notes with the `logic` command. Use for starting a project with a tempo, meter and key, checking status, setting tempo, listing, creating and renaming tracks, listing regions and notes, transposing, setting velocity, quantizing, or exporting and replacing a MIDI region. Not for playback, mixing, plugins, audio editing, deleting tracks, or creating regions.
 ---
 
 # Logic CLI
@@ -16,7 +16,7 @@ logic check
 
 - Stop and report if it lists a problem.
 - If `logic` is missing, ask the user to install it (see the repo README).
-- Every command except `check`, `inspect`, `status`, `tempo get`, `region list` and `project template` drives the Logic Pro UI.
+- Every command except `check`, `inspect`, `status`, `tempo get`, `track list`, `region list` and `project template` drives the Logic Pro UI.
   Ask the user to keep hands off keyboard and mouse.
 
 ## New project
@@ -43,6 +43,24 @@ logic tempo set 92 --project "Night Drive"
 ```
 
 `tempo set` does not save.
+
+## Tracks
+
+```bash
+logic track list --json
+```
+
+```bash
+logic track create --type instrument --name "Bass" --project "Night Drive"
+```
+
+```bash
+logic track rename 1 "Drums" --project "Night Drive"
+```
+
+- Types: `instrument`, `audio`, `external` (MIDI). A new track goes after the selected one.
+- `<track>` is a name or a number. Numbers change when tracks are added.
+- Neither command saves the project.
 
 ## Address a region
 
@@ -110,4 +128,4 @@ logic region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 - Automation and other unlisted region settings may be lost on replace.
 - Off-screen tracks or regions may not be listed.
 - Recorded pitch bend denser than 1/256 note is thinned.
-- Not available: adding or deleting single notes by command, creating regions or tracks.
+- Not available: adding or deleting single notes by command, creating regions, deleting tracks.
