@@ -30,6 +30,7 @@ downbeat project new "Night Drive" --tempo 92 --signature 6/8 --key "A minor"
 - All settings are optional. Meters: 3/4, 4/4, 5/4, 6/8, 7/8, 12/8. Tempo: whole numbers.
 - Needs a template. If missing, ask the user to save an empty project and run
   `downbeat project template <path.logicx>`, or pass `--template`.
+- `downbeat project template` prints the current template's path.
 - Refused while a project has unsaved changes. Report it. Never save or discard for the user.
 
 ## Open, describe and save
