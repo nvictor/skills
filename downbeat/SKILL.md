@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugins, audio editing, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing MIDI ports, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugins, audio editing, or deleting tracks.
 ---
 
 # downbeat
@@ -16,7 +16,7 @@ downbeat check
 
 - Stop and report if it lists a problem.
 - If `downbeat` is missing, ask the user to install it (see the repo README).
-- Every command except `check`, `inspect`, `status`, `tempo get`, `track list`, `region list`, `project info` and `project template` drives the Logic Pro UI.
+- Every command except `midi ports`, `check`, `inspect`, `status`, `tempo get`, `track list`, `region list`, `project info` and `project template` drives the Logic Pro UI.
   Ask the user to keep hands off keyboard and mouse.
 
 ## New project
@@ -133,6 +133,14 @@ downbeat marker create "Chorus" --bar 9 --project "Night Drive"
 
 - One marker per bar. No `#` in the name.
 - There is no command to list, move or delete markers.
+
+## MIDI ports
+
+```bash
+downbeat midi ports --json
+```
+
+Works without Logic Pro or `downbeat check`. A `source` is read from, a `destination` is written to.
 
 ## Import and delete
 
