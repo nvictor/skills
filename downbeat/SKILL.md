@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, creating, renaming, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, or deleting tracks.
 ---
 
 # downbeat
@@ -151,13 +151,18 @@ downbeat region rename "Chorus" --region "Verse" --project "Night Drive"
 
 The new name comes first. The options pick the region.
 
-## Duplicate a region
+## Move and duplicate a region
 
 ```bash
 downbeat region duplicate --region "Chorus" --to-bar 9 --project "Night Drive"
 ```
 
+```bash
+downbeat region move --region "Chorus" --bar 9 --to-bar 17 --project "Night Drive"
+```
+
 - Same track only. The target bars must be free.
+- `--bar` picks the source. `--to-bar` is the destination.
 - The copy keeps the name. Afterwards, pick a region with `--bar` too.
 
 ## Read
@@ -251,4 +256,4 @@ downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 - Automation and other unlisted region settings may be lost on replace.
 - Off-screen regions may not be listed or selected.
 - Recorded pitch bend denser than 1/256 note is thinned.
-- Not available: deleting tracks, moving regions.
+- Not available: deleting tracks, moving regions between tracks.
