@@ -73,6 +73,7 @@ logic region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 
 - A region with Loop, Mute, transpose, velocity offset, delay, quantize, dynamics,
   gate time or pitch source set is refused. Report it. Do not change settings yourself.
+- A region with a custom color is refused too. An edit finds this at the end and undoes itself.
 - Regions must start and end on a bar line.
 - A failed replace undoes its own steps. If the message says it could not restore,
   tell the user to use Undo in Logic Pro.
@@ -81,7 +82,7 @@ logic region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 ## Limits
 
 - Tested on Logic Pro 13.0, English UI, 4/4 and 3/4.
-- Region color and other unlisted settings are lost on replace.
+- Automation and other unlisted region settings may be lost on replace.
 - Off-screen tracks or regions may not be listed.
 - Recorded pitch bend denser than 1/256 note is thinned.
 - Not available: adding or deleting single notes by command, creating regions or tracks.
