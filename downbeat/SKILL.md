@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Create Logic Pro projects and read and edit MIDI notes with the `downbeat` command. Use for starting a project with a tempo, meter and key, checking status, setting tempo, listing, creating and renaming tracks, listing regions and notes, transposing, setting velocity, quantizing, or exporting and replacing a MIDI region. Not for playback, mixing, plugins, audio editing, deleting tracks, or creating regions.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, deleting, exporting and replacing regions, and listing, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, deleting tracks, or creating empty regions.
 ---
 
 # downbeat
@@ -16,7 +16,7 @@ downbeat check
 
 - Stop and report if it lists a problem.
 - If `downbeat` is missing, ask the user to install it (see the repo README).
-- Every command except `check`, `inspect`, `status`, `tempo get`, `track list`, `region list` and `project template` drives the Logic Pro UI.
+- Every command except `check`, `inspect`, `status`, `tempo get`, `track list`, `region list`, `project info` and `project template` drives the Logic Pro UI.
   Ask the user to keep hands off keyboard and mouse.
 
 ## New project
@@ -31,6 +31,40 @@ downbeat project new "Night Drive" --tempo 92 --signature 6/8 --key "A minor"
 - Needs a template. If missing, ask the user to save an empty project and run
   `downbeat project template <path.logicx>`, or pass `--template`.
 - Refused while a project has unsaved changes. Report it. Never save or discard for the user.
+
+## Open, describe and save
+
+```bash
+downbeat project open "$HOME/Music/Logic/Night Drive.logicx"
+```
+
+```bash
+downbeat project info --json
+```
+
+```bash
+downbeat project save --project "Night Drive"
+```
+
+- `open` is refused while a project has unsaved changes.
+- Run `save` only when the user asks.
+
+## Playback
+
+```bash
+downbeat play
+```
+
+```bash
+downbeat stop
+```
+
+```bash
+downbeat record --project "Night Drive"
+```
+
+- Run `record` only when the user asks. End it with `stop`.
+- Stop playback before an edit or an import.
 
 ## Status and tempo
 
@@ -61,6 +95,34 @@ downbeat track rename 1 "Drums" --project "Night Drive"
 - Types: `instrument`, `audio`, `external` (MIDI). A new track goes after the selected one.
 - `<track>` is a name or a number. Numbers change when tracks are added.
 - Neither command saves the project.
+
+```bash
+downbeat track select "Bass" --project "Night Drive"
+```
+
+```bash
+downbeat track mute "Bass" --project "Night Drive"
+```
+
+```bash
+downbeat track solo "Bass" --off --project "Night Drive"
+```
+
+- `--off` unmutes or ends a solo.
+- A solo hides mute states, so `mute` is refused until solo is off.
+
+## Import and delete
+
+```bash
+downbeat midi import drums.mid --bar 5 --project "Night Drive"
+```
+
+```bash
+downbeat region delete --track 1 --bar 3 --project "Night Drive"
+```
+
+- `import` adds new tracks and keeps the project tempo.
+- Confirm the target region with the user before `delete`.
 
 ## Address a region
 
@@ -118,9 +180,10 @@ downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
   gate time or pitch source set is refused. Report it. Do not change settings yourself.
 - A region with a custom color is refused too. An edit finds this at the end and undoes itself.
 - Regions must start and end on a bar line.
+- A region on a muted track, or silenced by a solo, cannot be read or edited. Report it.
 - A failed replace undoes its own steps. If the message says it could not restore,
   tell the user to use Undo in Logic Pro.
-- Never save an existing project. The user decides. `project new` saves only the project it creates.
+- Never save an existing project unprompted. The user decides. `project new` saves only the project it creates.
 
 ## Limits
 
@@ -128,4 +191,4 @@ downbeat region import /tmp/part-edited.mid --track 1 --bar 3 --project MySong
 - Automation and other unlisted region settings may be lost on replace.
 - Off-screen regions may not be listed or selected.
 - Recorded pitch bend denser than 1/256 note is thinned.
-- Not available: adding or deleting single notes by command, creating regions, deleting tracks.
+- Not available: adding or deleting single notes by command, creating empty regions, deleting tracks.
