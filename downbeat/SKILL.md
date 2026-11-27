@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing MIDI ports, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, plugins, audio editing, or deleting tracks.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, setting track volume and pan, creating markers, listing and bypassing plugins, listing MIDI ports, importing MIDI files, listing, creating, renaming, moving, duplicating, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for sends, adding or removing plugins, plugin settings, audio editing, or deleting tracks.
 ---
 
 # downbeat
@@ -141,6 +141,20 @@ downbeat midi ports --json
 ```
 
 Works without Logic Pro or `downbeat check`. A `source` is read from, a `destination` is written to.
+
+## Plugins
+
+```bash
+downbeat plugin list "Bass" --json
+```
+
+```bash
+downbeat plugin bypass "Bass" "Compressor" --project "Night Drive"
+```
+
+- The list includes the instrument. Bypassing it silences the track.
+- `--off` turns the bypass off. A plugin is picked by name or by its number from the list.
+- `list` selects the track while it reads, so it drives the UI.
 
 ## Import and delete
 
