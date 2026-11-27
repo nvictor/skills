@@ -1,6 +1,6 @@
 ---
 name: downbeat
-description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, deleting, exporting and replacing regions, and listing, adding, deleting, changing, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, deleting tracks, or creating empty regions.
+description: Control Logic Pro and edit MIDI notes with the `downbeat` command. Use for starting, opening, saving and describing a project, playback and recording, checking status, setting tempo, listing, creating, renaming, selecting, muting and soloing tracks, importing MIDI files, listing, deleting, exporting and replacing regions, and listing, adding, deleting, changing, exporting and importing as JSON, transposing, quantizing or setting velocity of notes. Not for mixing, plugins, audio editing, deleting tracks, or creating empty regions.
 ---
 
 # downbeat
@@ -178,7 +178,22 @@ downbeat note quantize --track 1 --bar 3 --project MySong --division 1/16
 - `note delete` and `note update`: take `--id` from a fresh `note list`. Ids change after every edit, so list again before the next one.
 - `note update`: give at least one of `--pitch`, `--beat`, `--duration`, `--velocity`. The rest stays.
 
-For other changes, export, edit the file, then import:
+To write or rewrite many notes, use JSON. One import is much faster than many single edits:
+
+```bash
+downbeat note export --track 1 --bar 3 > /tmp/notes.json
+```
+
+```bash
+downbeat note import /tmp/notes.json --track 1 --bar 3 --project MySong
+```
+
+- Format: `{"notes": [{"pitch": 60, "beat": 0, "duration": 1, "velocity": 100}]}`.
+- `pitch` is a number. `beat` and `duration` are quarter notes from the region start.
+- `velocity` and `releaseVelocity` are optional.
+- `import` replaces every note. Other events stay.
+
+For changes to other events, export the MIDI file, edit it, then import:
 
 ```bash
 downbeat region export --track 1 --bar 3 --output /tmp/part.mid
